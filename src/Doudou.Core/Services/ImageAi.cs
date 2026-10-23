@@ -93,6 +93,16 @@ public sealed class ImageAi
         "use large flat areas of solid color, remove gradients, highlights, reflections and soft shading; keep small important details " +
         "such as eyes, mouth and outlines crisp with solid dark colors. Use a perfectly flat solid pure magenta (#FF00FF) background filling the entire canvas (chroma-key screen, no gradient, no checkerboard), no text.";
 
+    /// <summary>单图 → 平面拼豆图纸：把参考图重画成大色块、强轮廓的正面图案。</summary>
+    public static string FlatPatternPrompt(string? subjectHint) =>
+        "Redesign this exact character/object as a clean 2D FUSE-BEAD (perler bead) pattern illustration. " +
+        (string.IsNullOrWhiteSpace(subjectHint) ? "" : "Subject: " + subjectHint + ". ") +
+        "Use BIG flat areas of solid color, no gradients, no highlights, no gloss, no texture and no tiny patterns. " +
+        "Keep the recognizable silhouette, pose and color scheme. Enlarge small details so they survive a 50-bead grid; " +
+        "eyes, mouth and other important features may use bold simple dark shapes. At most 12 solid colors. " +
+        "Exact front view, orthographic camera, centered, full subject visible with a small even margin, " +
+        "a perfectly flat solid pure magenta (#FF00FF) background filling the entire canvas (chroma-key screen, no gradient, no checkerboard), no shadow, no ground, no text, no watermark.";
+
     /// <summary>为 true 时忽略缓存、总是重新生成。</summary>
     public bool ForceRegenerate { get; set; }
 
@@ -188,7 +198,14 @@ public sealed class ImageAi
         req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _s.ImageApiKey);
         using var resp = await Http.SendAsync(req, ct);
         var body = await resp.Content.ReadAsStringAsync(ct);
-        if (!resp.IsSuccessStatusCode) throw new InvalidOperationException($"图像 API 返回 {(int)resp.StatusCode}：{Trim(body)}");
+        if (!resp.IsSuccessStatusCode)
+        {
+            if ((int)resp.StatusCode == 401)
+                throw new InvalidOperationException("图像 API 认证失败：请到「设置 → AI 图像服务」检查 Key 是否正确或已过期。");
+            if (body.Contains("insufficient_user_quota", StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("图像 API 余额不足，请充值后再试；也可以先用「直接像素化」生成平面图纸。");
+            throw new InvalidOperationException($"图像 API 返回 {(int)resp.StatusCode}：{Trim(body)}");
+        }
         using var doc = JsonDocument.Parse(body);
         var item = doc.RootElement.GetProperty("data")[0];
         byte[] bytes;

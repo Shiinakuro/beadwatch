@@ -103,6 +103,9 @@ public sealed class ImportPage : IStepPage
                 tip: "先选成品高度，再选模型文件；GLB/OBJ 自带纹理会保留五官细节")),
             Caption("导入前会先让你选择豆高；之后拖动「成品高度」即可随时重新体素化，不必再选文件。导入前还会检查朝向：有参考图时用轮廓吻合度选最正方向，没有参考图时按最长轴自动转正。")));
 
+        root.Children.Add(Card("平面拼豆", "只做一张平面图纸：上传 1 张图，AI 卡通化后像素化成豆格图，导出带色号的 PNG / PDF 和材料清单。",
+            Flow(Btn("打开平面拼豆", () => _h.OpenFlatPattern(), G.Print))));
+
         root.Children.Add(Card("作品", null, Row("名称", _name), _hint));
 
         var height = SliderRow("成品高度", 16, 128, _height, v => { _height = (int)v; UpdateSize(); UpdateSourceState(); }, 1, "0", " 颗");

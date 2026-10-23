@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>拼豆先锋 BEADWATCH · 立体拼豆设计</title>
-<meta name="description" content="从 3~6 张照片生成立体拼豆模型，逐颗修形、拆件、检查装配，导出整套可施工的图纸。Windows 10/11。">
+<meta name="description" content="从照片生成立体拼豆模型，或上传 1 张图生成平面拼豆图纸。逐颗修形、拆件、检查装配，导出整套可施工图纸。Windows 10/11。">
 <meta name="theme-color" content="#0a111b">
 <meta property="og:title" content="拼豆先锋 BEADWATCH">
 <meta property="og:description" content="把照片变成能真正拼起来的立体模型。">
@@ -346,6 +346,17 @@ footer{border-top:1px solid var(--line);padding:34px 0 46px;position:relative;z-
   html{scroll-behavior:auto}
   .reveal{opacity:1;transform:none}
 }
+
+.flat-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:34px;align-items:center;margin-top:28px}
+.flat-shot{margin:0;border:1px solid var(--line2);background:#0c1420;padding:8px;clip-path:polygon(0 0,calc(100% - 24px) 0,100% 24px,100% 100%,24px 100%,0 calc(100% - 24px));box-shadow:0 36px 70px -24px rgba(0,0,0,.7),0 0 0 1px rgba(33,143,254,.12)}
+.flat-shot img{width:100%;height:auto}
+.flat-copy h3{margin:0 0 12px;font-size:24px;letter-spacing:-.01em}
+.flat-copy p{margin:0 0 18px;color:#a9b7c9;font-size:14.5px;line-height:1.9}
+.flat-list{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.flat-list li{display:grid;grid-template-columns:96px 1fr;gap:12px;padding-top:12px;border-top:1px solid var(--line);font-size:13.5px;color:#a9b7c9;line-height:1.8}
+.flat-list b{color:var(--orange);font-size:11px;letter-spacing:.08em;padding-top:2px}
+@media(max-width:1080px){.flat-grid{grid-template-columns:1fr}.flat-shot{order:2}}
+
 </style>
 <style id="fx">
 /* ===== BEADWATCH // TACTICAL HUD FX LAYER ===== */
@@ -606,6 +617,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
     </a>
     <nav class="nav" aria-label="页面导航">
       <a href="#workflow">工作流</a>
+      <a href="#flat">平面拼豆</a>
       <a href="#interface">界面</a>
       <a href="#local-ai">本地 AI</a>
       <a href="#image-api">生图 API</a>
@@ -614,7 +626,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
       <a href="https://github.com/shiinakuro/beadwatch" target="_blank" rel="noopener">GitHub</a>
     </nav>
     <div class="top-act">
-      <span class="ver">v1.1.1</span>
+      <span class="ver">v1.2.0</span>
       <a class="btn btn-primary btn-sm" href="#download">下载</a>
     </div>
   </div>
@@ -626,7 +638,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
     <div class="hero-copy">
       <p class="kicker">WINDOWS 10 / 11 · 立体拼豆设计</p>
       <h1>把照片变成<br><em>能真正拼起来</em><br>的立体模型。</h1>
-      <p class="lead">从 3~6 张照片重建三维结构，逐颗修形、拆件、验装配，最后导出整套可施工的图纸。全程在三维视口里完成。</p>
+      <p class="lead">从 3~6 张照片重建三维结构，逐颗修形、拆件、验装配，最后导出整套可施工的图纸。全程在三维视口里完成。<br>也可以只上传 1 张图，生成带色号的平面拼豆图纸。</p>
       <div class="hero-btns">
         <a class="btn btn-primary" href="#download">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 21h14"/></svg>
@@ -638,6 +650,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
         <div><b>3~6 张</b><span>多视图重建</span></div>
         <div><b>14,045 颗</b><span>体素可编辑</span></div>
         <div><b>A3 整卷</b><span>图纸直出</span></div>
+        <div><b>1 张</b><span>平面拼豆</span></div>
       </div>
     </div>
     <div class="shot-wrap">
@@ -720,10 +733,38 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
   </div>
 </section>
 
-<section class="section" id="interface">
+<section class="section" id="flat">
   <div class="wrap">
     <div class="sec-head reveal">
       <div class="sec-no">02</div>
+      <div>
+        <p class="eyebrow">FLAT PATTERN</p>
+        <h2>一张图，也能做平面拼豆</h2>
+      </div>
+      <p class="sec-note">平行入口：单图上传 → <b>AI 卡通平涂</b> → 豆格像素化 → 带色号的 PNG / PDF / 材料清单。适合冰箱贴、挂件和平面摆件。</p>
+    </div>
+    <div class="flat-grid reveal">
+      <figure class="flat-shot">
+        <img src="assets/shots/flat.png" width="1360" height="940" loading="lazy" alt="平面拼豆窗口：上传图片、AI 生图、像素化预览与图纸导出">
+      </figure>
+      <div class="flat-copy">
+        <h3>从照片到可施工的平面图纸</h3>
+        <p>不需要三维重建。上传一张主体清楚的照片，先让 AI 把它重画成大色块、强轮廓的正面图案，再按品牌色卡逐格量化，直接读出每颗豆的颜色。</p>
+        <ul class="flat-list">
+          <li><b>01 / 单图</b><span>自动识别主体、去掉背景；也支持直接像素化已经平涂的图片。</span></li>
+          <li><b>02 / AI</b><span>卡通平涂提示词专为拼豆设计：大色块、少颜色、放大五官；同一张图同设置复用缓存。</span></li>
+          <li><b>03 / 豆格</b><span>最长边、品牌色卡、最多颜色、是否保留背景都可调，修改后自动更新预览。</span></li>
+          <li><b>04 / 图纸</b><span>行列标尺 + 色号字母 + 用量表；导出高清 PNG、分页 PDF 与 CSV 材料清单。</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="interface">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-no">03</div>
       <div>
         <p class="eyebrow">INTERFACE</p>
         <h2>所有工具，都在模型旁边</h2>
@@ -750,7 +791,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
 <section class="section" id="local-ai">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="sec-no">03</div>
+      <div class="sec-no">04</div>
       <div>
         <p class="eyebrow">LOCAL AI</p>
         <h2>本地 AI，一次装好</h2>
@@ -811,7 +852,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
 <section class="section" id="image-api">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="sec-no">04</div>
+      <div class="sec-no">05</div>
       <div>
         <p class="eyebrow">IMAGE API</p>
         <h2>生图 API，只做照片的前处理</h2>
@@ -864,7 +905,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
 <section class="section" id="keys">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="sec-no">05</div>
+      <div class="sec-no">06</div>
       <div>
         <p class="eyebrow">SHORTCUTS</p>
         <h2>手不离模型</h2>
@@ -906,15 +947,24 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
 <section class="section" id="log">
   <div class="wrap">
     <div class="sec-head reveal">
-      <div class="sec-no">06</div>
+      <div class="sec-no">07</div>
       <div>
         <p class="eyebrow">RELEASE</p>
         <h2>全新发布</h2>
       </div>
-      <p class="sec-note"><b>v1.1.1 豆高与参考图修复</b>。Windows 10 / 11 自包含安装程序，不需要另行安装 .NET 或 Windows App SDK。</p>
+      <p class="sec-note"><b>v1.2.0 平面拼豆</b>。Windows 10 / 11 自包含安装程序，不需要另行安装 .NET 或 Windows App SDK。</p>
     </div>
     <div class="log">
       <article class="entry now reveal">
+        <div class="vline"><span class="badge">RELEASE</span><h3>v1.2.0</h3><time>2026-10-24</time></div>
+        <ul>
+          <li><b>平面拼豆：</b>新增平行入口「平面 · 拼豆」：上传 1 张图 → AI 卡通平涂 → 按品牌色卡像素化 → 带色号的平面图纸。</li>
+          <li><b>可调豆格：</b>最长边、色卡、最多颜色与去背景都可调；修改后自动更新预览，方便先看效果再导出。</li>
+          <li><b>整套输出：</b>行列标尺、色号字母、用量表；导出高清 PNG、分页 PDF 和 CSV 材料清单。</li>
+          <li><b>可选 AI：</b>未配置生图 API 或额度不足时，可直接像素化已有平涂/像素图。</li>
+        </ul>
+      </article>
+      <article class="entry reveal">
         <div class="vline"><span class="badge">RELEASE</span><h3>v1.1.1</h3><time>2026-10-24</time></div>
         <ul>
           <li><b>新建工程更干净：</b>新建或打开无参考图的工程时，清空上一工程残留的参考图、主色和过程日志。</li>
@@ -992,8 +1042,8 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
       </div>
       <div class="dl-side">
         <div class="dl-box">
-          <div class="dl-name" id="dlName">拼豆先锋_v1.1.1_安装程序.exe</div>
-          <div class="dl-sub"><span>v1.1.1 · SELF-CONTAINED</span><span>117.0 MB</span></div>
+          <div class="dl-name" id="dlName">拼豆先锋_v1.2.0_安装程序.exe</div>
+          <div class="dl-sub"><span>v1.2.0 · SELF-CONTAINED</span><span>117.0 MB</span></div>
           <div class="dl-actions">
             <button class="btn btn-primary dl-btn" id="dlBtn" type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 21h14"/></svg>
@@ -1029,6 +1079,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
     <p>© 2026 BEADWATCH · WINDOWS 10 / 11</p>
     <nav aria-label="页脚导航">
       <a href="#workflow">工作流</a>
+      <a href="#flat">平面拼豆</a>
       <a href="#download">下载</a>
       <a href="#log">发布</a>
       <a href="https://github.com/shiinakuro/beadwatch" target="_blank" rel="noopener">GitHub</a>
@@ -1060,7 +1111,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
   const cancel = document.getElementById("dlCancel");
   const shaCopy = document.getElementById("shaCopy");
   const shaText = document.getElementById("shaText");
-  const meta = { name: "拼豆先锋_v1.1.1_安装程序.exe", size: 122648708 };
+  const meta = { name: "拼豆先锋_v1.2.0_安装程序.exe", size: 122648708 };
   let busy = false;
   let ac = null;
 

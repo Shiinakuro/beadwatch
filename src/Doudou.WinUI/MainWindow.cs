@@ -35,6 +35,7 @@ public interface IHost
     Task<string?> PromptAsync(string title, string label, string def);
     Task<bool> ConfirmAsync(string title, string text, string ok = "确定", string cancel = "取消");
     Task OpenProjectAsync(string path);
+    void OpenFlatPattern();
 }
 
 /// <summary>主窗口：自绘标题栏 + 左侧步骤导航 + 中央三维视口（浮动工具栏）+ 右侧步骤面板。</summary>
@@ -62,6 +63,7 @@ public sealed class MainWindow : Window, IHost
     private readonly Button _busyCancel = new() { Content = "取消", HorizontalAlignment = HorizontalAlignment.Center };
     private readonly Grid _welcome = new();
     private readonly Grid _preview = new() { Visibility = Visibility.Collapsed };
+    private FlatPatternWindow? _flatWindow;
     private readonly ComboBox _previewPick = new() { MinWidth = 260 };
     private readonly ScrollViewer _previewScroll = new() { ZoomMode = ZoomMode.Enabled, MinZoomFactor = 0.1f, MaxZoomFactor = 4f, HorizontalScrollBarVisibility = ScrollBarVisibility.Auto, HorizontalScrollMode = ScrollMode.Enabled };
     private readonly Image _previewImage = new() { Stretch = Stretch.None };
@@ -235,6 +237,18 @@ public sealed class MainWindow : Window, IHost
             ToolTipService.SetToolTip(it, items[i].Tip);
             _nav.MenuItems.Add(it);
         }
+        _nav.MenuItems.Add(new NavigationViewItemSeparator());
+        var flatItem = new NavigationViewItem
+        {
+            Content = "平面 · 拼豆", Tag = 7, SelectsOnInvoked = false,
+            Icon = new FontIcon { Glyph = G.Grid },
+        };
+        ToolTipService.SetToolTip(flatItem, "单图 → AI 生图 → 像素化 → 平面图纸");
+        _nav.MenuItems.Add(flatItem);
+        _nav.ItemInvoked += (_, e) =>
+        {
+            if (e.InvokedItemContainer is NavigationViewItem { Tag: 7 }) OpenFlatPattern();
+        };
         _nav.SelectionChanged += (_, e) =>
         {
             if (e.IsSettingsSelected) { ShowPage(6); return; }
@@ -445,6 +459,33 @@ public sealed class MainWindow : Window, IHost
         Tile(2, "新建 · NEW", Theme.Green, G.Cube, "空白画布", "从零搭建体素模型", async () => await NewBlankAsync());
         sp.Children.Add(grid);
 
+        var flatText = new StackPanel { Spacing = 2, VerticalAlignment = VerticalAlignment.Center };
+        flatText.Children.Add(new TextBlock
+        {
+            Text = "平面拼豆 · FLAT PATTERN", FontFamily = Theme.Display, FontWeight = Microsoft.UI.Text.FontWeights.Bold,
+            FontSize = 16, RenderTransform = new SkewTransform { AngleX = -8 },
+        });
+        flatText.Children.Add(new TextBlock
+        {
+            Text = "上传 1 张图 → AI 卡通平涂 → 像素化 → 导出带色号的平面图纸",
+            FontSize = 12, TextWrapping = TextWrapping.Wrap, Foreground = Brush("TextFillColorSecondaryBrush"),
+        });
+        var flatContent = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 14 };
+        var flatIcon = Icon(G.Grid, 26);
+        flatIcon.Foreground = Theme.B(Theme.Blue);
+        flatIcon.VerticalAlignment = VerticalAlignment.Center;
+        flatContent.Children.Add(flatIcon);
+        flatContent.Children.Add(flatText);
+        var flatTile = new Button
+        {
+            Content = flatContent, HorizontalAlignment = HorizontalAlignment.Stretch,
+            HorizontalContentAlignment = HorizontalAlignment.Left, Padding = new Thickness(16, 11, 16, 11),
+            Margin = new Thickness(0, 12, 0, 0), CornerRadius = new CornerRadius(3, 14, 3, 14),
+            Background = Theme.B(Theme.Navy, 0xCC), BorderBrush = Theme.B(Theme.Blue, 0x70), BorderThickness = new Thickness(1.2),
+        };
+        flatTile.Click += (_, _) => OpenFlatPattern();
+        sp.Children.Add(flatTile);
+
         var recent = RecentFiles.Load();
         if (recent.Count > 0)
         {
@@ -631,6 +672,14 @@ public sealed class MainWindow : Window, IHost
             _busyCts.Dispose();
             _busyCts = null;
         }
+    }
+
+    public void OpenFlatPattern()
+    {
+        if (_flatWindow != null) { _flatWindow.Activate(); return; }
+        _flatWindow = new FlatPatternWindow(S);
+        _flatWindow.Closed += (_, _) => _flatWindow = null;
+        _flatWindow.Activate();
     }
 
     public void ShowPreview(IReadOnlyList<string> images, string folder)
@@ -861,7 +910,8 @@ public sealed class MainWindow : Window, IHost
             "【剖切】PageUp / PageDown 逐层；Home 关闭剖切\n" +
             "【选择】Shift 加选，Ctrl 减选；Delete 删除所选；Esc 取消\n" +
             "【文件】Ctrl+N 新建　Ctrl+O 打开　Ctrl+S 保存　Ctrl+Z/Y 撤销/重做\n\n" +
-            "流程：① 导入图片重建 → ② 编辑修形上色 → ③ 拆成可熨烫的平板零件 → ④ 检查漏色与装配 → ⑤ 导出图纸。";
+            "流程：① 导入图片重建 → ② 编辑修形上色 → ③ 拆成可熨烫的平板零件 → ④ 检查漏色与装配 → ⑤ 导出图纸。\n\n" +
+            "平面拼豆：左侧「平面 · 拼豆」→ 上传 1 张图 → AI 卡通平涂 → 像素化 → 导出 PNG / PDF / 材料清单。";
         var dlg = new ContentDialog
         {
             Title = "使用帮助", Content = new TextBlock { Text = text, TextWrapping = TextWrapping.Wrap },

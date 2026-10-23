@@ -1,4 +1,6 @@
 ﻿using Doudou.Core.Color;
+using Doudou.Core.Drawing;
+using Doudou.Core.Imaging;
 using Doudou.Core.IO;
 using Doudou.Core.Recon;
 using Doudou.Core.Render;
@@ -252,9 +254,9 @@ switch (args[0])
         Console.WriteLine($"{Path.GetFileName(args[1])}: 色键={Doudou.Core.Imaging.BackgroundRemoval.DetectChroma(img)} 棋盘格={(Doudou.Core.Imaging.BackgroundRemoval.DetectChecker(img) is { } c ? c.Size + "px" : "无")} 前景 {sil.Mask.Count(b => b) * 100.0 / sil.Mask.Length:F1}% {sw.ElapsedMilliseconds}ms");
         return 0;
     }
-    case "flat":
+    case "pixel":
     {
-        // flat <图片> <输出.png> [主色,...]：去光影平涂化
+        // pixel <图片> <输出.png> [主色,...]：去光影平涂化
         var img = Doudou.Core.Imaging.RgbaImage.Load(args[1]);
         var sil = Doudou.Core.Imaging.Silhouette.FromImage(img);
         var ks = args.Length > 3 ? args[3].Split(',').Select(Rgb.FromHex).ToList() : null;
@@ -265,6 +267,52 @@ switch (args[0])
         Console.WriteLine($"{sw.ElapsedMilliseconds}ms，{r.Colors.Count} 色：" + string.Join(" ", r.Colors.Select(c => c.Color.Hex + "×" + c.Pixels)));
         var auto = Doudou.Core.Imaging.ColorFlatten.ExtractKeyColors(new[] { (img, sil) });
         Console.WriteLine("自动主色：" + string.Join(",", auto.Select(c => c.Hex)));
+        return 0;
+    }
+    case "flatbead":
+    {
+        // flatbead <图片> <输出目录> <最长边颗数> [--colors=N] [--brand=id] [--keep-bg] [--margin=N]
+        var src = RgbaImage.Load(args[1]);
+        var outDir = args[2];
+        int longSide = int.Parse(args[3]);
+        int colors = 16, margin = 0;
+        string brand = "mard221", hint = "";
+        bool keepBg = false, useAi = false;
+        foreach (var a in args.Skip(4))
+        {
+            if (a.StartsWith("--colors=")) colors = int.Parse(a[9..]);
+            else if (a.StartsWith("--brand=")) brand = a[8..];
+            else if (a.StartsWith("--margin=")) margin = int.Parse(a[9..]);
+            else if (a.StartsWith("--hint=")) hint = a[7..];
+            else if (a == "--keep-bg") keepBg = true;
+            else if (a == "--ai") useAi = true;
+        }
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        if (useAi)
+        {
+            var settings = AppSettings.Load();
+            var ai = new ImageAi(settings);
+            if (!ai.Configured) throw new InvalidOperationException("尚未配置图像 API");
+            Console.WriteLine("  AI 卡通平涂…");
+            var aiPath = await ai.EditAsync(new[] { args[1] }, ImageAi.FlatPatternPrompt(hint),
+                Path.Combine(outDir, "ai_flat.png"));
+            Console.WriteLine("  AI 图：" + aiPath + (ai.LastFromCache ? "（缓存）" : ""));
+            src = RgbaImage.Load(aiPath);
+        }
+        var res = FlatPattern.Build(src, lib, new FlatPatternOptions
+        {
+            LongSide = longSide, BrandId = brand, MaxColors = colors,
+            RemoveBackground = !keepBg, Margin = margin,
+            Name = Path.GetFileNameWithoutExtension(args[1]),
+        }, s => Console.WriteLine("  " + s));
+        var o = new FlatPatternRenderOptions
+        {
+            BrandId = brand, Title = Path.GetFileNameWithoutExtension(args[1]),
+            Notes = "平面拼豆", PitchMm = 5.0,
+        };
+        var outp = FlatPatternRenderer.Export(outDir, res.Model, lib, o);
+        Console.WriteLine($"完成 {sw.Elapsed.TotalSeconds:F1}s：{res.Model.SX}×{res.Model.SY} {res.Model.CountSolid()} 颗 {res.Model.Palette.Count - 1} 色");
+        foreach (var f in outp.Files) Console.WriteLine("  " + f);
         return 0;
     }
     case "render":
