@@ -1,6 +1,7 @@
 @echo off
 chcp 65001 >nul
 setlocal
+cd /d "%~dp0"
 set "PS1=%~dp0collect_diagnostics.ps1"
 if not exist "%PS1%" (
   echo 找不到 collect_diagnostics.ps1。
@@ -8,10 +9,9 @@ if not exist "%PS1%" (
   pause
   exit /b 1
 )
-echo 正在收集诊断信息，请稍候...
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%PS1%" %*
+echo 正在启动诊断脚本，请稍候...
+powershell.exe -NoExit -NoProfile -ExecutionPolicy Bypass -File "%PS1%" %*
 echo.
-echo 如果上方显示了 zip 路径，请把该 zip 发给开发者。
-echo 如果没有生成 zip，请把窗口里的提示或运行日志发给开发者。
+echo 诊断脚本已结束。按任意键关闭此窗口。
 pause
 endlocal

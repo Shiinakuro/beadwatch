@@ -265,5 +265,7 @@ if ($zipPath) {
         Write-Host $transcript -ForegroundColor Yellow
     }
     Write-Host "请把上面这个文件夹（或运行日志）压缩后发给开发者。"
-    exit 1
 }
+
+Write-Host ""
+Write-Host "诊断脚本结束，可以关闭此窗口了。"
