@@ -34,6 +34,7 @@ def main() -> None:
     parser.add_argument("--release-dir", type=Path, help="directory containing the installer")
     parser.add_argument("--dist", type=Path, default=Path("site/dist"))
     parser.add_argument("--version", default="1.0")
+    parser.add_argument("--name", help="filename shown in the browser download")
     args = parser.parse_args()
 
     if args.installer:
@@ -71,9 +72,10 @@ def main() -> None:
             index += 1
 
     digest = sha256(installer)
+    display_name = args.name or f"拼豆先锋_v{args.version}_安装程序.exe"
     manifest = {
         "ok": True,
-        "name": installer.name,
+        "name": display_name,
         "version": args.version,
         "size": total,
         "sha256": digest,
@@ -82,7 +84,7 @@ def main() -> None:
     (download / "installer.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
-    (download / "SHA256SUMS").write_text(f"{digest}  {installer.name}\n", encoding="utf-8")
+    (download / "SHA256SUMS").write_text(f"{digest}  {display_name}\n", encoding="utf-8")
 
     print(json.dumps({
         "installer": str(installer),

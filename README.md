@@ -7,7 +7,7 @@
 
 ## 安装与启动
 
-**安装版（推荐）**：从 [GitHub Releases](https://github.com/shiinakuro/beadwatch/releases/latest) 下载 `拼豆先锋_v1.0_安装程序.exe`，双击后选好位置安装。只装到当前用户，无需管理员权限；自动创建开始菜单 / 桌面快捷方式，卸载入口进入 Windows「设置 → 应用」。
+**安装版（推荐）**：从 [GitHub Releases](https://github.com/shiinakuro/beadwatch/releases/latest) 下载 `beadwatch-1.0-setup.exe`（页面内显示为 `拼豆先锋_v1.0_安装程序.exe`），双击后选好位置安装。只装到当前用户，无需管理员权限；自动创建开始菜单 / 桌面快捷方式，卸载入口进入 Windows「设置 → 应用」。
 **本地 AI 依赖**：安装程序只带主程序和混元代码，不含 Python / PyTorch / 模型。打开「设置 → 本地 AI 模型」可一键安装（完整约 10 GB；只装 ISNet 抠图约 300 MB）。下载会自动测速选择最快镜像，大文件多线程分段，支持断点续传；装在程序目录下，卸载时按需保留。
 **便携版**：双击 `启动拼豆先锋.cmd`（或 `app\拼豆先锋.exe`）；示例工程在 `示例\`，可直接拖进窗口打开。
 
