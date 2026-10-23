@@ -115,7 +115,8 @@ def stage(version):
 def collect():
     entries = []
     for d, dirs, files in os.walk(STAGE):
-        dirs.sort()
+        # userdata 里有用户设置和 API Key，任何情况下都不能进安装包
+        dirs[:] = sorted(x for x in dirs if x != "userdata")
         for fn in sorted(files):
             full = os.path.join(d, fn)
             rel = os.path.relpath(full, STAGE).replace(os.sep, "/")
