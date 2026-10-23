@@ -8,6 +8,9 @@ public sealed class AppSettings
     public string ImageApiBase { get; set; } = "";
     public string ImageApiKey { get; set; } = "";
     public string ImageModel { get; set; } = "";
+    /// <summary>混元 3D 在线 API（AI3D 的 OpenAI 兼容接口）。</summary>
+    public string Hunyuan3dApiBase { get; set; } = "https://api.ai3d.cloud.tencent.com";
+    public string Hunyuan3dApiKey { get; set; } = "";
     public string DefaultBrand { get; set; } = "mard221";
     public string Author { get; set; } = "";
     public string Watermark { get; set; } = "";

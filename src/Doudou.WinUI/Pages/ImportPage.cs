@@ -17,8 +17,8 @@ namespace Doudou.WinUI.Pages;
 /// <summary>① 图片导入 + 三维重建。</summary>
 public sealed class ImportPage : IStepPage
 {
-    public string Header => "图片导入";
-    public string Description => "上传同一物体的 3~6 张图片，框选主体，自动生成立体拼豆模型";
+    public string Header => "图片 / 模型导入";
+    public string Description => "上传多视图图片，或导入 OBJ/GLB/STL 模型，选好豆高后体素化";
     public UIElement View { get; }
 
     private sealed class Item
@@ -46,6 +46,8 @@ public sealed class ImportPage : IStepPage
     private readonly ItemsWrap _aiThumbs = new() { HSpacing = 6, VSpacing = 6 };
     private readonly TextBlock _aiState = Caption("");
     private readonly TextBlock _sizeHint = Caption("");
+    private readonly TextBlock _gpuNote = Caption("");
+    private readonly TextBlock _hyState = Caption("");
     private readonly ItemsWrap _keySwatches = new() { HSpacing = 4, VSpacing = 4 };
     private readonly List<Rgb> _keyColors = new();
     private CheckBox _onlyKeysCheck = null!;
@@ -78,12 +80,18 @@ public sealed class ImportPage : IStepPage
         root.Children.Add(Card("图片", "标准视图（正/背/左/右）效果最好；角度随意的实拍照片标为「参考照片」，由 AI 先整理成标准视图。",
             drop, Check("添加图片后自动弹出框选主体", _askBox, v => _askBox = v), _tiles));
 
+        root.Children.Add(Card("三维模型", "已有 OBJ / GLB / STL / VOX 可以直接导入，不用照片。GLB/OBJ 带纹理会自动按纹理上色；STL 不带颜色，用上面添加的图片做参考上色；VOX 按 MagicaVoxel 标准转正。",
+            Flow(Btn("导入 OBJ / GLB / STL / VOX", async () => await ImportMeshAsync(), G.Download, accent: true,
+                tip: "按当前「成品高度」体素化；GLB/OBJ 自带纹理会保留五官细节")),
+            Caption("导入前会检查朝向：有参考图时用轮廓吻合度选最正方向，没有参考图时按最长轴自动转正。没有纹理也没有参考图时生成单色模型。")));
+
         root.Children.Add(Card("作品", null, Row("名称", _name), _hint));
 
         var height = SliderRow("成品高度", 16, 128, _height, v => { _height = (int)v; UpdateSize(); }, 1, "0", " 颗");
         root.Children.Add(Card("重建设置", null,
+            _gpuNote, _hyState,
             height.Row, _sizeHint,
-            Row("建模方式", Combo(new[] { "自动（优先本地混元3D）", "混元3D（需要 NVIDIA 显卡）", "轮廓雕刻（纯 CPU）" }, 0, i => _method = i)),
+            Row("建模方式", Combo(new[] { "自动（本地混元3D / 在线 API / 轮廓）", "本地混元3D（需要 NVIDIA 显卡）", "在线混元3D 3.1（需要 API Key）", "轮廓雕刻（纯 CPU）" }, 0, i => _method = i)),
             Row("色卡", Combo(_brandIds.Select(id => h.S.Lib.Brands[id].Title), _brand, i => _brand = i)),
             SliderRow("最多颜色", 4, 40, _maxColors, v => _maxColors = (int)v, 1, "0", " 色").Row));
 
@@ -138,6 +146,13 @@ public sealed class ImportPage : IStepPage
         _aiState.Text += Hy3dClient.CutoutInstalled
             ? "\n本地抠图模型就绪：框选后会自动去掉墙面、桌面、水印等背景。"
             : "\n本地抠图模型未安装：框选后按背景色去背景。可在「设置 → 本地 AI 模型」一键安装。";
+
+        var local = Hy3dClient.IsInstalled(out var why);
+        _gpuNote.Text = GpuProbe.LocalChoiceText + (local ? " 本地 2mv 权重已就绪。" : " 本地 2mv 未安装：" + why + "。");
+        var api = new Hunyuan3dApi(_h.S.Settings);
+        _hyState.Text = api.Configured
+            ? "在线混元 3.1 已配置：显存不足或本地模型未安装时，「自动」会优先用它；单图约 20 积分/次，照片会上传到腾讯云。在线接口当前使用正面图（单图），多视图请用本地 2mv。"
+            : "在线混元 3.1 未配置：到「设置 → 混元 3D 在线 API」填 Key；不配置时自动退回轮廓雕刻。";
     }
 
     /// <summary>打开工程时：把工程里保存的视图图片（多为 AI 生成）放回列表，直接复用，不再调用 AI。</summary>
@@ -356,43 +371,166 @@ public sealed class ImportPage : IStepPage
         });
     }
 
+    private async Task ImportMeshAsync()
+    {
+        if (_running) return;
+        var s = _h.S;
+        if (s.Dirty && s.Model.CountSolid() > 0 && !await _h.ConfirmAsync("替换当前模型？", "导入的网格会替换当前未保存的模型。", "继续")) return;
+        var pick = new FileOpenPicker();
+        WinRT.Interop.InitializeWithWindow.Initialize(pick, _h.Hwnd);
+        foreach (var e in new[] { ".obj", ".glb", ".stl", ".vox" }) pick.FileTypeFilter.Add(e);
+        var f = await pick.PickSingleFileAsync();
+        if (f == null) return;
+        _log.Text = "";
+        _running = true;
+        try
+        {
+            await _h.RunAsync("导入三维模型", async (progress, ct) =>
+            {
+                IProgress<string> p = new Progress<string>(m => { Log(m); progress.Report(m); });
+                var mesh = MeshLoader.Load(f.Path);
+                bool hasTexture = mesh.Texture != null && mesh.VertexUVs?.Count == mesh.Vertices.Count;
+                var views = new List<ViewImage>();
+                var viewPaths = new Dictionary<ViewKind, string>();
+
+                if (!hasTexture && _items.Count > 0)
+                {
+                    var prepped = await Prepare(p, ct);
+                    foreach (var (it, path) in prepped.Where(x => x.It.Role < 6))
+                    {
+                        var kind = (ViewKind)it.Role;
+                        if (viewPaths.ContainsKey(kind)) continue;
+                        var v = ViewImage.Load(kind, path);
+                        v.IsAi = it.IsAi;
+                        views.Add(v);
+                        viewPaths[kind] = path;
+                    }
+                }
+                else if (_items.Count > 0)
+                {
+                    foreach (var it in _items.Where(x => x.Role < 6))
+                    {
+                        var kind = (ViewKind)it.Role;
+                        if (!viewPaths.ContainsKey(kind)) viewPaths[kind] = it.Path;
+                    }
+                }
+
+                var res = await Task.Run(() => MeshImporter.Import(mesh, s.Lib, new MeshImportOptions
+                {
+                    TargetHeight = _height,
+                    BrandId = _brandIds[_brand],
+                    MaxColors = _maxColors,
+                    Name = System.IO.Path.GetFileNameWithoutExtension(f.Path),
+                    Views = views,
+                }, m => p.Report(m), ct), ct);
+
+                s.Replace(res.Model, new ProjectMeta
+                {
+                    Title = System.IO.Path.GetFileNameWithoutExtension(f.Path),
+                    Author = s.Settings.Author,
+                    Watermark = s.Settings.Watermark,
+                }, viewPaths);
+                var how = res.UsedTexture ? "模型自带纹理上色" : res.UsedViews ? "参考视图投影上色" : "单色（无纹理/参考图）";
+                Log($"导入完成：{res.Model.SX}×{res.Model.SY}×{res.Model.SZ}，{res.Model.CountSolid():N0} 颗，{res.Model.Palette.Count - 1} 色；{how}{(res.RotatedZUp ? "；Z-up 已转正" : "")}");
+                _h.Notify($"模型已导入：{res.Model.CountSolid():N0} 颗 · {how}。可以开始编辑了。", InfoBarSeverity.Success);
+                _h.GoStep(2);
+            }, cancellable: true);
+        }
+        finally { _running = false; }
+    }
+
     private async Task Run()
     {
         if (_items.Count == 0) { _h.Notify("请先添加图片", InfoBarSeverity.Warning); return; }
         var s = _h.S;
+        var api = new Hunyuan3dApi(s.Settings);
+        var localReady = Hy3dClient.IsInstalled(out var localWhy) && GpuProbe.CanRunLocalHunyuan;
+        if (_method == 2 && !api.Configured)
+        {
+            _h.Notify("在线混元 3.1 未配置：请先到「设置 → 混元 3D 在线 API」填写 Key。", InfoBarSeverity.Warning);
+            return;
+        }
+        if (_method == 1 && !localReady)
+        {
+            var why = !GpuProbe.CanRunLocalHunyuan ? "显存低于本地混元 2mv 的约 6 GB 门槛" : localWhy;
+            _h.Notify("本地混元不可用：" + why + "。可改用在线 3.1 或轮廓雕刻。", InfoBarSeverity.Warning);
+            return;
+        }
+        var useApi = _method == 2 || (_method == 0 && !localReady && api.Configured);
         if (s.Dirty && s.Model.CountSolid() > 0 && !await _h.ConfirmAsync("替换当前模型？", "生成的新模型会替换当前未保存的模型。", "继续")) return;
         _log.Text = "";
         _aiThumbs.Children.Clear();
         _running = true;
         try
         {
-        await _h.RunAsync("生成立体模型", async (progress, ct) =>
-        {
-            var p = new Progress<string>(m => { Log(m); progress.Report(m); });
-            var prepped = await Prepare(p, ct);
-            var inputs = prepped.Where(x => x.It.Role < 6).GroupBy(x => x.It.Role).Select(g => ((ViewKind)g.Key, g.First().Path)).ToList();
-            var refs = prepped.Where(x => x.It.Role == 6).Select(x => x.Path).ToList();
-            var opt = new ReconOptions
+            await _h.RunAsync(useApi ? "在线生成三维模型" : "生成立体模型", async (progress, ct) =>
             {
-                Method = _method switch { 1 => ReconMethod.Hunyuan, 2 => ReconMethod.VisualHull, _ => ReconMethod.Auto },
-                TargetHeight = _height,
-                AiCompleteViews = _complete, AiFlatColors = _flat, CartoonStyle = _cartoon, InferSymmetricSides = _sym,
-                ReferencePhotos = refs, SubjectHint = _hint.Text.Trim(), Name = _name.Text.Trim(),
-                Quantize = new QuantizeOptions { BrandId = _brandIds[_brand], MaxColors = _maxColors },
-                FlattenPhotos = _flatten,
-                KeyColors = _onlyKeys ? _keyColors.ToList() : new List<Rgb>(),
-                AiViews = prepped.Where(x => x.It.IsAi && x.It.Role < 6).Select(x => (ViewKind)x.It.Role).ToHashSet(),
-                OnAiImage = (label, path, cached) => AddThumb(label, path, cached),
-            };
-            var ai = new ImageAi(s.Settings) { ForceRegenerate = _force };
-            var pipe = new ReconstructPipeline(s.Lib, s.Hy3d, ai);
-            var res = await Task.Run(() => pipe.RunAsync(inputs, opt, p, ct), ct);
-            var views = res.Views.Where(v => !v.ShapeOnly).GroupBy(v => v.Kind).ToDictionary(g => g.Key, g => g.First().SourcePath);
-            s.Replace(res.Model, new ProjectMeta { Title = opt.Name, Author = s.Settings.Author, Watermark = s.Settings.Watermark }, views);
-            Log($"完成：{res.Model.SX}×{res.Model.SY}×{res.Model.SZ}，{res.Model.CountSolid():N0} 颗，{res.Model.Palette.Count - 1} 色");
-            _h.Notify($"模型已生成：{res.Model.CountSolid():N0} 颗 · {res.Model.Palette.Count - 1} 色。可以开始编辑了。", InfoBarSeverity.Success);
-            _h.GoStep(2);
-        }, cancellable: true);
+                IProgress<string> p = new Progress<string>(m => { Log(m); progress.Report(m); });
+                var prepped = await Prepare(p, ct);
+
+                if (useApi)
+                {
+                    var front = prepped.FirstOrDefault(x => x.It.Role == 0);
+                    if (front.It == null) front = prepped.FirstOrDefault();
+                    if (front.It == null) throw new InvalidOperationException("缺少正面图。");
+                    var apiDir = AppPaths.NewWorkDir("api3d");
+                    var meshPath = await api.GenerateAsync(front.Path, apiDir, p, ct);
+                    var mesh = MeshLoader.Load(meshPath);
+                    var viewImages = new List<ViewImage>();
+                    var viewPaths = new Dictionary<ViewKind, string>();
+                    foreach (var (it, path) in prepped.Where(x => x.It.Role < 6))
+                    {
+                        var kind = (ViewKind)it.Role;
+                        if (viewPaths.ContainsKey(kind)) continue;
+                        var v = ViewImage.Load(kind, path);
+                        v.IsAi = it.IsAi;
+                        viewImages.Add(v);
+                        viewPaths[kind] = path;
+                    }
+                    var import = await Task.Run(() => MeshImporter.Import(mesh, s.Lib, new MeshImportOptions
+                    {
+                        TargetHeight = _height,
+                        BrandId = _brandIds[_brand],
+                        MaxColors = _maxColors,
+                        Name = _name.Text.Trim(),
+                        Views = viewImages,
+                    }, m => p.Report(m), ct), ct);
+                    s.Replace(import.Model, new ProjectMeta
+                    {
+                        Title = _name.Text.Trim(),
+                        Author = s.Settings.Author,
+                        Watermark = s.Settings.Watermark,
+                    }, viewPaths);
+                    Log($"在线 3.1 完成：{import.Model.SX}×{import.Model.SY}×{import.Model.SZ}，{import.Model.CountSolid():N0} 颗，{import.Model.Palette.Count - 1} 色");
+                    _h.Notify($"在线 3.1 模型已生成：{import.Model.CountSolid():N0} 颗 · {import.Model.Palette.Count - 1} 色。可以开始编辑了。", InfoBarSeverity.Success);
+                    _h.GoStep(2);
+                    return;
+                }
+
+                var inputs = prepped.Where(x => x.It.Role < 6).GroupBy(x => x.It.Role).Select(g => ((ViewKind)g.Key, g.First().Path)).ToList();
+                var refs = prepped.Where(x => x.It.Role == 6).Select(x => x.Path).ToList();
+                var method = _method == 1 ? ReconMethod.Hunyuan : _method == 3 ? ReconMethod.VisualHull : (localReady ? ReconMethod.Hunyuan : ReconMethod.VisualHull);
+                var opt = new ReconOptions
+                {
+                    Method = method,
+                    TargetHeight = _height,
+                    AiCompleteViews = _complete, AiFlatColors = _flat, CartoonStyle = _cartoon, InferSymmetricSides = _sym,
+                    ReferencePhotos = refs, SubjectHint = _hint.Text.Trim(), Name = _name.Text.Trim(),
+                    Quantize = new QuantizeOptions { BrandId = _brandIds[_brand], MaxColors = _maxColors },
+                    FlattenPhotos = _flatten,
+                    KeyColors = _onlyKeys ? _keyColors.ToList() : new List<Rgb>(),
+                    AiViews = prepped.Where(x => x.It.IsAi && x.It.Role < 6).Select(x => (ViewKind)x.It.Role).ToHashSet(),
+                    OnAiImage = (label, path, cached) => AddThumb(label, path, cached),
+                };
+                var ai = new ImageAi(s.Settings) { ForceRegenerate = _force };
+                var pipe = new ReconstructPipeline(s.Lib, s.Hy3d, ai);
+                var res = await Task.Run(() => pipe.RunAsync(inputs, opt, p, ct), ct);
+                var views = res.Views.Where(v => !v.ShapeOnly).GroupBy(v => v.Kind).ToDictionary(g => g.Key, g => g.First().SourcePath);
+                s.Replace(res.Model, new ProjectMeta { Title = opt.Name, Author = s.Settings.Author, Watermark = s.Settings.Watermark }, views);
+                Log($"完成：{res.Model.SX}×{res.Model.SY}×{res.Model.SZ}，{res.Model.CountSolid():N0} 颗，{res.Model.Palette.Count - 1} 色");
+                _h.Notify($"模型已生成：{res.Model.CountSolid():N0} 颗 · {res.Model.Palette.Count - 1} 色。可以开始编辑了。", InfoBarSeverity.Success);
+                _h.GoStep(2);
+            }, cancellable: true);
         }
         finally { _running = false; }
     }

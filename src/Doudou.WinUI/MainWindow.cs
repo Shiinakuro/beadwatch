@@ -765,17 +765,24 @@ public sealed class MainWindow : Window, IHost
         {
             var hs = await PromptAsync("导入三维网格", "成品高度（颗 / 层）", "48");
             if (!int.TryParse(hs, out int h) || h < 5) return;
-            await RunAsync("体素化网格", async (prog, ct) =>
+            await RunAsync("导入三维模型", async (prog, ct) =>
             {
-                var m = await Task.Run(() =>
+                var res = await Task.Run(() =>
                 {
                     var mesh = MeshLoader.Load(path);
-                    var occ = Voxelizer.Voxelize(mesh, h);
-                    return Quantizer.Build(occ, new Doudou.Core.Color.Lab?[occ.Cells.Length], S.Lib, new QuantizeOptions { BrandId = S.Settings.DefaultBrand }, Path.GetFileNameWithoutExtension(path));
+                    return MeshImporter.Import(mesh, S.Lib, new MeshImportOptions
+                    {
+                        TargetHeight = h,
+                        BrandId = S.Settings.DefaultBrand,
+                        MaxColors = 24,
+                        Name = Path.GetFileNameWithoutExtension(path),
+                    }, m => prog.Report(m), ct);
                 }, ct);
+                var m = res.Model;
                 S.Replace(m, new ProjectMeta { Title = Path.GetFileNameWithoutExtension(path) }, new());
                 _welcomeDismissed = true;
-                Notify($"网格已体素化：{m.SX}×{m.SY}×{m.SZ}，{m.CountSolid():N0} 颗（网格不带颜色，请在编辑中上色）", InfoBarSeverity.Success);
+                var how = res.UsedTexture ? "模型自带纹理上色" : "单色（无纹理/参考图，请在编辑中上色）";
+                Notify($"网格已体素化：{m.SX}×{m.SY}×{m.SZ}，{m.CountSolid():N0} 颗；{how}{(res.RotatedZUp ? "；Z-up 已转正" : "")}", InfoBarSeverity.Success);
                 GoStep(2);
             });
         }

@@ -30,6 +30,19 @@ public sealed class RgbaImage
         return img;
     }
 
+    /// <summary>解码 GLB/OBJ 内嵌的 PNG/JPEG 纹理。</summary>
+    public static RgbaImage FromEncoded(byte[] bytes)
+    {
+        using var data = SKData.CreateCopy(bytes);
+        using var codec = SKCodec.Create(data) ?? throw new InvalidDataException("无法解码内嵌纹理");
+        var info = new SKImageInfo(codec.Info.Width, codec.Info.Height, SKColorType.Rgba8888, SKAlphaType.Unpremul);
+        using var bmp = new SKBitmap(info);
+        codec.GetPixels(info, bmp.GetPixels());
+        var img = new RgbaImage(codec.Info.Width, codec.Info.Height);
+        System.Runtime.InteropServices.Marshal.Copy(bmp.GetPixels(), img.Px, 0, img.Px.Length);
+        return img;
+    }
+
     private static SKBitmap ApplyOrigin(SKBitmap src, SKEncodedOrigin origin)
     {
         if (origin == SKEncodedOrigin.TopLeft) return src;

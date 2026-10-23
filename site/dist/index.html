@@ -614,7 +614,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
       <a href="https://github.com/shiinakuro/beadwatch" target="_blank" rel="noopener">GitHub</a>
     </nav>
     <div class="top-act">
-      <span class="ver">v1.0.3</span>
+      <span class="ver">v1.1.0</span>
       <a class="btn btn-primary btn-sm" href="#download">下载</a>
     </div>
   </div>
@@ -911,10 +911,19 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
         <p class="eyebrow">RELEASE</p>
         <h2>全新发布</h2>
       </div>
-      <p class="sec-note"><b>v1.0.3 本地 AI 修复入口</b>。Windows 10 / 11 自包含安装程序，不需要另行安装 .NET 或 Windows App SDK。</p>
+      <p class="sec-note"><b>v1.1.0 模型导入与在线 API</b>。Windows 10 / 11 自包含安装程序，不需要另行安装 .NET 或 Windows App SDK。</p>
     </div>
     <div class="log">
       <article class="entry now reveal">
+        <div class="vline"><span class="badge">RELEASE</span><h3>v1.1.0</h3><time>2026-10-24</time></div>
+        <ul>
+          <li><b>图片 + 模型统一导入：</b>第一步同时支持多视图图片和 OBJ/GLB/STL/VOX；导入前检查朝向，有参考图时按轮廓吻合度自动转正，按选定豆高体素化。</li>
+          <li><b>纹理上色：</b>GLB/OBJ 直接读取 UV 与内嵌纹理，保留眼睛、嘴、装饰等细节；STL 可用参考图投影上色。</li>
+          <li><b>硬件与 API：</b>检测 NVIDIA 显存并选择本地最大可运行模型（2mv 多视图）；设置页新增混元 3.1 在线 API Key，本地不可用时自动切换。</li>
+          <li><b>继续保留：</b>RTX 50 系 cu128 修复与「一键安装 / 修复」入口。</li>
+        </ul>
+      </article>
+      <article class="entry reveal">
         <div class="vline"><span class="badge">RELEASE</span><h3>v1.0.3</h3><time>2026-10-24</time></div>
         <ul>
           <li><b>修复入口：</b>「一键安装全部」改为「一键安装 / 修复」，本地依赖已就绪时也能点击。</li>
@@ -974,8 +983,8 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
       </div>
       <div class="dl-side">
         <div class="dl-box">
-          <div class="dl-name" id="dlName">拼豆先锋_v1.0.3_安装程序.exe</div>
-          <div class="dl-sub"><span>v1.0.3 · SELF-CONTAINED</span><span>102.7 MB</span></div>
+          <div class="dl-name" id="dlName">拼豆先锋_v1.1.0_安装程序.exe</div>
+          <div class="dl-sub"><span>v1.1.0 · SELF-CONTAINED</span><span>102.8 MB</span></div>
           <div class="dl-actions">
             <button class="btn btn-primary dl-btn" id="dlBtn" type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 21h14"/></svg>
@@ -992,7 +1001,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
           <a class="dl-alt" href="https://github.com/shiinakuro/beadwatch/releases/latest" target="_blank" rel="noopener">GitHub Releases 直链</a>
           <details class="sha">
             <summary>SHA-256 校验</summary>
-            <code id="shaText">0c8c53ec782d92d70422dba7235676d54f477d9a02b0bff5b8e850fe2463a058</code>
+            <code id="shaText">05648a1fb497b156cce7bd204e5f70ec15cff1a6710348d95599b69d44f3fcd3</code>
             <button class="copy" id="shaCopy" type="button">复制校验值</button>
           </details>
         </div>
@@ -1042,7 +1051,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
   const cancel = document.getElementById("dlCancel");
   const shaCopy = document.getElementById("shaCopy");
   const shaText = document.getElementById("shaText");
-  const meta = { name: "拼豆先锋_v1.0.3_安装程序.exe", size: 107728073 };
+  const meta = { name: "拼豆先锋_v1.1.0_安装程序.exe", size: 107780594 };
   let busy = false;
   let ac = null;
 

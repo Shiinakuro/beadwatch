@@ -10,6 +10,12 @@ public sealed class TriMesh
 {
     public List<Vector3> Vertices { get; } = new();
     public List<Vector3>? VertexColors { get; set; }   // 0..1
+    /// <summary>每个顶点对应的 UV（GLB/OBJ 纹理）。</summary>
+    public List<Vector2>? VertexUVs { get; set; }
+    /// <summary>网格自带的 baseColor 纹理；没有则为空。</summary>
+    public Doudou.Core.Imaging.RgbaImage? Texture { get; set; }
+    /// <summary>OBJ 的 V 轴通常以左下角为原点，采样时需要翻转；GLB 由混元导出时不需要。</summary>
+    public bool TextureFlipV { get; set; }
     public List<int> Indices { get; } = new();          // 每 3 个一组
 
     public int TriangleCount => Indices.Count / 3;
@@ -39,8 +45,11 @@ public static class MeshLoader
 
     public static TriMesh LoadObj(string path)
     {
-        var m = new TriMesh();
+        var verts = new List<Vector3>();
         var colors = new List<Vector3>();
+        var uvs = new List<Vector2>();
+        var faces = new List<(int V, int Vt)[]>();
+        string? mtl = null;
         var inv = CultureInfo.InvariantCulture;
         foreach (var raw in File.ReadLines(path))
         {
@@ -48,28 +57,95 @@ public static class MeshLoader
             if (line.StartsWith("v ", StringComparison.Ordinal))
             {
                 var t = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                m.Vertices.Add(new Vector3(float.Parse(t[1], inv), float.Parse(t[2], inv), float.Parse(t[3], inv)));
-                if (t.Length >= 7)
-                    colors.Add(new Vector3(float.Parse(t[4], inv), float.Parse(t[5], inv), float.Parse(t[6], inv)));
+                verts.Add(new Vector3(float.Parse(t[1], inv), float.Parse(t[2], inv), float.Parse(t[3], inv)));
+                if (t.Length >= 7) colors.Add(new Vector3(float.Parse(t[4], inv), float.Parse(t[5], inv), float.Parse(t[6], inv)));
+            }
+            else if (line.StartsWith("vt ", StringComparison.Ordinal))
+            {
+                var t = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                float u = t.Length > 1 ? float.Parse(t[1], inv) : 0;
+                float v = t.Length > 2 ? float.Parse(t[2], inv) : 0;
+                uvs.Add(new Vector2(u, v));
             }
             else if (line.StartsWith("f ", StringComparison.Ordinal))
             {
                 var t = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-                var idx = new int[t.Length - 1];
+                var arr = new (int V, int Vt)[t.Length - 1];
                 for (int k = 1; k < t.Length; k++)
                 {
-                    var s = t[k];
-                    int slash = s.IndexOf('/');
-                    int v = int.Parse(slash >= 0 ? s[..slash] : s, inv);
-                    idx[k - 1] = v > 0 ? v - 1 : m.Vertices.Count + v;
+                    var parts = t[k].Split('/');
+                    int v = int.Parse(parts[0], inv);
+                    v = v > 0 ? v - 1 : verts.Count + v;
+                    int vt = -1;
+                    if (parts.Length > 1 && parts[1].Length > 0)
+                    {
+                        vt = int.Parse(parts[1], inv);
+                        vt = vt > 0 ? vt - 1 : uvs.Count + vt;
+                    }
+                    arr[k - 1] = (v, vt);
                 }
-                for (int k = 1; k + 1 < idx.Length; k++)
+                if (arr.Length >= 3) faces.Add(arr);
+            }
+            else if (line.StartsWith("mtllib ", StringComparison.Ordinal))
+                mtl = line["mtllib ".Length..].Trim();
+        }
+
+        var m = new TriMesh();
+        bool hasUv = uvs.Count > 0 && faces.Any(f => f.Any(c => c.Vt >= 0));
+        if (!hasUv)
+        {
+            m.Vertices.AddRange(verts);
+            if (colors.Count == verts.Count && colors.Count > 0) m.VertexColors = colors;
+            foreach (var f in faces)
+                for (int k = 1; k + 1 < f.Length; k++)
                 {
-                    m.Indices.Add(idx[0]); m.Indices.Add(idx[k]); m.Indices.Add(idx[k + 1]);
+                    m.Indices.Add(f[0].V); m.Indices.Add(f[k].V); m.Indices.Add(f[k + 1].V);
                 }
+            return m;
+        }
+
+        var map = new Dictionary<(int V, int Vt), int>();
+        m.VertexUVs = new List<Vector2>();
+        foreach (var f in faces)
+        {
+            var idx = new int[f.Length];
+            for (int k = 0; k < f.Length; k++)
+            {
+                var key = f[k];
+                if (!map.TryGetValue(key, out int ni))
+                {
+                    ni = m.Vertices.Count;
+                    map[key] = ni;
+                    m.Vertices.Add(verts[Math.Clamp(key.V, 0, verts.Count - 1)]);
+                    m.VertexUVs.Add(key.Vt >= 0 && key.Vt < uvs.Count ? uvs[key.Vt] : Vector2.Zero);
+                }
+                idx[k] = ni;
+            }
+            for (int k = 1; k + 1 < idx.Length; k++)
+            {
+                m.Indices.Add(idx[0]); m.Indices.Add(idx[k]); m.Indices.Add(idx[k + 1]);
             }
         }
-        if (colors.Count == m.Vertices.Count && colors.Count > 0) m.VertexColors = colors;
+        m.TextureFlipV = true;
+        if (!string.IsNullOrWhiteSpace(mtl))
+        {
+            try
+            {
+                var mtlPath = Path.Combine(Path.GetDirectoryName(path) ?? "", mtl);
+                if (File.Exists(mtlPath))
+                {
+                    foreach (var raw in File.ReadLines(mtlPath))
+                    {
+                        var l = raw.Trim();
+                        if (!l.StartsWith("map_Kd", StringComparison.OrdinalIgnoreCase)) continue;
+                        var texName = l["map_Kd".Length..].Trim().Trim('"');
+                        var texPath = Path.Combine(Path.GetDirectoryName(mtlPath) ?? "", texName);
+                        if (File.Exists(texPath)) { m.Texture = Doudou.Core.Imaging.RgbaImage.Load(texPath); break; }
+                    }
+                }
+            }
+            catch (Exception) { m.Texture = null; }
+        }
         return m;
     }
 
@@ -149,6 +225,30 @@ public static class MeshLoader
                 meshXf[mi.GetInt32()] = xf;
             }
 
+        // 读取第一张 baseColor 纹理（GLB 内嵌 PNG/JPEG）
+        Doudou.Core.Imaging.RgbaImage? texture = null;
+        try
+        {
+            if (json.TryGetProperty("materials", out var mats))
+                foreach (var mat in mats.EnumerateArray())
+                {
+                    if (!mat.TryGetProperty("pbrMetallicRoughness", out var pbr)) continue;
+                    if (!pbr.TryGetProperty("baseColorTexture", out var bct)) continue;
+                    int ti = bct.GetProperty("index").GetInt32();
+                    var texNode = json.GetProperty("textures")[ti];
+                    int si = texNode.GetProperty("source").GetInt32();
+                    var imgNode = json.GetProperty("images")[si];
+                    if (!imgNode.TryGetProperty("bufferView", out var bvi)) continue;
+                    var bv = views[bvi.GetInt32()];
+                    int off = binStart + (bv.TryGetProperty("byteOffset", out var bo) ? bo.GetInt32() : 0);
+                    int len = bv.GetProperty("byteLength").GetInt32();
+                    texture = Doudou.Core.Imaging.RgbaImage.FromEncoded(bytes.AsSpan(off, len).ToArray());
+                    break;
+                }
+        }
+        catch (Exception) { texture = null; }
+
+        bool uvOk = true;
         var meshes = json.GetProperty("meshes");
         for (int mi = 0; mi < meshes.GetArrayLength(); mi++)
         {
@@ -157,6 +257,17 @@ public static class MeshLoader
             {
                 var attrs = prim.GetProperty("attributes");
                 var pa = Acc(attrs.GetProperty("POSITION").GetInt32());
+                List<Vector2>? primUv = null;
+                if (attrs.TryGetProperty("TEXCOORD_0", out var uvNode) && Acc(uvNode.GetInt32()) is var ua && ua.CompType == 5126)
+                {
+                    int uvStride = ua.Stride == 0 ? 8 : ua.Stride;
+                    primUv = new List<Vector2>(ua.Count);
+                    for (int i = 0; i < ua.Count; i++)
+                    {
+                        int o = ua.Offset + i * uvStride;
+                        primUv.Add(new Vector2(BitConverter.ToSingle(bytes, o), BitConverter.ToSingle(bytes, o + 4)));
+                    }
+                }
                 int baseV = m.Vertices.Count;
                 int stride = pa.Stride == 0 ? 12 : pa.Stride;
                 for (int i = 0; i < pa.Count; i++)
@@ -178,8 +289,17 @@ public static class MeshLoader
                 }
                 else
                     for (int i = 0; i < pa.Count; i++) m.Indices.Add(baseV + i);
+                if (primUv != null && primUv.Count == pa.Count && uvOk)
+                {
+                    m.VertexUVs ??= new List<Vector2>();
+                    m.VertexUVs.AddRange(primUv);
+                }
+                else uvOk = false;
             }
         }
+        if (!uvOk) m.VertexUVs = null;
+        m.Texture = texture;
+        m.TextureFlipV = false;
         return m;
     }
 }

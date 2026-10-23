@@ -15,6 +15,10 @@ public sealed class SettingsPage : IStepPage
     private readonly IHost _h;
     private readonly TextBox _api = new(), _author = new(), _wm = new();
     private readonly PasswordBox _key = new();
+    private readonly TextBox _hyBase = new();
+    private readonly PasswordBox _hyKey = new();
+    private readonly TextBlock _hyStatus = Caption("");
+    private readonly TextBlock _gpuNote = Caption("");
     // AutoSuggestBox：输入即生效（可编辑 ComboBox 只有按回车/失焦才提交，点保存时会丢掉刚输入的值）
     private readonly AutoSuggestBox _model = new() { HorizontalAlignment = HorizontalAlignment.Stretch, PlaceholderText = "自动获取或手填" };
     private List<string> _knownModels = new();
@@ -58,6 +62,7 @@ public sealed class SettingsPage : IStepPage
         _model.LostFocus += (_, _) => SaveModelOnly();
 
         _api.PlaceholderText = "https://服务商地址（不用带 /v1）";
+        _hyBase.PlaceholderText = Hunyuan3dApi.DefaultBase;
         _api.LostFocus += async (_, _) => await AutoFetchModelsAsync();
         _key.LostFocus += async (_, _) => await AutoFetchModelsAsync();
 
@@ -100,9 +105,16 @@ public sealed class SettingsPage : IStepPage
             Caption("可用模型：gpt-image、Gemini Nano Banana、Seedream、Qwen-Image 等；只要服务商支持 OpenAI 兼容的 /v1/images/edits 就能用。"),
             Caption("Key 只保存在本机。启用 API 后照片会发送到你填写的服务商；不想上传照片就别配置，纯本地也能完成重建与取色。"),
             Flow(providerHint, affiliate, providerTail)));
+        root.Children.Add(Card("混元 3D 在线 API",
+            "可选。用腾讯混元 3.1 在线生成网格，适合显存不足或想要更高形体质量；会消耗腾讯云积分，照片会上传到腾讯云。",
+            Row("接口地址", _hyBase), Row("API Key", _hyKey), _hyStatus,
+            Flow(Btn("测试 Key", async () => await TestHunyuan3dApiAsync(), G.Refresh),
+                 Caption("单图约 20 积分/次；Key 只保存在本机。建议用正面图。")),
+            Caption("默认 endpoint：https://api.ai3d.cloud.tencent.com/v1/ai3d/submit；模型 3.1。")));
         root.Children.Add(Card("默认", null, Row("色卡", _brand), Row("作者/拆图", _author), Row("图纸水印", _wm), Row("豆径 mm", _pitch)));
         root.Children.Add(Card("本地 AI 模型",
             "全套依赖把重建和抠图留在本机：照片不上传、不消耗生图额度，断网也能继续。",
+            _gpuNote,
             Row("运行时", _stPython), Row("混元3D", _stHy), Row("抠图", _stCut),
             Caption("· 混元3D：从照片直接估出立体形体，凹槽、厚度与背面比纯轮廓更准。"),
             Caption("· ISNet：发丝、透明边缘和杂乱背景抠得更干净，省去手动框选。"),
@@ -121,6 +133,11 @@ public sealed class SettingsPage : IStepPage
     {
         var s = _h.S.Settings;
         _api.Text = ImageAi.NormalizeBase(s.ImageApiBase); _key.Password = s.ImageApiKey; _model.Text = s.ImageModel;
+        _hyBase.Text = string.IsNullOrWhiteSpace(s.Hunyuan3dApiBase) ? Hunyuan3dApi.DefaultBase : s.Hunyuan3dApiBase;
+        _hyKey.Password = s.Hunyuan3dApiKey;
+        _hyStatus.Text = s.Hunyuan3dApiKey.Trim().Length > 0 ? "已配置在线 API。显存不足或本地模型未安装时会自动使用它。" : "未配置：在线 3.1 需要填写 API Key。";
+        _hyStatus.Foreground = Theme.B(Theme.Text2);
+        _gpuNote.Text = GpuProbe.LocalChoiceText;
         _brand.SelectedIndex = Math.Max(0, _brandIds.IndexOf(s.DefaultBrand));
         _author.Text = s.Author; _wm.Text = s.Watermark; _pitch.Value = s.BeadPitchMm;
         if (ImageAi.NormalizeBase(s.ImageApiBase).Length > 0 && s.ImageApiKey.Length > 0 && _knownModels.Count == 0)
@@ -243,12 +260,24 @@ public sealed class SettingsPage : IStepPage
         _api.Text = s.ImageApiBase;
         s.ImageApiKey = _key.Password.Trim();
         s.ImageModel = _model.Text.Trim();
+        s.Hunyuan3dApiBase = string.IsNullOrWhiteSpace(_hyBase.Text) ? Hunyuan3dApi.DefaultBase : _hyBase.Text.Trim();
+        _hyBase.Text = s.Hunyuan3dApiBase;
+        s.Hunyuan3dApiKey = _hyKey.Password.Trim();
         if (_brand.SelectedIndex >= 0) s.DefaultBrand = _brandIds[_brand.SelectedIndex];
         s.Author = _author.Text.Trim();
         s.Watermark = _wm.Text.Trim();
         if (!double.IsNaN(_pitch.Value)) s.BeadPitchMm = _pitch.Value;
         s.Save();
         _h.Notify("设置已保存", InfoBarSeverity.Success);
+    }
+
+    private async Task TestHunyuan3dApiAsync()
+    {
+        _hyStatus.Text = "正在测试 Key…";
+        _hyStatus.Foreground = Theme.B(Theme.Text2);
+        var (ok, msg) = await Hunyuan3dApi.TestAsync(_hyBase.Text, _hyKey.Password);
+        _hyStatus.Text = msg;
+        _hyStatus.Foreground = Theme.B(ok ? Theme.Green : Theme.Red);
     }
 
     private void SetApiStatus(string text, bool? ok = null)
