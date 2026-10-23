@@ -7,6 +7,10 @@ try { [Console]::OutputEncoding = [System.Text.Encoding]::UTF8 } catch { }
 $stamp = Get-Date -Format "yyyyMMdd_HHmmss"
 $work = Join-Path $env:TEMP ("beadwatch_diag_" + $stamp)
 New-Item -ItemType Directory -Force -Path $work | Out-Null
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$transcript = Join-Path $env:TEMP ("beadwatch_diag_run_" + $stamp + ".txt")
+Write-Host "正在收集诊断信息，请稍候…"
+try { Start-Transcript -Path $transcript -Force | Out-Null } catch { }
 
 function Save-Text([string]$Name, [string]$Text) {
     $path = Join-Path $work $Name
@@ -211,16 +215,55 @@ RTX 50 系计算能力为 12.0 (sm_120)。如果 arch_list 不含 sm_120，或�
 "@
 Save-Text "summary.txt" $summary
 
+if (Test-Path $transcript) {
+    Copy-Item $transcript (Join-Path $work "run-log.txt") -Force -ErrorAction SilentlyContinue
+}
+
 $desktop = [Environment]::GetFolderPath("Desktop")
-if (-not $desktop) { $desktop = (Get-Location).Path }
-$zip = Join-Path $desktop ("拼豆先锋_诊断日志_" + $stamp + ".zip")
-Compress-Archive -Path (Join-Path $work "*") -DestinationPath $zip -Force
-Remove-Item $work -Recurse -Force
+$oneDriveDesktop = ""
+if ($env:OneDrive) { $oneDriveDesktop = Join-Path $env:OneDrive "Desktop" }
+$userDesktop = Join-Path $env:USERPROFILE "Desktop"
+$scriptDir = $PSScriptRoot
+if (-not $scriptDir) { $scriptDir = (Get-Location).Path }
+
+$zipPath = ""
+$candidates = @($desktop, $oneDriveDesktop, $userDesktop, $scriptDir, $env:TEMP) |
+    Where-Object { $_ -and (Test-Path $_) } |
+    Select-Object -Unique
+
+foreach ($dir in $candidates) {
+    try {
+        $zip = Join-Path $dir ("拼豆先锋_诊断日志_" + $stamp + ".zip")
+        if (Test-Path $zip) { Remove-Item $zip -Force }
+        [System.IO.Compression.ZipFile]::CreateFromDirectory($work, $zip, [System.IO.Compression.CompressionLevel]::Optimal, $false)
+        if ((Test-Path $zip) -and ((Get-Item $zip).Length -gt 0)) {
+            $zipPath = $zip
+            break
+        }
+    } catch {
+        Write-Host ("保存到 " + $dir + " 失败：" + $_.Exception.Message) -ForegroundColor DarkYellow
+    }
+}
+
+try { Stop-Transcript | Out-Null } catch { }
 
 Write-Host ""
-Write-Host "诊断日志已生成：" -ForegroundColor Green
-Write-Host $zip -ForegroundColor Yellow
-Write-Host ""
-Write-Host "日志只包含显卡/驱动、Python/PyTorch 版本、CUDA 自检、应用版本与 *.log。"
-Write-Host "不会收集 API Key、settings.json、工程文件、缓存图片或模型文件。"
-Write-Host "请把这个 zip 发给开发者。"
+if ($zipPath) {
+    Write-Host "诊断日志已生成：" -ForegroundColor Green
+    Write-Host $zipPath -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "日志只包含显卡/驱动、Python/PyTorch 版本、CUDA 自检、应用版本与 *.log。"
+    Write-Host "不会收集 API Key、settings.json、工程文件、缓存图片或模型文件。"
+    Write-Host "请把这个 zip 发给开发者。"
+    try { Start-Process explorer.exe -ArgumentList ('/select,"' + $zipPath + '"') } catch { }
+    Remove-Item $work -Recurse -Force -ErrorAction SilentlyContinue
+} else {
+    Write-Host "未能生成 zip。诊断文件保留在：" -ForegroundColor Yellow
+    Write-Host $work -ForegroundColor Yellow
+    if (Test-Path $transcript) {
+        Write-Host "运行日志：" -ForegroundColor Yellow
+        Write-Host $transcript -ForegroundColor Yellow
+    }
+    Write-Host "请把上面这个文件夹（或运行日志）压缩后发给开发者。"
+    exit 1
+}
