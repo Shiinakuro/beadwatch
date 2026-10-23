@@ -204,6 +204,10 @@ $gpu
 
 === PyTorch / CUDA 自检 ===
 $torchOut
+
+=== 判断提示 ===
+RTX 50 系计算能力为 12.0 (sm_120)。如果 arch_list 不含 sm_120，或出现 SMOKE_FAILED / no kernel image，
+说明当前 PyTorch 的 CUDA 构建不包含 Blackwell 内核，需要 cu128 或更高版本的构建。
 "@
 Save-Text "summary.txt" $summary
 
