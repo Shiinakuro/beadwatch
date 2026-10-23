@@ -252,6 +252,12 @@ public sealed class ReconstructPipeline
             Say($"按 {opt.KeyColors.Count} 种主色取色");
         }
         var model = Quantizer.Build(occ, proj.Colors, _lib, opt.Quantize, opt.Name);
+        int cleaned = SurfaceColorCleaner.Clean(model);
+        if (cleaned > 0)
+        {
+            model.CompactPalette();
+            Say($"表面颜色清理 {cleaned} 颗");
+        }
         Say($"量化到 {_lib.Get(opt.Quantize.BrandId).Title}：{model.Palette.Count - 1} 色");
 
         var fit = views.ToDictionary(v => v.Kind, v => SilhouetteFit.IoU(occ, v));

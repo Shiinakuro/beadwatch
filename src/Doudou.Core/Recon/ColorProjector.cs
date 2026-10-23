@@ -28,6 +28,9 @@ public static class ColorProjector
         var res = new Result();
 
         var normals = EstimateNormals(occ);
+        // 每个视图单独保存取色结果：正面朝向的表面优先用正视图，背面用背视图，
+        // 只有朝向不明确时才对多视图加权平均。这样侧面不会把脸/蝴蝶结的颜色盖到正面头发/衣服上。
+        var samples = new List<(ViewKind Kind, double[] L, double[] A, double[] B, double[] W, double[] Cos)>();
         foreach (var v in views)
         {
             if (v.ShapeOnly) continue;
@@ -35,6 +38,7 @@ public static class ColorProjector
             var src = v.ColorSource ?? v;
             var map = ViewMapping.For(occ, src);
             var (axis, sign) = ViewGeometry.AxisSign(v.Kind);
+            var sv = (Kind: v.Kind, L: new double[n], A: new double[n], B: new double[n], W: new double[n], Cos: new double[n]);
             int seen = 0;
             // 沿视线方向逐列找第一颗豆
             int na = axis == 0 ? occ.SY : occ.SX, nb = axis == 2 ? occ.SY : occ.SZ, nc = axis == 0 ? occ.SX : axis == 1 ? occ.SY : occ.SZ;
@@ -61,14 +65,51 @@ public static class ColorProjector
                             // 否则前层头发/脸的颜色会漏到后面被遮挡的表面上。
                             double cos = Vector3.Dot(normals[i], vdir);
                             if (cos < 0.12) break;
-                            double w = cos * cos * cos * (v.Kind == ViewKind.Front ? 1.3 : 1.0);
-                            sumL[i] += lab.Value.L * w; sumA[i] += lab.Value.A * w; sumB[i] += lab.Value.B * w; wsum[i] += w;
+                            sv.L[i] = lab.Value.L; sv.A[i] = lab.Value.A; sv.B[i] = lab.Value.B;
+                            sv.W[i] = cos * cos * cos;
+                            sv.Cos[i] = cos;
                             seen++;
                         }
                         break;
                     }
                 }
+            samples.Add(sv);
             res.Coverage[v.Kind] = seen;
+        }
+
+        for (int i = 0; i < n; i++)
+        {
+            int best = -1;
+            double bestScore = -1;
+            for (int s = 0; s < samples.Count; s++)
+            {
+                var sv = samples[s];
+                if (sv.W[i] <= 0 || sv.Cos[i] < 0.5) continue;
+                int rank = sv.Kind switch
+                {
+                    ViewKind.Front => 4,
+                    ViewKind.Back => 3,
+                    ViewKind.Left or ViewKind.Right => 2,
+                    _ => 1,
+                };
+                double score = 100 + rank + sv.Cos[i];
+                if (score > bestScore) { bestScore = score; best = s; }
+            }
+            if (best >= 0)
+            {
+                var sv = samples[best];
+                sumL[i] = sv.L[i]; sumA[i] = sv.A[i]; sumB[i] = sv.B[i]; wsum[i] = 1;
+                continue;
+            }
+            for (int s = 0; s < samples.Count; s++)
+            {
+                var sv = samples[s];
+                if (sv.W[i] <= 0) continue;
+                sumL[i] += sv.L[i] * sv.W[i];
+                sumA[i] += sv.A[i] * sv.W[i];
+                sumB[i] += sv.B[i] * sv.W[i];
+                wsum[i] += sv.W[i];
+            }
         }
 
         // 保边平滑：表面上相邻且色差小的取色互相平均，去掉渲染高光/渐变造成的颗粒感，色块边界保留
@@ -267,23 +308,9 @@ public static class ColorProjector
                 px.Add(ColorMath.ToLab(img.Px[o], img.Px[o + 1], img.Px[o + 2]));
             }
         if (px.Count == 0 && darkPx.Count > 0) px = darkPx;
-        int cnt = px.Count;
-        if (cnt == 0)
-        {
-            // 轮廓边缘对不上时，退而取最近的前景像素
-            int ix = (int)Math.Round(cx), iy = (int)Math.Round(cy);
-            for (int rad = 1; rad <= Math.Max(2, (int)(map.PixelsPerVoxel * 1.5)); rad++)
-                for (int dy = -rad; dy <= rad; dy++)
-                    for (int dx = -rad; dx <= rad; dx++)
-                    {
-                        if (Math.Abs(dx) != rad && Math.Abs(dy) != rad) continue;
-                        int qx = ix + dx, qy = iy + dy;
-                        if (!v.Sil.At(qx, qy)) continue;
-                        var c = img.GetRgb(qx, qy);
-                        return ColorMath.ToLab(c);
-                    }
-            return null;
-        }
+        // 投影点落在轮廓外时不要向四周找最近的前景：那会把脸/蝴蝶结的颜色贴到相邻的头发/衣服上。
+        // 留给表面继承去填，继承只从相邻的直接取色豆扩散。
+        if (px.Count == 0) return null;
         return Majority(px);
     }
 
