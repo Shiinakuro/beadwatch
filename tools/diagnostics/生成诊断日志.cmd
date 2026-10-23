@@ -7,6 +7,6 @@ if not exist "%PS1%" (
   pause
   exit /b 1
 )
-powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%PS1%"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%PS1%" %*
 if errorlevel 1 pause
 endlocal
