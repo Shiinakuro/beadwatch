@@ -80,7 +80,7 @@ public sealed class SettingsPage : IStepPage
         ToolTipService.SetToolTip(affiliate, "推广链接：通过它注册不会增加你的费用，可以支持本项目继续更新。");
         var providerTail = new TextBlock { Text = "：OpenAI 兼容聚合，按量计费。", FontSize = Theme.F2, Foreground = Theme.B(Theme.Text3), VerticalAlignment = VerticalAlignment.Center };
 
-        _depAll = Btn("一键安装全部", () => _ = StartInstallAsync(false), G.Download, accent: true,
+        _depAll = Btn("一键安装 / 修复", () => _ = StartInstallAsync(false), G.Download, accent: true,
             tip: "下载 Python、PyTorch CUDA、混元3D 权重与抠图模型，约 10 GB");
         _depCut = Btn("仅装抠图", () => _ = StartInstallAsync(true), G.Pick,
             tip: "只安装 ISNet 抠图（约 300 MB），不装显卡运行时");
@@ -143,11 +143,11 @@ public sealed class SettingsPage : IStepPage
         Mark(_stCut, cut, "已就绪", "未安装");
         var free = FreeBytes();
         var gpu = HasNvidia() ? "检测到 NVIDIA 驱动" : "未检测到 NVIDIA 显卡（混元3D 需要 NVIDIA 显卡，可只安装抠图）";
-        _depNote.Text = $"完整依赖约 10 GB，抠图约 300 MB，安装需预留约 15 GB。当前可用 {(free > 0 ? DependencyInstaller.FormatSize(free) : "未知")}；{gpu}。";
-        _depAll.IsEnabled = !_depBusy && !(py && cut && hy);
+        _depNote.Text = $"完整依赖约 10 GB，抠图约 300 MB，安装需预留约 15 GB。当前可用 {(free > 0 ? DependencyInstaller.FormatSize(free) : "未知")}；{gpu}。RTX 50 系会自动使用 CUDA 12.8 版 PyTorch。";
+        _depAll.IsEnabled = !_depBusy;
         _depCut.IsEnabled = !_depBusy && !(py && cut);
         if (!_depBusy && hy && cut)
-            _depDetail.Text = "本地混元3D 与抠图均已就绪，可直接在图片导入页选择「自动」或「混元3D」。";
+            _depDetail.Text = "本地混元3D 与抠图均已就绪。如果混元3D 无法调用显卡（例如 RTX 50 系），点击「一键安装 / 修复」会检查并升级 PyTorch，不会重下模型。";
         else if (!_depBusy && cut)
             _depDetail.Text = "ISNet 抠图已就绪；补装全部依赖后可用混元3D 本地生成形体。";
         else if (!_depBusy && py)
@@ -164,11 +164,13 @@ public sealed class SettingsPage : IStepPage
                 "仍要安装全部", "取消");
             if (!go) return;
         }
-        var size = cutoutOnly ? "约 300 MB" : "约 10 GB";
+        var size = cutoutOnly
+            ? "预计下载约 300 MB"
+            : "完整约 10 GB；已安装的 Python 与模型会跳过，RTX 50 系升级 PyTorch 时约 3.3 GB";
         var free = FreeBytes();
-        var confirm = await _h.ConfirmAsync("安装本地 AI 依赖",
-            $"将下载 {size} 到程序目录，并安装到 {AppPaths.Root}。\n\n安装过程中请保持联网；已下载的部分会自动保留，取消或断网后可继续。\n当前可用空间：{(free > 0 ? DependencyInstaller.FormatSize(free) : "未知")}。",
-            "开始安装", "取消");
+        var confirm = await _h.ConfirmAsync("安装 / 修复本地 AI 依赖",
+            $"将安装或修复本地 AI 依赖到 {AppPaths.Root}。\n\n{size}。\n\n安装过程中请保持联网；已下载的部分会自动保留，取消或断网后可继续。\n当前可用空间：{(free > 0 ? DependencyInstaller.FormatSize(free) : "未知")}。",
+            "开始", "取消");
         if (!confirm) return;
 
         _depBusy = true;
