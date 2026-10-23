@@ -35,6 +35,20 @@ public sealed class ImportPage : IStepPage
         public WriteableBitmap? Thumb;
     }
 
+    /// <summary>当前模型是怎么来的：改高度后据此重新体素化，不必让用户再选一遍文件。</summary>
+    private sealed class ReconSource
+    {
+        public string MeshPath = "";
+        public string Name = "";
+        public int Height;
+        public string BrandId = "";
+        public int MaxColors;
+        /// <summary>体素化时用到的预处理视图（路径 + 是否 AI 图）。</summary>
+        public Dictionary<ViewKind, (string Path, bool IsAi)> Views = new();
+
+        public bool Fast => MeshPath.Length > 0 && File.Exists(MeshPath);
+    }
+
     private static readonly string[] Roles = { "正面", "背面", "左侧（面朝左）", "右侧（面朝右）", "顶部", "底部", "参考照片" };
 
     private readonly IHost _h;
@@ -48,10 +62,14 @@ public sealed class ImportPage : IStepPage
     private readonly TextBlock _sizeHint = Caption("");
     private readonly TextBlock _gpuNote = Caption("");
     private readonly TextBlock _hyState = Caption("");
+    private readonly TextBlock _sourceNote = Caption("导入模型或生成模型后，改高度可随时重新体素化。");
     private readonly ItemsWrap _keySwatches = new() { HSpacing = 4, VSpacing = 4 };
     private readonly List<Rgb> _keyColors = new();
     private CheckBox _onlyKeysCheck = null!;
-    private int _height = 100, _method, _brand, _maxColors = 16;
+    private Slider? _heightSlider;
+    private Button? _revoxelBtn;
+    private ReconSource? _source;
+    private int _height = 100, _method, _brand, _maxColors = 32;
     private bool _cartoon = true, _complete = true, _flat, _sym, _flatten = true, _onlyKeys, _force, _askBox = true;
     private readonly List<string> _brandIds;
 
@@ -82,18 +100,23 @@ public sealed class ImportPage : IStepPage
 
         root.Children.Add(Card("三维模型", "已有 OBJ / GLB / STL / VOX 可以直接导入，不用照片。GLB/OBJ 带纹理会自动按纹理上色；STL 不带颜色，用上面添加的图片做参考上色；VOX 按 MagicaVoxel 标准转正。",
             Flow(Btn("导入 OBJ / GLB / STL / VOX", async () => await ImportMeshAsync(), G.Download, accent: true,
-                tip: "按当前「成品高度」体素化；GLB/OBJ 自带纹理会保留五官细节")),
-            Caption("导入前会检查朝向：有参考图时用轮廓吻合度选最正方向，没有参考图时按最长轴自动转正。没有纹理也没有参考图时生成单色模型。")));
+                tip: "先选成品高度，再选模型文件；GLB/OBJ 自带纹理会保留五官细节")),
+            Caption("导入前会先让你选择豆高；之后拖动「成品高度」即可随时重新体素化，不必再选文件。导入前还会检查朝向：有参考图时用轮廓吻合度选最正方向，没有参考图时按最长轴自动转正。")));
 
         root.Children.Add(Card("作品", null, Row("名称", _name), _hint));
 
-        var height = SliderRow("成品高度", 16, 128, _height, v => { _height = (int)v; UpdateSize(); }, 1, "0", " 颗");
+        var height = SliderRow("成品高度", 16, 128, _height, v => { _height = (int)v; UpdateSize(); UpdateSourceState(); }, 1, "0", " 颗");
+        _heightSlider = height.Slider;
+        _revoxelBtn = Btn("按当前设置重新体素化", async () => await RevoxelizeAsync(), G.Magic,
+            tip: "改高度、色卡或颜色数后，用同一个模型重新体素化，不用再选文件");
+        _revoxelBtn.IsEnabled = false;
         root.Children.Add(Card("重建设置", null,
             _gpuNote, _hyState,
             height.Row, _sizeHint,
+            Flow(_revoxelBtn), _sourceNote,
             Row("建模方式", Combo(new[] { "自动（本地混元3D / 在线 API / 轮廓）", "本地混元3D（需要 NVIDIA 显卡）", "在线混元3D 3.1（需要 API Key）", "轮廓雕刻（纯 CPU）" }, 0, i => _method = i)),
-            Row("色卡", Combo(_brandIds.Select(id => h.S.Lib.Brands[id].Title), _brand, i => _brand = i)),
-            SliderRow("最多颜色", 4, 40, _maxColors, v => _maxColors = (int)v, 1, "0", " 色").Row));
+            Row("色卡", Combo(_brandIds.Select(id => h.S.Lib.Brands[id].Title), _brand, i => { _brand = i; UpdateSourceState(); })),
+            SliderRow("最多颜色", 4, 48, _maxColors, v => { _maxColors = (int)v; UpdateSourceState(); }, 1, "0", " 色").Row));
 
         root.Children.Add(Card("取色", "实拍照片的明暗、反光会让颜色很脏。去光影会把同一种材质归并成一块纯色；再指定主色，模型就只会用这些颜色。",
             Check("去光影（实拍照片推荐）", _flatten, v => _flatten = v),
@@ -161,16 +184,96 @@ public sealed class ImportPage : IStepPage
     private void RestoreFromProject()
     {
         if (_running) return;   // 本页自己生成的模型，不要用结果覆盖用户的图片列表
-        var files = _h.S.ViewFiles;
-        if (files.Count == 0) return;
+        var s = _h.S;
+        var files = s.ViewFiles;
         _items.Clear();
         _aiThumbs.Children.Clear();   // 否则每打开一个工程就把上一次的缩略图叠在后面
+        _keyColors.Clear();
+        _log.Text = "";
+        RefreshKeys();
         foreach (var (kind, path) in files.OrderBy(kv => kv.Key))
             if (File.Exists(path)) _items.Add(new Item { Path = path, Role = (int)kind, IsAi = true, Restored = true });
-        _name.Text = _h.S.Meta.Title;
+
+        // 新建空白 / 打开不含视图的工程：清空上一个工程残留的参考图和主色。
+        var fallback = !string.IsNullOrWhiteSpace(s.Model.Name) && s.Model.Name != "未命名" ? s.Model.Name : "我的作品";
+        _name.Text = string.IsNullOrWhiteSpace(s.Meta.Title) || s.Meta.Title == "未命名作品" ? fallback : s.Meta.Title;
+        _source = null;
+        if (!string.IsNullOrEmpty(s.Meta.SourceMesh) && File.Exists(s.Meta.SourceMesh))
+        {
+            _source = new ReconSource
+            {
+                MeshPath = s.Meta.SourceMesh,
+                Name = s.Meta.Title,
+                Height = s.Meta.SourceHeight > 0 ? s.Meta.SourceHeight : _height,
+                BrandId = s.Meta.SourceBrand,
+                MaxColors = s.Meta.SourceMaxColors > 0 ? s.Meta.SourceMaxColors : _maxColors,
+                Views = files.Where(kv => File.Exists(kv.Value)).ToDictionary(kv => kv.Key, kv => (kv.Value, true)),
+            };
+        }
+        UpdateSourceState();
         Refresh();
+        if (files.Count == 0) return;   // 新工程没有参考图，保持干净
         Log($"已从工程恢复 {_items.Count} 张视图图片：重新生成模型时直接使用，不会再调用 AI。");
         foreach (var it in _items) AddThumb(Roles[it.Role], it.Path, true, project: true);
+    }
+
+    /// <summary>改高度/色卡/颜色数后，提示当前模型是否需要用新设置重新体素化。</summary>
+    private void UpdateSourceState()
+    {
+        if (_revoxelBtn == null) return;
+        var src = _source;
+        if (src == null)
+        {
+            _revoxelBtn.IsEnabled = false;
+            _sourceNote.Text = "导入模型或生成模型后，改高度可随时重新体素化。";
+            return;
+        }
+        bool changed = _height != src.Height || _brandIds[_brand] != src.BrandId || _maxColors != src.MaxColors;
+        _revoxelBtn.IsEnabled = changed && !_running;
+        if (!changed)
+        {
+            _sourceNote.Text = $"当前模型按 {src.Height} 颗、{src.MaxColors} 色生成。拖动高度或修改色卡/颜色数后，点上面的按钮即可重新体素化。";
+            return;
+        }
+        _sourceNote.Text = src.Fast
+            ? $"当前模型按 {src.Height} 颗生成；现在将按 {_height} 颗、{_brandIds[_brand]}、{_maxColors} 色重新体素化（几秒）。"
+            : $"当前模型按 {src.Height} 颗生成；图片重建会按 {_height} 颗重新跑一遍（已生成的 AI 视图走缓存）。";
+    }
+
+    private async Task RevoxelizeAsync()
+    {
+        if (_running || _source == null) return;
+        if (_source.Fast)
+            await ImportMeshFileAsync(_source.MeshPath, _source.Name, _source);
+        else
+            await Run();
+    }
+
+    private async Task<int?> AskHeightAsync(string title, string hint)
+    {
+        int value = Math.Clamp(_height, 16, 128);
+        var readout = Strong($"{value} 颗 · 约 {value * _h.S.Settings.BeadPitchMm / 10:F1} cm 高");
+        var slider = new Slider { Minimum = 16, Maximum = 128, StepFrequency = 1, Value = value };
+        slider.ValueChanged += (_, e) =>
+        {
+            value = (int)e.NewValue;
+            readout.Text = $"{value} 颗 · 约 {value * _h.S.Settings.BeadPitchMm / 10:F1} cm 高";
+        };
+        var panel = new StackPanel { Spacing = 12, MinWidth = 360 };
+        panel.Children.Add(Caption(hint));
+        panel.Children.Add(readout);
+        panel.Children.Add(slider);
+        panel.Children.Add(Caption("人物公仔常用 40~64 颗；细节多的挂件可用 80~100 颗。导入后仍可随时改高度重新体素化。"));
+        var dlg = new ContentDialog
+        {
+            Title = title, Content = panel, PrimaryButtonText = "按此高度导入", CloseButtonText = "取消",
+            DefaultButton = ContentDialogButton.Primary, XamlRoot = _h.XamlRoot,
+        };
+        if (await dlg.ShowAsync() != ContentDialogResult.Primary) return null;
+        _height = value;
+        if (_heightSlider != null) _heightSlider.Value = value;
+        UpdateSize();
+        return value;
     }
 
     private void UpdateSize()
@@ -374,69 +477,117 @@ public sealed class ImportPage : IStepPage
     private async Task ImportMeshAsync()
     {
         if (_running) return;
-        var s = _h.S;
-        if (s.Dirty && s.Model.CountSolid() > 0 && !await _h.ConfirmAsync("替换当前模型？", "导入的网格会替换当前未保存的模型。", "继续")) return;
         var pick = new FileOpenPicker();
         WinRT.Interop.InitializeWithWindow.Initialize(pick, _h.Hwnd);
         foreach (var e in new[] { ".obj", ".glb", ".stl", ".vox" }) pick.FileTypeFilter.Add(e);
         var f = await pick.PickSingleFileAsync();
         if (f == null) return;
+        if (System.IO.Path.GetExtension(f.Path).Equals(".vox", StringComparison.OrdinalIgnoreCase))
+        {
+            await ImportVoxAsync(f.Path);
+            return;
+        }
+        var h = await AskHeightAsync("导入三维模型", "体素化前先选成品高度。之后改高度可以随时重新体素化。");
+        if (h == null) return;
+        await ImportMeshFileAsync(f.Path, System.IO.Path.GetFileNameWithoutExtension(f.Path), null);
+    }
+
+    private async Task ImportVoxAsync(string path)
+    {
+        var s = _h.S;
+        if (s.Dirty && s.Model.CountSolid() > 0 && !await _h.ConfirmAsync("替换当前模型？", "导入的 VOX 会替换当前未保存的模型。", "继续")) return;
         _log.Text = "";
         _running = true;
+        try
+        {
+            await _h.RunAsync("导入 VOX", async (progress, ct) =>
+            {
+                var m = await Task.Run(() => VoxFile.Read(path), ct);
+                Quantizer.RemapToBrand(m, s.Lib, _brandIds[_brand]);
+                s.Replace(m, new ProjectMeta { Title = System.IO.Path.GetFileNameWithoutExtension(path) }, new());
+                _source = null;
+                UpdateSourceState();
+                Log($"VOX 导入完成：{m.SX}×{m.SY}×{m.SZ}，{m.CountSolid():N0} 颗。VOX 已是体素模型，不能再按豆高重新体素化。");
+                _h.Notify($"VOX 已导入：{m.CountSolid():N0} 颗。可以开始编辑了。", InfoBarSeverity.Success);
+                _h.GoStep(2);
+            }, cancellable: true);
+        }
+        finally { _running = false; UpdateSourceState(); }
+    }
+
+    /// <summary>把网格体素化并替换当前工程。reuseSource 非空时表示改豆高后重做，沿用原视图与名称。</summary>
+    private async Task ImportMeshFileAsync(string path, string title, ReconSource? reuseSource)
+    {
+        if (_running) return;
+        var s = _h.S;
+        if (s.History.CanUndo && s.Model.CountSolid() > 0 &&
+            !await _h.ConfirmAsync("替换当前模型？", "重新体素化会用新结果替换当前模型，手工修改会丢失。", "继续")) return;
+        _log.Text = "";
+        _running = true;
+        UpdateSourceState();
         try
         {
             await _h.RunAsync("导入三维模型", async (progress, ct) =>
             {
                 IProgress<string> p = new Progress<string>(m => { Log(m); progress.Report(m); });
-                var mesh = MeshLoader.Load(f.Path);
-                bool hasTexture = mesh.Texture != null && mesh.VertexUVs?.Count == mesh.Vertices.Count;
-                var views = new List<ViewImage>();
-                var viewPaths = new Dictionary<ViewKind, string>();
-
-                if (!hasTexture && _items.Count > 0)
+                var mesh = MeshLoader.Load(path);
+                var views = reuseSource?.Views.Where(kv => File.Exists(kv.Value.Path))
+                    .ToDictionary(kv => kv.Key, kv => kv.Value) ?? new Dictionary<ViewKind, (string, bool)>();
+                if (views.Count == 0) views = await CollectViewsAsync(p, ct);
+                var viewImages = views.Select(kv =>
                 {
-                    var prepped = await Prepare(p, ct);
-                    foreach (var (it, path) in prepped.Where(x => x.It.Role < 6))
-                    {
-                        var kind = (ViewKind)it.Role;
-                        if (viewPaths.ContainsKey(kind)) continue;
-                        var v = ViewImage.Load(kind, path);
-                        v.IsAi = it.IsAi;
-                        views.Add(v);
-                        viewPaths[kind] = path;
-                    }
-                }
-                else if (_items.Count > 0)
-                {
-                    foreach (var it in _items.Where(x => x.Role < 6))
-                    {
-                        var kind = (ViewKind)it.Role;
-                        if (!viewPaths.ContainsKey(kind)) viewPaths[kind] = it.Path;
-                    }
-                }
+                    var v = ViewImage.Load(kv.Key, kv.Value.Path);
+                    v.IsAi = kv.Value.IsAi;
+                    return v;
+                }).ToList();
 
+                var brandId = _brandIds[_brand];
                 var res = await Task.Run(() => MeshImporter.Import(mesh, s.Lib, new MeshImportOptions
                 {
                     TargetHeight = _height,
-                    BrandId = _brandIds[_brand],
+                    BrandId = brandId,
                     MaxColors = _maxColors,
-                    Name = System.IO.Path.GetFileNameWithoutExtension(f.Path),
-                    Views = views,
+                    Name = title,
+                    Views = viewImages,
                 }, m => p.Report(m), ct), ct);
 
+                var savedViews = views.ToDictionary(kv => kv.Key, kv => kv.Value.Path);
                 s.Replace(res.Model, new ProjectMeta
                 {
-                    Title = System.IO.Path.GetFileNameWithoutExtension(f.Path),
+                    Title = title,
                     Author = s.Settings.Author,
                     Watermark = s.Settings.Watermark,
-                }, viewPaths);
+                    SourceMesh = path,
+                    SourceHeight = _height,
+                    SourceBrand = brandId,
+                    SourceMaxColors = _maxColors,
+                }, savedViews);
+                _source = new ReconSource
+                {
+                    MeshPath = path, Name = title, Height = _height,
+                    BrandId = brandId, MaxColors = _maxColors, Views = views,
+                };
                 var how = res.UsedTexture ? "模型自带纹理上色" : res.UsedViews ? "参考视图投影上色" : "单色（无纹理/参考图）";
-                Log($"导入完成：{res.Model.SX}×{res.Model.SY}×{res.Model.SZ}，{res.Model.CountSolid():N0} 颗，{res.Model.Palette.Count - 1} 色；{how}{(res.RotatedZUp ? "；Z-up 已转正" : "")}");
+                Log($"体素化完成：{res.Model.SX}×{res.Model.SY}×{res.Model.SZ}，{res.Model.CountSolid():N0} 颗，{res.Model.Palette.Count - 1} 色；{how}{(res.RotatedZUp ? "；已转正" : "")}");
                 _h.Notify($"模型已导入：{res.Model.CountSolid():N0} 颗 · {how}。可以开始编辑了。", InfoBarSeverity.Success);
                 _h.GoStep(2);
             }, cancellable: true);
         }
-        finally { _running = false; }
+        finally { _running = false; UpdateSourceState(); }
+    }
+
+    /// <summary>把当前图片列表预处理成参考视图（首次导入/重新生成用）。</summary>
+    private async Task<Dictionary<ViewKind, (string Path, bool IsAi)>> CollectViewsAsync(IProgress<string> p, CancellationToken ct)
+    {
+        var views = new Dictionary<ViewKind, (string, bool)>();
+        if (_items.Count == 0) return views;
+        var prepped = await Prepare(p, ct);
+        foreach (var (it, path) in prepped.Where(x => x.It.Role < 6))
+        {
+            var kind = (ViewKind)it.Role;
+            if (!views.ContainsKey(kind)) views[kind] = (path, it.IsAi);
+        }
+        return views;
     }
 
     private async Task Run()
@@ -461,6 +612,7 @@ public sealed class ImportPage : IStepPage
         _log.Text = "";
         _aiThumbs.Children.Clear();
         _running = true;
+        UpdateSourceState();
         try
         {
             await _h.RunAsync(useApi ? "在线生成三维模型" : "生成立体模型", async (progress, ct) =>
@@ -478,6 +630,7 @@ public sealed class ImportPage : IStepPage
                     var mesh = MeshLoader.Load(meshPath);
                     var viewImages = new List<ViewImage>();
                     var viewPaths = new Dictionary<ViewKind, string>();
+                    var srcViews = new Dictionary<ViewKind, (string Path, bool IsAi)>();
                     foreach (var (it, path) in prepped.Where(x => x.It.Role < 6))
                     {
                         var kind = (ViewKind)it.Role;
@@ -486,21 +639,33 @@ public sealed class ImportPage : IStepPage
                         v.IsAi = it.IsAi;
                         viewImages.Add(v);
                         viewPaths[kind] = path;
+                        srcViews[kind] = (path, it.IsAi);
                     }
+                    var brandId = _brandIds[_brand];
+                    var title = string.IsNullOrWhiteSpace(_name.Text) ? "在线 3.1 模型" : _name.Text.Trim();
                     var import = await Task.Run(() => MeshImporter.Import(mesh, s.Lib, new MeshImportOptions
                     {
                         TargetHeight = _height,
-                        BrandId = _brandIds[_brand],
+                        BrandId = brandId,
                         MaxColors = _maxColors,
-                        Name = _name.Text.Trim(),
+                        Name = title,
                         Views = viewImages,
                     }, m => p.Report(m), ct), ct);
                     s.Replace(import.Model, new ProjectMeta
                     {
-                        Title = _name.Text.Trim(),
+                        Title = title,
                         Author = s.Settings.Author,
                         Watermark = s.Settings.Watermark,
+                        SourceMesh = meshPath,
+                        SourceHeight = _height,
+                        SourceBrand = brandId,
+                        SourceMaxColors = _maxColors,
                     }, viewPaths);
+                    _source = new ReconSource
+                    {
+                        MeshPath = meshPath, Name = title, Height = _height,
+                        BrandId = brandId, MaxColors = _maxColors, Views = srcViews,
+                    };
                     Log($"在线 3.1 完成：{import.Model.SX}×{import.Model.SY}×{import.Model.SZ}，{import.Model.CountSolid():N0} 颗，{import.Model.Palette.Count - 1} 色");
                     _h.Notify($"在线 3.1 模型已生成：{import.Model.CountSolid():N0} 颗 · {import.Model.Palette.Count - 1} 色。可以开始编辑了。", InfoBarSeverity.Success);
                     _h.GoStep(2);
@@ -525,13 +690,32 @@ public sealed class ImportPage : IStepPage
                 var ai = new ImageAi(s.Settings) { ForceRegenerate = _force };
                 var pipe = new ReconstructPipeline(s.Lib, s.Hy3d, ai);
                 var res = await Task.Run(() => pipe.RunAsync(inputs, opt, p, ct), ct);
-                var views = res.Views.Where(v => !v.ShapeOnly).GroupBy(v => v.Kind).ToDictionary(g => g.Key, g => g.First().SourcePath);
-                s.Replace(res.Model, new ProjectMeta { Title = opt.Name, Author = s.Settings.Author, Watermark = s.Settings.Watermark }, views);
+                var viewList = res.Views.Where(v => !v.ShapeOnly).GroupBy(v => v.Kind).Select(g => g.First()).ToList();
+                var views = viewList.ToDictionary(v => v.Kind, v => v.SourcePath);
+                var resViews = viewList.Where(v => File.Exists(v.SourcePath))
+                    .ToDictionary(v => v.Kind, v => (v.SourcePath, v.IsAi));
+                var resBrandId = _brandIds[_brand];
+                var resMeshPath = res.MeshPath ?? "";
+                s.Replace(res.Model, new ProjectMeta
+                {
+                    Title = opt.Name,
+                    Author = s.Settings.Author,
+                    Watermark = s.Settings.Watermark,
+                    SourceMesh = resMeshPath,
+                    SourceHeight = _height,
+                    SourceBrand = resBrandId,
+                    SourceMaxColors = _maxColors,
+                }, views);
+                _source = new ReconSource
+                {
+                    MeshPath = resMeshPath, Name = opt.Name, Height = _height,
+                    BrandId = resBrandId, MaxColors = _maxColors, Views = resViews,
+                };
                 Log($"完成：{res.Model.SX}×{res.Model.SY}×{res.Model.SZ}，{res.Model.CountSolid():N0} 颗，{res.Model.Palette.Count - 1} 色");
                 _h.Notify($"模型已生成：{res.Model.CountSolid():N0} 颗 · {res.Model.Palette.Count - 1} 色。可以开始编辑了。", InfoBarSeverity.Success);
                 _h.GoStep(2);
             }, cancellable: true);
         }
-        finally { _running = false; }
+        finally { _running = false; UpdateSourceState(); }
     }
 }

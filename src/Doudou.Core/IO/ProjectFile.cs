@@ -16,6 +16,11 @@ public sealed class ProjectMeta
     public string Notes { get; set; } = "禁止二传、二改、商用";
     public string Watermark { get; set; } = "";
     public List<RefView> Views { get; set; } = new();
+    /// <summary>最近一次体素化所用的网格（绝对路径，用于改豆高后重新体素化）。</summary>
+    public string SourceMesh { get; set; } = "";
+    public int SourceHeight { get; set; }
+    public string SourceBrand { get; set; } = "";
+    public int SourceMaxColors { get; set; }
 }
 
 public sealed class RefView

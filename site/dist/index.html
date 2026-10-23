@@ -614,7 +614,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
       <a href="https://github.com/shiinakuro/beadwatch" target="_blank" rel="noopener">GitHub</a>
     </nav>
     <div class="top-act">
-      <span class="ver">v1.1.0</span>
+      <span class="ver">v1.1.1</span>
       <a class="btn btn-primary btn-sm" href="#download">下载</a>
     </div>
   </div>
@@ -911,10 +911,19 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
         <p class="eyebrow">RELEASE</p>
         <h2>全新发布</h2>
       </div>
-      <p class="sec-note"><b>v1.1.0 模型导入与在线 API</b>。Windows 10 / 11 自包含安装程序，不需要另行安装 .NET 或 Windows App SDK。</p>
+      <p class="sec-note"><b>v1.1.1 豆高与参考图修复</b>。Windows 10 / 11 自包含安装程序，不需要另行安装 .NET 或 Windows App SDK。</p>
     </div>
     <div class="log">
       <article class="entry now reveal">
+        <div class="vline"><span class="badge">RELEASE</span><h3>v1.1.1</h3><time>2026-10-24</time></div>
+        <ul>
+          <li><b>新建工程更干净：</b>新建或打开无参考图的工程时，清空上一工程残留的参考图、主色和过程日志。</li>
+          <li><b>导入先选豆高：</b>OBJ/GLB/STL 体素化前先选成品高度；导入后改高度、色卡或颜色数，可一键重新体素化，不用再选文件。</li>
+          <li><b>更接近直接体素化：</b>默认最多颜色 16 → 32，带纹理模型的头发高光、肤色和眼睛层次不再被压成色块。</li>
+          <li><b>来源可恢复：</b>重建来源随工程保存，重新打开工程后仍可改豆高重做；VOX 会提示已是体素模型。</li>
+        </ul>
+      </article>
+      <article class="entry reveal">
         <div class="vline"><span class="badge">RELEASE</span><h3>v1.1.0</h3><time>2026-10-24</time></div>
         <ul>
           <li><b>图片 + 模型统一导入：</b>第一步同时支持多视图图片和 OBJ/GLB/STL/VOX；导入前检查朝向，有参考图时按轮廓吻合度自动转正，按选定豆高体素化。</li>
@@ -983,8 +992,8 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
       </div>
       <div class="dl-side">
         <div class="dl-box">
-          <div class="dl-name" id="dlName">拼豆先锋_v1.1.0_安装程序.exe</div>
-          <div class="dl-sub"><span>v1.1.0 · SELF-CONTAINED</span><span>102.8 MB</span></div>
+          <div class="dl-name" id="dlName">拼豆先锋_v1.1.1_安装程序.exe</div>
+          <div class="dl-sub"><span>v1.1.1 · SELF-CONTAINED</span><span>117.0 MB</span></div>
           <div class="dl-actions">
             <button class="btn btn-primary dl-btn" id="dlBtn" type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 21h14"/></svg>
@@ -1001,7 +1010,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
           <a class="dl-alt" href="https://github.com/shiinakuro/beadwatch/releases/latest" target="_blank" rel="noopener">GitHub Releases 直链</a>
           <details class="sha">
             <summary>SHA-256 校验</summary>
-            <code id="shaText">05648a1fb497b156cce7bd204e5f70ec15cff1a6710348d95599b69d44f3fcd3</code>
+            <code id="shaText">7e1027eed0f9c78ff1ae18a71cc54ef5e97ed5ceef13b252bed894e1dc574fdf</code>
             <button class="copy" id="shaCopy" type="button">复制校验值</button>
           </details>
         </div>
@@ -1051,7 +1060,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
   const cancel = document.getElementById("dlCancel");
   const shaCopy = document.getElementById("shaCopy");
   const shaText = document.getElementById("shaText");
-  const meta = { name: "拼豆先锋_v1.1.0_安装程序.exe", size: 107780594 };
+  const meta = { name: "拼豆先锋_v1.1.1_安装程序.exe", size: 122648702 };
   let busy = false;
   let ac = null;
 

@@ -19,7 +19,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
     <Product>拼豆先锋 BEADWATCH</Product>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Company>拼豆先锋</Company>
     <Description>立体拼豆设计：多视图三维重建 · 体素编辑 · 拆件 · 图纸</Description>
     <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>

@@ -774,12 +774,19 @@ public sealed class MainWindow : Window, IHost
                     {
                         TargetHeight = h,
                         BrandId = S.Settings.DefaultBrand,
-                        MaxColors = 24,
+                        MaxColors = 32,
                         Name = Path.GetFileNameWithoutExtension(path),
                     }, m => prog.Report(m), ct);
                 }, ct);
                 var m = res.Model;
-                S.Replace(m, new ProjectMeta { Title = Path.GetFileNameWithoutExtension(path) }, new());
+                S.Replace(m, new ProjectMeta
+                {
+                    Title = Path.GetFileNameWithoutExtension(path),
+                    SourceMesh = path,
+                    SourceHeight = h,
+                    SourceBrand = S.Settings.DefaultBrand,
+                    SourceMaxColors = 32,
+                }, new());
                 _welcomeDismissed = true;
                 var how = res.UsedTexture ? "模型自带纹理上色" : "单色（无纹理/参考图，请在编辑中上色）";
                 Notify($"网格已体素化：{m.SX}×{m.SY}×{m.SZ}，{m.CountSolid():N0} 颗；{how}{(res.RotatedZUp ? "；Z-up 已转正" : "")}", InfoBarSeverity.Success);

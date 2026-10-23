@@ -7,7 +7,7 @@
 
 ## 安装与启动
 
-**安装版（推荐）**：从 [GitHub Releases](https://github.com/shiinakuro/beadwatch/releases/latest) 下载 `beadwatch-1.1.0-setup.exe`（页面内显示为 `拼豆先锋_v1.1.0_安装程序.exe`），双击后选好位置安装。只装到当前用户，无需管理员权限；自动创建开始菜单 / 桌面快捷方式，卸载入口进入 Windows「设置 → 应用」。
+**安装版（推荐）**：从 [GitHub Releases](https://github.com/shiinakuro/beadwatch/releases/latest) 下载 `beadwatch-1.1.1-setup.exe`（页面内显示为 `拼豆先锋_v1.1.1_安装程序.exe`），双击后选好位置安装。只装到当前用户，无需管理员权限；自动创建开始菜单 / 桌面快捷方式，卸载入口进入 Windows「设置 → 应用」。
 **本地 AI 依赖**：安装程序只带主程序和混元代码，不含 Python / PyTorch / 模型。打开「设置 → 本地 AI 模型」可一键安装（完整约 10 GB；只装 ISNet 抠图约 300 MB）。下载会自动测速选择最快镜像，大文件多线程分段，支持断点续传；装在程序目录下，卸载时按需保留。
 **便携版**：双击 `启动拼豆先锋.cmd`（或 `app\拼豆先锋.exe`）；示例工程在 `示例\`，可直接拖进窗口打开。
 
@@ -21,7 +21,7 @@
 | 完整版（目录，约 12GB） | 程序 + 本地混元3D（Python 运行时与模型） | 有 NVIDIA 显卡（≥6GB 显存），离线三维重建 |
 | 精简版（zip，约 280MB） | 程序 + 色卡 + 示例 | 无独显：用 AI 视图 + 轮廓雕刻重建，编辑/拆件/图纸功能完整 |
 
-重新打包：`python tools\make_release.py 1.1.0`（目录版）、`python tools\make_installer.py 1.1.0`（安装程序）。
+重新打包：`python tools\make_release.py 1.1.1`（目录版）、`python tools\make_installer.py 1.1.1`（安装程序）。
 
 站点源码在 `site/dist`。推送到 `main` 后，`.github/workflows/pages.yml` 会从 GitHub Releases 拉取安装程序、切成 Pages 可承载的分片，并部署到 GitHub Pages；安装包本体不进入 Git 仓库。
 
@@ -113,6 +113,12 @@ dotnet run --project src\Doudou.Cli -- make <模型.vox> <图纸目录> [壁厚]
 - 高度 100 层的模型按水平分层会得到上百个零件；想要更少零件可降低高度，或在零件页对局部改用竖切/面板拆分。
 
 ## 更新日志
+
+### 1.1.1 · 豆高与参考图修复（2026-10-24）
+- 新建空白工程或打开不含参考图的工程时，清空上一个工程残留的参考图、主色与过程日志。
+- 导入 OBJ/GLB/STL 时先选择豆高，再开始体素化；导入完成后改高度、色卡或最多颜色，可一键用同一模型重新体素化。
+- 重建来源随工程保存：重新打开工程后仍可改豆高重新体素化；VOX 已是体素模型，会提示不能按豆高重做。
+- 默认最多颜色从 16 提高到 32，带纹理的 GLB/OBJ 不再被压成色块，头发高光、肤色和眼睛层次与直接体素化一致。
 
 ### 1.1.0 · 模型导入与在线 API（2026-10-24）
 - 第一步同时支持多视图图片与 OBJ/GLB/STL/VOX：导入前检查朝向，有参考图时按轮廓吻合度自动转正；按选择的豆高体素化。

@@ -269,9 +269,48 @@ switch (args[0])
     }
     case "render":
     {
-        var m = VoxFile.Read(args[1]);
-        using var r = IsoRenderer.Render(IsoRenderer.FromModel(m).ToList(), new RenderOptions { FitSize = 1000, Background = SkiaSharp.SKColors.White });
+        var m = Path.GetExtension(args[1]).Equals(".doudou", StringComparison.OrdinalIgnoreCase)
+            ? ProjectFile.Load(args[1]).Model
+            : VoxFile.Read(args[1]);
+        using var r = IsoRenderer.Render(IsoRenderer.FromModel(m).ToList(), new RenderOptions
+        {
+            FitSize = 1000, Background = SkiaSharp.SKColors.White, Look = BeadLook.Bead,
+            Yaw = args.Length > 3 ? float.Parse(args[3]) : 35f,
+            Pitch = args.Length > 4 ? float.Parse(args[4]) : 28f,
+        });
         IsoRenderer.SavePng(r.Bitmap, args[2]);
+        return 0;
+    }
+    case "mesh":
+    {
+        // mesh <模型.obj|.glb|.stl> <输出目录> <高度> [--colors=N] [--brand=id]
+        var mesh = MeshLoader.Load(args[1]);
+        int height = int.Parse(args[3]);
+        int colors = 24;
+        string brand = "mard221";
+        foreach (var a in args.Skip(4))
+        {
+            if (a.StartsWith("--colors=")) colors = int.Parse(a[9..]);
+            else if (a.StartsWith("--brand=")) brand = a[8..];
+        }
+        var outDir = args[2];
+        Directory.CreateDirectory(outDir);
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        var res = MeshImporter.Import(mesh, lib, new MeshImportOptions
+        {
+            TargetHeight = height, BrandId = brand, MaxColors = colors,
+            Name = Path.GetFileNameWithoutExtension(args[1]),
+        }, s => Console.WriteLine("  " + s));
+        var m = res.Model;
+        Console.WriteLine($"完成 {sw.Elapsed.TotalSeconds:F1}s：{m.SX}×{m.SY}×{m.SZ} {m.CountSolid()} 颗 {m.Palette.Count - 1} 色 纹理={res.UsedTexture}");
+        VoxFile.Write(m, Path.Combine(outDir, "model.vox"));
+        ProjectFile.Save(Path.Combine(outDir, "model.doudou"), m, new ProjectMeta { Title = m.Name });
+        foreach (var (yaw, name) in new[] { (35f, "iso_front"), (215f, "iso_back"), (0f, "front"), (90f, "left") })
+        {
+            using var r = IsoRenderer.Render(IsoRenderer.FromModel(m).ToList(),
+                new RenderOptions { Yaw = yaw, Pitch = name.StartsWith("iso") ? 28 : 0, FitSize = 900, Background = SkiaSharp.SKColors.White, Look = BeadLook.Bead });
+            IsoRenderer.SavePng(r.Bitmap, Path.Combine(outDir, name + ".png"));
+        }
         return 0;
     }
 }
