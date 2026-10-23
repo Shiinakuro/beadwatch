@@ -1,0 +1,8412 @@
+{
+ "base": "mard221",
+ "targets": [
+  "coco291",
+  "manman278",
+  "panpan289",
+  "mixiaowo290",
+  "mard291",
+  "artkalM221",
+  "youken174"
+ ],
+ "rows": {
+  "A1": {
+   "rgb": [
+    250,
+    245,
+    205
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "E02",
+     "delta_e": 1.65
+    },
+    "manman278": {
+     "code": "E2",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "65",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "77",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A1",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA1",
+     "delta_e": 2.58
+    },
+    "youken174": {
+     "code": "C61",
+     "delta_e": 3.45
+    }
+   }
+  },
+  "A2": {
+   "rgb": [
+    252,
+    254,
+    214
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "E01",
+     "delta_e": 0.89
+    },
+    "manman278": {
+     "code": "B1",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "2",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "2",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A2",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA24",
+     "delta_e": 1.95
+    },
+    "youken174": {
+     "code": "C61",
+     "delta_e": 2.62
+    }
+   }
+  },
+  "A3": {
+   "rgb": [
+    252,
+    255,
+    146
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "E05",
+     "delta_e": 1.39
+    },
+    "manman278": {
+     "code": "B2",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "28",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "28",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A3",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA3",
+     "delta_e": 4.44
+    },
+    "youken174": {
+     "code": "C10",
+     "delta_e": 3.15
+    }
+   }
+  },
+  "A4": {
+   "rgb": [
+    247,
+    236,
+    92
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "E04",
+     "delta_e": 3.07
+    },
+    "manman278": {
+     "code": "B3",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "3",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "3",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A4",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA4",
+     "delta_e": 5.74
+    },
+    "youken174": {
+     "code": "C46",
+     "delta_e": 2.05
+    }
+   }
+  },
+  "A5": {
+   "rgb": [
+    255,
+    228,
+    75
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "E07",
+     "delta_e": 2.47
+    },
+    "manman278": {
+     "code": "L2",
+     "delta_e": 2.83
+    },
+    "panpan289": {
+     "code": "156",
+     "delta_e": 2.83
+    },
+    "mixiaowo290": {
+     "code": "53",
+     "delta_e": 2.83
+    },
+    "mard291": {
+     "code": "A5",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA4",
+     "delta_e": 2.33
+    },
+    "youken174": {
+     "code": "C42",
+     "delta_e": 4.3
+    }
+   }
+  },
+  "A6": {
+   "rgb": [
+    253,
+    169,
+    81
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M17",
+     "delta_e": 3.87
+    },
+    "manman278": {
+     "code": "B5",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "29",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "29",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A6",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG6",
+     "delta_e": 4.2
+    },
+    "youken174": {
+     "code": "C03",
+     "delta_e": 5.47
+    }
+   }
+  },
+  "A7": {
+   "rgb": [
+    250,
+    140,
+    79
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "D8",
+     "delta_e": 1.59
+    },
+    "manman278": {
+     "code": "B6",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "4",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "4",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A7",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA10",
+     "delta_e": 3.29
+    },
+    "youken174": {
+     "code": "C04",
+     "delta_e": 2.43
+    }
+   }
+  },
+  "A8": {
+   "rgb": [
+    249,
+    224,
+    69
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "L10",
+     "delta_e": 2.59
+    },
+    "manman278": {
+     "code": "B4",
+     "delta_e": 1.86
+    },
+    "panpan289": {
+     "code": "74",
+     "delta_e": 1.86
+    },
+    "mixiaowo290": {
+     "code": "79",
+     "delta_e": 1.86
+    },
+    "mard291": {
+     "code": "A8",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA4",
+     "delta_e": 2.61
+    },
+    "youken174": {
+     "code": "C42",
+     "delta_e": 4.67
+    }
+   }
+  },
+  "A9": {
+   "rgb": [
+    249,
+    156,
+    95
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "D7",
+     "delta_e": 2.05
+    },
+    "manman278": {
+     "code": "B11",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "90",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "97",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A9",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA10",
+     "delta_e": 4.08
+    },
+    "youken174": {
+     "code": "C95",
+     "delta_e": 5.19
+    }
+   }
+  },
+  "A10": {
+   "rgb": [
+    244,
+    126,
+    54
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "L3",
+     "delta_e": 3.59
+    },
+    "manman278": {
+     "code": "B12",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "89",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "96",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A10",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA7",
+     "delta_e": 3.29
+    },
+    "youken174": {
+     "code": "C04",
+     "delta_e": 4.02
+    }
+   }
+  },
+  "A11": {
+   "rgb": [
+    254,
+    219,
+    153
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Z09",
+     "delta_e": 0.83
+    },
+    "manman278": {
+     "code": "E11",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "100",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "109",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A11",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA11",
+     "delta_e": 1.83
+    },
+    "youken174": {
+     "code": "CE12",
+     "delta_e": 3.23
+    }
+   }
+  },
+  "A12": {
+   "rgb": [
+    253,
+    162,
+    118
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "D6",
+     "delta_e": 3.09
+    },
+    "manman278": {
+     "code": "A18",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "99",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "110",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A12",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA9",
+     "delta_e": 5.41
+    },
+    "youken174": {
+     "code": "C65",
+     "delta_e": 2.23
+    }
+   }
+  },
+  "A13": {
+   "rgb": [
+    254,
+    198,
+    103
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M16",
+     "delta_e": 2.89
+    },
+    "manman278": {
+     "code": "B13",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "131",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "116",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A13",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA26",
+     "delta_e": 4.98
+    },
+    "youken174": {
+     "code": "C72",
+     "delta_e": 2.0
+    }
+   }
+  },
+  "A14": {
+   "rgb": [
+    248,
+    88,
+    66
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "C04",
+     "delta_e": 3.62
+    },
+    "manman278": {
+     "code": "B14",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "138",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "135",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A14",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF2",
+     "delta_e": 1.73
+    },
+    "youken174": {
+     "code": "C62",
+     "delta_e": 5.77
+    }
+   }
+  },
+  "A15": {
+   "rgb": [
+    251,
+    246,
+    94
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "E04",
+     "delta_e": 1.17
+    },
+    "manman278": {
+     "code": "B15",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "150",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "150",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A15",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA15",
+     "delta_e": 6.37
+    },
+    "youken174": {
+     "code": "C46",
+     "delta_e": 2.65
+    }
+   }
+  },
+  "A16": {
+   "rgb": [
+    254,
+    255,
+    151
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "E05",
+     "delta_e": 0.6
+    },
+    "manman278": {
+     "code": "IC04",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "216",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "216",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A16",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA3",
+     "delta_e": 3.69
+    },
+    "youken174": {
+     "code": "C10",
+     "delta_e": 2.48
+    }
+   }
+  },
+  "A17": {
+   "rgb": [
+    253,
+    225,
+    115
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "E14",
+     "delta_e": 2.31
+    },
+    "manman278": {
+     "code": "IC9",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "213",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "213",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A17",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA4",
+     "delta_e": 3.0
+    },
+    "youken174": {
+     "code": "C42",
+     "delta_e": 1.64
+    }
+   }
+  },
+  "A18": {
+   "rgb": [
+    252,
+    191,
+    128
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "S10",
+     "delta_e": 3.35
+    },
+    "manman278": {
+     "code": "IC14",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "223",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "208",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A18",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA18",
+     "delta_e": 4.16
+    },
+    "youken174": {
+     "code": "C74",
+     "delta_e": 4.52
+    }
+   }
+  },
+  "A19": {
+   "rgb": [
+    253,
+    126,
+    119
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "C01",
+     "delta_e": 4.14
+    },
+    "manman278": {
+     "code": "IC15",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "218",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "218",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A19",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF23",
+     "delta_e": 4.28
+    },
+    "youken174": {
+     "code": "C94",
+     "delta_e": 4.65
+    }
+   }
+  },
+  "A20": {
+   "rgb": [
+    249,
+    214,
+    110
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "E14",
+     "delta_e": 1.63
+    },
+    "manman278": {
+     "code": "Q6",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "242",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "242",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A20",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA17",
+     "delta_e": 1.48
+    },
+    "youken174": {
+     "code": "C11",
+     "delta_e": 3.54
+    }
+   }
+  },
+  "A21": {
+   "rgb": [
+    250,
+    227,
+    147
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "E10",
+     "delta_e": 2.75
+    },
+    "manman278": {
+     "code": "R07",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "276",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "261",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A21",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA21",
+     "delta_e": 1.07
+    },
+    "youken174": {
+     "code": "C144",
+     "delta_e": 2.59
+    }
+   }
+  },
+  "A22": {
+   "rgb": [
+    237,
+    248,
+    120
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "GB3",
+     "delta_e": 3.41
+    },
+    "manman278": {
+     "code": "R06",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "270",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "255",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A22",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA15",
+     "delta_e": 3.51
+    },
+    "youken174": {
+     "code": "C41",
+     "delta_e": 5.42
+    }
+   }
+  },
+  "A23": {
+   "rgb": [
+    225,
+    201,
+    189
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "S7",
+     "delta_e": 3.01
+    },
+    "manman278": {
+     "code": "R08",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "274",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "259",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A23",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA23",
+     "delta_e": 5.73
+    },
+    "youken174": {
+     "code": "C153",
+     "delta_e": 5.23
+    }
+   }
+  },
+  "A24": {
+   "rgb": [
+    243,
+    246,
+    169
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "E03",
+     "delta_e": 2.12
+    },
+    "manman278": {
+     "code": "G3",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "288",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "273",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A24",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA3",
+     "delta_e": 2.38
+    },
+    "youken174": {
+     "code": "C41",
+     "delta_e": 2.91
+    }
+   }
+  },
+  "A25": {
+   "rgb": [
+    255,
+    215,
+    133
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "D1",
+     "delta_e": 2.32
+    },
+    "manman278": {
+     "code": "G4",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "289",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "274",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A25",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA25",
+     "delta_e": 1.88
+    },
+    "youken174": {
+     "code": "CE12",
+     "delta_e": 5.73
+    }
+   }
+  },
+  "A26": {
+   "rgb": [
+    254,
+    200,
+    50
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "D4",
+     "delta_e": 1.77
+    },
+    "manman278": {
+     "code": "G5",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "290",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "275",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "A26",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA26",
+     "delta_e": 1.98
+    },
+    "youken174": {
+     "code": "C11",
+     "delta_e": 3.51
+    }
+   }
+  },
+  "B1": {
+   "rgb": [
+    223,
+    241,
+    57
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F05",
+     "delta_e": 1.5
+    },
+    "manman278": {
+     "code": "C1",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "48",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "48",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B1",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB1",
+     "delta_e": 3.16
+    },
+    "youken174": {
+     "code": "C53",
+     "delta_e": 4.08
+    }
+   }
+  },
+  "B2": {
+   "rgb": [
+    100,
+    243,
+    67
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F09",
+     "delta_e": 4.23
+    },
+    "manman278": {
+     "code": "C2",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "33",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "33",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B2",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB4",
+     "delta_e": 4.83
+    },
+    "youken174": {
+     "code": "C122",
+     "delta_e": 9.84
+    }
+   }
+  },
+  "B3": {
+   "rgb": [
+    159,
+    246,
+    133
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F09",
+     "delta_e": 5.15
+    },
+    "manman278": {
+     "code": "C7",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "26",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "26",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B3",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB16",
+     "delta_e": 7.6
+    },
+    "youken174": {
+     "code": "C12",
+     "delta_e": 6.61
+    }
+   }
+  },
+  "B4": {
+   "rgb": [
+    95,
+    223,
+    52
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F09",
+     "delta_e": 4.99
+    },
+    "manman278": {
+     "code": "C3",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "66",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "78",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B4",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB4",
+     "delta_e": 2.35
+    },
+    "youken174": {
+     "code": "C122",
+     "delta_e": 5.63
+    }
+   }
+  },
+  "B5": {
+   "rgb": [
+    57,
+    225,
+    88
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F09",
+     "delta_e": 3.96
+    },
+    "manman278": {
+     "code": "C4",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "39",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "39",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B5",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB4",
+     "delta_e": 3.34
+    },
+    "youken174": {
+     "code": "C122",
+     "delta_e": 6.48
+    }
+   }
+  },
+  "B6": {
+   "rgb": [
+    100,
+    224,
+    164
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "G04",
+     "delta_e": 3.29
+    },
+    "manman278": {
+     "code": "C9",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "11",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "11",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B6",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB3",
+     "delta_e": 4.03
+    },
+    "youken174": {
+     "code": "C45",
+     "delta_e": 4.24
+    }
+   }
+  },
+  "B7": {
+   "rgb": [
+    63,
+    174,
+    124
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "L6",
+     "delta_e": 5.43
+    },
+    "manman278": {
+     "code": "C10",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "44",
+     "delta_e": 0.08
+    },
+    "mixiaowo290": {
+     "code": "44",
+     "delta_e": 0.08
+    },
+    "mard291": {
+     "code": "B7",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB5",
+     "delta_e": 9.94
+    },
+    "youken174": {
+     "code": "C121",
+     "delta_e": 2.58
+    }
+   }
+  },
+  "B8": {
+   "rgb": [
+    29,
+    158,
+    84
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F11",
+     "delta_e": 6.85
+    },
+    "manman278": {
+     "code": "C5",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "10",
+     "delta_e": 1.04
+    },
+    "mixiaowo290": {
+     "code": "10",
+     "delta_e": 1.04
+    },
+    "mard291": {
+     "code": "B8",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB5",
+     "delta_e": 12.85
+    },
+    "youken174": {
+     "code": "C14",
+     "delta_e": 6.73
+    }
+   }
+  },
+  "B9": {
+   "rgb": [
+    42,
+    80,
+    55
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F15",
+     "delta_e": 2.62
+    },
+    "manman278": {
+     "code": "C6",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "79",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "84",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B9",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB15",
+     "delta_e": 4.1
+    },
+    "youken174": {
+     "code": "C150",
+     "delta_e": 8.71
+    }
+   }
+  },
+  "B10": {
+   "rgb": [
+    154,
+    209,
+    186
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "G03",
+     "delta_e": 2.96
+    },
+    "manman278": {
+     "code": "C11",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "96",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "100",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B10",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB10",
+     "delta_e": 5.56
+    },
+    "youken174": {
+     "code": "C120",
+     "delta_e": 3.29
+    }
+   }
+  },
+  "B11": {
+   "rgb": [
+    98,
+    112,
+    50
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F14",
+     "delta_e": 7.08
+    },
+    "manman278": {
+     "code": "C12",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "97",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "99",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B11",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB11",
+     "delta_e": 2.65
+    },
+    "youken174": {
+     "code": "C117",
+     "delta_e": 5.81
+    }
+   }
+  },
+  "B12": {
+   "rgb": [
+    26,
+    110,
+    61
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F12",
+     "delta_e": 4.01
+    },
+    "manman278": {
+     "code": "C13",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "106",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "111",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B12",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB8",
+     "delta_e": 4.55
+    },
+    "youken174": {
+     "code": "C123",
+     "delta_e": 6.29
+    }
+   }
+  },
+  "B13": {
+   "rgb": [
+    200,
+    232,
+    125
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "GB4",
+     "delta_e": 2.84
+    },
+    "manman278": {
+     "code": "C14",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "128",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "119",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B13",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA15",
+     "delta_e": 6.32
+    },
+    "youken174": {
+     "code": "C12",
+     "delta_e": 8.08
+    }
+   }
+  },
+  "B14": {
+   "rgb": [
+    172,
+    232,
+    76
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F06",
+     "delta_e": 4.51
+    },
+    "manman278": {
+     "code": "C15",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "129",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "117",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B14",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB14",
+     "delta_e": 5.44
+    },
+    "youken174": {
+     "code": "C53",
+     "delta_e": 7.96
+    }
+   }
+  },
+  "B15": {
+   "rgb": [
+    48,
+    83,
+    53
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F15",
+     "delta_e": 2.9
+    },
+    "manman278": {
+     "code": "C16",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "130",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "122",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B15",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB15",
+     "delta_e": 6.14
+    },
+    "youken174": {
+     "code": "C150",
+     "delta_e": 6.78
+    }
+   }
+  },
+  "B16": {
+   "rgb": [
+    192,
+    237,
+    156
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F03",
+     "delta_e": 3.46
+    },
+    "manman278": {
+     "code": "C17",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "141",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "133",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B16",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB16",
+     "delta_e": 3.33
+    },
+    "youken174": {
+     "code": "C12",
+     "delta_e": 2.34
+    }
+   }
+  },
+  "B17": {
+   "rgb": [
+    158,
+    179,
+    62
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F13",
+     "delta_e": 4.74
+    },
+    "manman278": {
+     "code": "C18",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "142",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "141",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B17",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB32",
+     "delta_e": 4.36
+    },
+    "youken174": {
+     "code": "C13",
+     "delta_e": 4.49
+    }
+   }
+  },
+  "B18": {
+   "rgb": [
+    230,
+    237,
+    79
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F22",
+     "delta_e": 1.23
+    },
+    "manman278": {
+     "code": "C19",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "147",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "147",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B18",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA15",
+     "delta_e": 3.58
+    },
+    "youken174": {
+     "code": "C46",
+     "delta_e": 2.48
+    }
+   }
+  },
+  "B19": {
+   "rgb": [
+    38,
+    183,
+    142
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "L6",
+     "delta_e": 1.14
+    },
+    "manman278": {
+     "code": "DH15",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "191",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "174",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B19",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB19",
+     "delta_e": 7.08
+    },
+    "youken174": {
+     "code": "C121",
+     "delta_e": 5.04
+    }
+   }
+  },
+  "B20": {
+   "rgb": [
+    202,
+    237,
+    207
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "G02",
+     "delta_e": 5.64
+    },
+    "manman278": {
+     "code": "DH10",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "192",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "175",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B20",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB31",
+     "delta_e": 2.7
+    },
+    "youken174": {
+     "code": "C118",
+     "delta_e": 9.25
+    }
+   }
+  },
+  "B21": {
+   "rgb": [
+    23,
+    98,
+    104
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "G08",
+     "delta_e": 9.47
+    },
+    "manman278": {
+     "code": "DH2",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "207",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "194",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B21",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB22",
+     "delta_e": 4.11
+    },
+    "youken174": {
+     "code": "C125",
+     "delta_e": 6.84
+    }
+   }
+  },
+  "B22": {
+   "rgb": [
+    10,
+    66,
+    65
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "G08",
+     "delta_e": 9.1
+    },
+    "manman278": {
+     "code": "DH7",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "206",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "193",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B22",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB15",
+     "delta_e": 7.44
+    },
+    "youken174": {
+     "code": "C70",
+     "delta_e": 4.33
+    }
+   }
+  },
+  "B23": {
+   "rgb": [
+    52,
+    59,
+    26
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F17",
+     "delta_e": 1.26
+    },
+    "manman278": {
+     "code": "DH12",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "205",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "192",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B23",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB23",
+     "delta_e": 4.25
+    },
+    "youken174": {
+     "code": "C150",
+     "delta_e": 8.86
+    }
+   }
+  },
+  "B24": {
+   "rgb": [
+    232,
+    250,
+    166
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F02",
+     "delta_e": 2.4
+    },
+    "manman278": {
+     "code": "IC5",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "222",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "207",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B24",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB24",
+     "delta_e": 2.68
+    },
+    "youken174": {
+     "code": "C41",
+     "delta_e": 5.31
+    }
+   }
+  },
+  "B25": {
+   "rgb": [
+    78,
+    132,
+    109
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "G07",
+     "delta_e": 3.29
+    },
+    "manman278": {
+     "code": "Q13",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "240",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "240",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B25",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB25",
+     "delta_e": 1.38
+    },
+    "youken174": {
+     "code": "C124",
+     "delta_e": 7.48
+    }
+   }
+  },
+  "B26": {
+   "rgb": [
+    144,
+    124,
+    53
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F19",
+     "delta_e": 1.52
+    },
+    "manman278": {
+     "code": "Q7",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "248",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "248",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B26",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB26",
+     "delta_e": 2.87
+    },
+    "youken174": {
+     "code": "C111",
+     "delta_e": 3.33
+    }
+   }
+  },
+  "B27": {
+   "rgb": [
+    208,
+    224,
+    175
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F20",
+     "delta_e": 3.19
+    },
+    "manman278": {
+     "code": "R10",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "262",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "262",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B27",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB27",
+     "delta_e": 2.44
+    },
+    "youken174": {
+     "code": "C12",
+     "delta_e": 8.33
+    }
+   }
+  },
+  "B28": {
+   "rgb": [
+    158,
+    229,
+    187
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H28",
+     "delta_e": 5.8
+    },
+    "manman278": {
+     "code": "R11",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "269",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "254",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B28",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB28",
+     "delta_e": 3.61
+    },
+    "youken174": {
+     "code": "C119",
+     "delta_e": 5.68
+    }
+   }
+  },
+  "B29": {
+   "rgb": [
+    198,
+    223,
+    95
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "S6",
+     "delta_e": 1.69
+    },
+    "manman278": {
+     "code": "R09",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "268",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "253",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B29",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB29",
+     "delta_e": 2.69
+    },
+    "youken174": {
+     "code": "C53",
+     "delta_e": 5.53
+    }
+   }
+  },
+  "B30": {
+   "rgb": [
+    227,
+    251,
+    177
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F24",
+     "delta_e": 0.97
+    },
+    "manman278": {
+     "code": "G6",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "285",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "270",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B30",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB13",
+     "delta_e": 1.21
+    },
+    "youken174": {
+     "code": "C12",
+     "delta_e": 6.72
+    }
+   }
+  },
+  "B31": {
+   "rgb": [
+    178,
+    230,
+    148
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F21",
+     "delta_e": 4.78
+    },
+    "manman278": {
+     "code": "G7",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "286",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "271",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B31",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB16",
+     "delta_e": 5.35
+    },
+    "youken174": {
+     "code": "C12",
+     "delta_e": 2.86
+    }
+   }
+  },
+  "B32": {
+   "rgb": [
+    146,
+    173,
+    96
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "F13",
+     "delta_e": 6.66
+    },
+    "manman278": {
+     "code": "G12",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "287",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "272",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "B32",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB32",
+     "delta_e": 4.54
+    },
+    "youken174": {
+     "code": "C13",
+     "delta_e": 8.18
+    }
+   }
+  },
+  "C1": {
+   "rgb": [
+    232,
+    255,
+    231
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "G02",
+     "delta_e": 1.32
+    },
+    "manman278": {
+     "code": "DH10",
+     "delta_e": 5.75
+    },
+    "panpan289": {
+     "code": "64",
+     "delta_e": 2.95
+    },
+    "mixiaowo290": {
+     "code": "76",
+     "delta_e": 2.95
+    },
+    "mard291": {
+     "code": "C1",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB20",
+     "delta_e": 2.48
+    },
+    "youken174": {
+     "code": "C61",
+     "delta_e": 7.78
+    }
+   }
+  },
+  "C2": {
+   "rgb": [
+    171,
+    248,
+    254
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H04",
+     "delta_e": 4.42
+    },
+    "manman278": {
+     "code": "D1",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "30",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "30",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C2",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC2",
+     "delta_e": 3.77
+    },
+    "youken174": {
+     "code": "C79",
+     "delta_e": 5.73
+    }
+   }
+  },
+  "C3": {
+   "rgb": [
+    158,
+    224,
+    248
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "N4",
+     "delta_e": 3.02
+    },
+    "manman278": {
+     "code": "D2",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "63",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "75",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C3",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC17",
+     "delta_e": 6.77
+    },
+    "youken174": {
+     "code": "C98",
+     "delta_e": 3.26
+    }
+   }
+  },
+  "C4": {
+   "rgb": [
+    68,
+    205,
+    251
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H05",
+     "delta_e": 2.14
+    },
+    "manman278": {
+     "code": "D3",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "77",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "82",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C4",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC17",
+     "delta_e": 3.55
+    },
+    "youken174": {
+     "code": "C20",
+     "delta_e": 4.86
+    }
+   }
+  },
+  "C5": {
+   "rgb": [
+    6,
+    171,
+    227
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H08",
+     "delta_e": 5.12
+    },
+    "manman278": {
+     "code": "D7",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "34",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "34",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C5",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC4",
+     "delta_e": 3.32
+    },
+    "youken174": {
+     "code": "C100",
+     "delta_e": 2.52
+    }
+   }
+  },
+  "C6": {
+   "rgb": [
+    84,
+    167,
+    233
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H08",
+     "delta_e": 6.17
+    },
+    "manman278": {
+     "code": "D4",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "25",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "25",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C6",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC6",
+     "delta_e": 2.47
+    },
+    "youken174": {
+     "code": "C38",
+     "delta_e": 3.04
+    }
+   }
+  },
+  "C7": {
+   "rgb": [
+    57,
+    119,
+    204
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M14",
+     "delta_e": 5.89
+    },
+    "manman278": {
+     "code": "D8",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "9",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "9",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C7",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC9",
+     "delta_e": 5.5
+    },
+    "youken174": {
+     "code": "C139",
+     "delta_e": 1.94
+    }
+   }
+  },
+  "C8": {
+   "rgb": [
+    15,
+    82,
+    189
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H16",
+     "delta_e": 2.08
+    },
+    "manman278": {
+     "code": "D9",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "52",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "71",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C8",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD3",
+     "delta_e": 6.69
+    },
+    "youken174": {
+     "code": "C102",
+     "delta_e": 5.23
+    }
+   }
+  },
+  "C9": {
+   "rgb": [
+    51,
+    73,
+    195
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J21",
+     "delta_e": 4.85
+    },
+    "manman278": {
+     "code": "N5",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "42",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "42",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C9",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD25",
+     "delta_e": 6.35
+    },
+    "youken174": {
+     "code": "C142",
+     "delta_e": 4.5
+    }
+   }
+  },
+  "C10": {
+   "rgb": [
+    61,
+    187,
+    227
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H05",
+     "delta_e": 4.39
+    },
+    "manman278": {
+     "code": "D25",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "121",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "130",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C10",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC4",
+     "delta_e": 2.82
+    },
+    "youken174": {
+     "code": "C20",
+     "delta_e": 3.12
+    }
+   }
+  },
+  "C11": {
+   "rgb": [
+    42,
+    222,
+    211
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "S3",
+     "delta_e": 5.8
+    },
+    "manman278": {
+     "code": "S3",
+     "delta_e": 5.8
+    },
+    "panpan289": {
+     "code": "122",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "113",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C11",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB10",
+     "delta_e": 7.78
+    },
+    "youken174": {
+     "code": "CE05",
+     "delta_e": 3.11
+    }
+   }
+  },
+  "C12": {
+   "rgb": [
+    30,
+    51,
+    78
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H20",
+     "delta_e": 5.83
+    },
+    "manman278": {
+     "code": "D28",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "120",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "120",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C12",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC12",
+     "delta_e": 2.67
+    },
+    "youken174": {
+     "code": "C143",
+     "delta_e": 7.13
+    }
+   }
+  },
+  "C13": {
+   "rgb": [
+    205,
+    231,
+    254
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J06",
+     "delta_e": 2.12
+    },
+    "manman278": {
+     "code": "D26",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "140",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "142",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C13",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC13",
+     "delta_e": 3.1
+    },
+    "youken174": {
+     "code": "C18",
+     "delta_e": 5.58
+    }
+   }
+  },
+  "C14": {
+   "rgb": [
+    214,
+    253,
+    252
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H01",
+     "delta_e": 3.53
+    },
+    "manman278": {
+     "code": "D30",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "139",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "136",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C14",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC2",
+     "delta_e": 4.52
+    },
+    "youken174": {
+     "code": "C79",
+     "delta_e": 3.87
+    }
+   }
+  },
+  "C15": {
+   "rgb": [
+    33,
+    197,
+    196
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "S3",
+     "delta_e": 2.58
+    },
+    "manman278": {
+     "code": "D29",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "143",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "132",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C15",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MB19",
+     "delta_e": 7.16
+    },
+    "youken174": {
+     "code": "CE05",
+     "delta_e": 7.35
+    }
+   }
+  },
+  "C16": {
+   "rgb": [
+    24,
+    88,
+    162
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H16",
+     "delta_e": 2.56
+    },
+    "manman278": {
+     "code": "D31",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "149",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "149",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C16",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC8",
+     "delta_e": 3.94
+    },
+    "youken174": {
+     "code": "C102",
+     "delta_e": 1.71
+    }
+   }
+  },
+  "C17": {
+   "rgb": [
+    2,
+    209,
+    243
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H09",
+     "delta_e": 2.72
+    },
+    "manman278": {
+     "code": "D32",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "163",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "156",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C17",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC17",
+     "delta_e": 3.4
+    },
+    "youken174": {
+     "code": "C81",
+     "delta_e": 5.46
+    }
+   }
+  },
+  "C18": {
+   "rgb": [
+    33,
+    50,
+    68
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H23",
+     "delta_e": 3.3
+    },
+    "manman278": {
+     "code": "D36",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "196",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "196",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C18",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC12",
+     "delta_e": 6.17
+    },
+    "youken174": {
+     "code": "C157",
+     "delta_e": 9.11
+    }
+   }
+  },
+  "C19": {
+   "rgb": [
+    24,
+    134,
+    144
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H12",
+     "delta_e": 6.04
+    },
+    "manman278": {
+     "code": "DH6",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "202",
+     "delta_e": 5.21
+    },
+    "mixiaowo290": {
+     "code": "202",
+     "delta_e": 5.21
+    },
+    "mard291": {
+     "code": "C19",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC19",
+     "delta_e": 3.69
+    },
+    "youken174": {
+     "code": "C104",
+     "delta_e": 2.82
+    }
+   }
+  },
+  "C20": {
+   "rgb": [
+    26,
+    112,
+    169
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H14",
+     "delta_e": 3.98
+    },
+    "manman278": {
+     "code": "DH9",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "197",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "197",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C20",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC9",
+     "delta_e": 2.38
+    },
+    "youken174": {
+     "code": "C37",
+     "delta_e": 4.94
+    }
+   }
+  },
+  "C21": {
+   "rgb": [
+    190,
+    221,
+    252
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J06",
+     "delta_e": 3.29
+    },
+    "manman278": {
+     "code": "DH14",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "212",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "212",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C21",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD17",
+     "delta_e": 3.65
+    },
+    "youken174": {
+     "code": "C68",
+     "delta_e": 6.55
+    }
+   }
+  },
+  "C22": {
+   "rgb": [
+    107,
+    177,
+    187
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H29",
+     "delta_e": 2.97
+    },
+    "manman278": {
+     "code": "IC3",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "239",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "239",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C22",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC22",
+     "delta_e": 4.02
+    },
+    "youken174": {
+     "code": "C99",
+     "delta_e": 3.74
+    }
+   }
+  },
+  "C23": {
+   "rgb": [
+    200,
+    226,
+    249
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J06",
+     "delta_e": 1.54
+    },
+    "manman278": {
+     "code": "Q11",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "263",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "263",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C23",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC13",
+     "delta_e": 2.83
+    },
+    "youken174": {
+     "code": "C18",
+     "delta_e": 5.13
+    }
+   }
+  },
+  "C24": {
+   "rgb": [
+    126,
+    197,
+    249
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H08",
+     "delta_e": 6.48
+    },
+    "manman278": {
+     "code": "R13",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "267",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "252",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C24",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC24",
+     "delta_e": 3.75
+    },
+    "youken174": {
+     "code": "C97",
+     "delta_e": 2.27
+    }
+   }
+  },
+  "C25": {
+   "rgb": [
+    169,
+    232,
+    224
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "S1",
+     "delta_e": 1.48
+    },
+    "manman278": {
+     "code": "R14",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "271",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "256",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C25",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC25",
+     "delta_e": 2.11
+    },
+    "youken174": {
+     "code": "C118",
+     "delta_e": 2.78
+    }
+   }
+  },
+  "C26": {
+   "rgb": [
+    66,
+    173,
+    209
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H07",
+     "delta_e": 3.11
+    },
+    "manman278": {
+     "code": "R12",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "265",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "250",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C26",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC4",
+     "delta_e": 2.89
+    },
+    "youken174": {
+     "code": "C83",
+     "delta_e": 1.77
+    }
+   }
+  },
+  "C27": {
+   "rgb": [
+    208,
+    222,
+    239
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J06",
+     "delta_e": 4.87
+    },
+    "manman278": {
+     "code": "R15",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "263",
+     "delta_e": 3.78
+    },
+    "mixiaowo290": {
+     "code": "263",
+     "delta_e": 3.78
+    },
+    "mard291": {
+     "code": "C27",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC13",
+     "delta_e": 1.81
+    },
+    "youken174": {
+     "code": "CE01",
+     "delta_e": 5.7
+    }
+   }
+  },
+  "C28": {
+   "rgb": [
+    189,
+    206,
+    237
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M13",
+     "delta_e": 4.17
+    },
+    "manman278": {
+     "code": "G13",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "280",
+     "delta_e": 1.74
+    },
+    "mixiaowo290": {
+     "code": "265",
+     "delta_e": 1.74
+    },
+    "mard291": {
+     "code": "C28",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC28",
+     "delta_e": 3.08
+    },
+    "youken174": {
+     "code": "C134",
+     "delta_e": 3.33
+    }
+   }
+  },
+  "C29": {
+   "rgb": [
+    54,
+    74,
+    137
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J21",
+     "delta_e": 4.74
+    },
+    "manman278": {
+     "code": "G15",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "281",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "266",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "C29",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD3",
+     "delta_e": 4.91
+    },
+    "youken174": {
+     "code": "C142",
+     "delta_e": 5.47
+    }
+   }
+  },
+  "D1": {
+   "rgb": [
+    172,
+    183,
+    239
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M13",
+     "delta_e": 7.55
+    },
+    "manman278": {
+     "code": "D5",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "46",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "46",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D1",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD11",
+     "delta_e": 4.31
+    },
+    "youken174": {
+     "code": "C25",
+     "delta_e": 1.89
+    }
+   }
+  },
+  "D2": {
+   "rgb": [
+    134,
+    141,
+    211
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "GB5",
+     "delta_e": 3.11
+    },
+    "manman278": {
+     "code": "D6",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "36",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "36",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D2",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD2",
+     "delta_e": 5.74
+    },
+    "youken174": {
+     "code": "C149",
+     "delta_e": 5.52
+    }
+   }
+  },
+  "D3": {
+   "rgb": [
+    54,
+    83,
+    175
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H16",
+     "delta_e": 3.88
+    },
+    "manman278": {
+     "code": "D10",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "8",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "8",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D3",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD22",
+     "delta_e": 5.09
+    },
+    "youken174": {
+     "code": "C141",
+     "delta_e": 4.17
+    }
+   }
+  },
+  "D4": {
+   "rgb": [
+    22,
+    44,
+    126
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H22",
+     "delta_e": 4.45
+    },
+    "manman278": {
+     "code": "D11",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "75",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "80",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D4",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD4",
+     "delta_e": 2.58
+    },
+    "youken174": {
+     "code": "C143",
+     "delta_e": 3.29
+    }
+   }
+  },
+  "D5": {
+   "rgb": [
+    179,
+    78,
+    198
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "L9",
+     "delta_e": 6.46
+    },
+    "manman278": {
+     "code": "D13",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "32",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "32",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D5",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD20",
+     "delta_e": 4.23
+    },
+    "youken174": {
+     "code": "C67",
+     "delta_e": 3.35
+    }
+   }
+  },
+  "D6": {
+   "rgb": [
+    179,
+    123,
+    220
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "S15",
+     "delta_e": 5.8
+    },
+    "manman278": {
+     "code": "D14",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "27",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "27",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D6",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD18",
+     "delta_e": 5.48
+    },
+    "youken174": {
+     "code": "C26",
+     "delta_e": 3.67
+    }
+   }
+  },
+  "D7": {
+   "rgb": [
+    135,
+    88,
+    169
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "L9",
+     "delta_e": 2.92
+    },
+    "manman278": {
+     "code": "D12",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "7",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "7",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D7",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD14",
+     "delta_e": 8.59
+    },
+    "youken174": {
+     "code": "C67",
+     "delta_e": 7.8
+    }
+   }
+  },
+  "D8": {
+   "rgb": [
+    227,
+    210,
+    254
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J22",
+     "delta_e": 2.63
+    },
+    "manman278": {
+     "code": "D16",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "94",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "89",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D8",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD8",
+     "delta_e": 3.26
+    },
+    "youken174": {
+     "code": "C130",
+     "delta_e": 3.58
+    }
+   }
+  },
+  "D9": {
+   "rgb": [
+    214,
+    186,
+    245
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J10",
+     "delta_e": 4.34
+    },
+    "manman278": {
+     "code": "D17",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "93",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "90",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D9",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD9",
+     "delta_e": 5.22
+    },
+    "youken174": {
+     "code": "C130",
+     "delta_e": 4.4
+    }
+   }
+  },
+  "D10": {
+   "rgb": [
+    48,
+    26,
+    73
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J19",
+     "delta_e": 9.52
+    },
+    "manman278": {
+     "code": "D15",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "92",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "91",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D10",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD10",
+     "delta_e": 5.27
+    },
+    "youken174": {
+     "code": "C58",
+     "delta_e": 9.34
+    }
+   }
+  },
+  "D11": {
+   "rgb": [
+    188,
+    186,
+    226
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M10",
+     "delta_e": 7.5
+    },
+    "manman278": {
+     "code": "D19",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "105",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "104",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D11",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD9",
+     "delta_e": 3.91
+    },
+    "youken174": {
+     "code": "C151",
+     "delta_e": 3.28
+    }
+   }
+  },
+  "D12": {
+   "rgb": [
+    220,
+    153,
+    206
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "S13",
+     "delta_e": 3.75
+    },
+    "manman278": {
+     "code": "D20",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "104",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "105",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D12",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD12",
+     "delta_e": 4.05
+    },
+    "youken174": {
+     "code": "C127",
+     "delta_e": 2.62
+    }
+   }
+  },
+  "D13": {
+   "rgb": [
+    181,
+    3,
+    143
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J14",
+     "delta_e": 9.45
+    },
+    "manman278": {
+     "code": "D21",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "103",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "106",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D13",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD13",
+     "delta_e": 1.24
+    },
+    "youken174": {
+     "code": "CE11",
+     "delta_e": 5.75
+    }
+   }
+  },
+  "D14": {
+   "rgb": [
+    136,
+    40,
+    147
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J16",
+     "delta_e": 7.25
+    },
+    "manman278": {
+     "code": "D22",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "102",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "107",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D14",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD21",
+     "delta_e": 0.9
+    },
+    "youken174": {
+     "code": "C133",
+     "delta_e": 6.09
+    }
+   }
+  },
+  "D15": {
+   "rgb": [
+    47,
+    30,
+    142
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "H22",
+     "delta_e": 8.29
+    },
+    "manman278": {
+     "code": "D18",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "101",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "108",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D15",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD25",
+     "delta_e": 7.05
+    },
+    "youken174": {
+     "code": "C27",
+     "delta_e": 2.2
+    }
+   }
+  },
+  "D16": {
+   "rgb": [
+    226,
+    228,
+    240
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J09",
+     "delta_e": 3.94
+    },
+    "manman278": {
+     "code": "D23",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "118",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "126",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D16",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH10",
+     "delta_e": 2.71
+    },
+    "youken174": {
+     "code": "CE01",
+     "delta_e": 4.07
+    }
+   }
+  },
+  "D17": {
+   "rgb": [
+    199,
+    211,
+    249
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M13",
+     "delta_e": 6.67
+    },
+    "manman278": {
+     "code": "D24",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "119",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "128",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D17",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC28",
+     "delta_e": 5.32
+    },
+    "youken174": {
+     "code": "C134",
+     "delta_e": 2.26
+    }
+   }
+  },
+  "D18": {
+   "rgb": [
+    154,
+    100,
+    184
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J17",
+     "delta_e": 1.68
+    },
+    "manman278": {
+     "code": "D27",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "124",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "125",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D18",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD20",
+     "delta_e": 5.25
+    },
+    "youken174": {
+     "code": "C26",
+     "delta_e": 6.06
+    }
+   }
+  },
+  "D19": {
+   "rgb": [
+    216,
+    194,
+    217
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M10",
+     "delta_e": 4.13
+    },
+    "manman278": {
+     "code": "D33",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "153",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "153",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D19",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD26",
+     "delta_e": 1.58
+    },
+    "youken174": {
+     "code": "CE07",
+     "delta_e": 3.61
+    }
+   }
+  },
+  "D20": {
+   "rgb": [
+    156,
+    52,
+    173
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "L9",
+     "delta_e": 8.29
+    },
+    "manman278": {
+     "code": "D34",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "161",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "155",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D20",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD14",
+     "delta_e": 1.95
+    },
+    "youken174": {
+     "code": "CE11",
+     "delta_e": 3.58
+    }
+   }
+  },
+  "D21": {
+   "rgb": [
+    148,
+    5,
+    149
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J16",
+     "delta_e": 10.21
+    },
+    "manman278": {
+     "code": "D35",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "162",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "158",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D21",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD21",
+     "delta_e": 3.73
+    },
+    "youken174": {
+     "code": "C133",
+     "delta_e": 5.85
+    }
+   }
+  },
+  "D22": {
+   "rgb": [
+    56,
+    57,
+    149
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J21",
+     "delta_e": 4.16
+    },
+    "manman278": {
+     "code": "DH1",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "198",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "198",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D22",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD25",
+     "delta_e": 3.06
+    },
+    "youken174": {
+     "code": "C142",
+     "delta_e": 4.9
+    }
+   }
+  },
+  "D23": {
+   "rgb": [
+    250,
+    219,
+    248
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J22",
+     "delta_e": 4.35
+    },
+    "manman278": {
+     "code": "IC8",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "UNKNOWN-01",
+     "delta_e": 3.51
+    },
+    "mixiaowo290": {
+     "code": "UNKNOWN-01",
+     "delta_e": 3.51
+    },
+    "mard291": {
+     "code": "D23",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME2",
+     "delta_e": 2.18
+    },
+    "youken174": {
+     "code": "C126",
+     "delta_e": 3.2
+    }
+   }
+  },
+  "D24": {
+   "rgb": [
+    118,
+    138,
+    225
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J20",
+     "delta_e": 4.08
+    },
+    "manman278": {
+     "code": "Q14",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "244",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "244",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D24",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD1",
+     "delta_e": 3.19
+    },
+    "youken174": {
+     "code": "C138",
+     "delta_e": 5.37
+    }
+   }
+  },
+  "D25": {
+   "rgb": [
+    73,
+    80,
+    194
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J21",
+     "delta_e": 5.69
+    },
+    "manman278": {
+     "code": "Q15",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "249",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "234",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D25",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD22",
+     "delta_e": 7.53
+    },
+    "youken174": {
+     "code": "C141",
+     "delta_e": 5.86
+    }
+   }
+  },
+  "D26": {
+   "rgb": [
+    214,
+    198,
+    235
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M10",
+     "delta_e": 1.51
+    },
+    "manman278": {
+     "code": "R01",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "273",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "258",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "D26",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD8",
+     "delta_e": 2.38
+    },
+    "youken174": {
+     "code": "C130",
+     "delta_e": 1.79
+    }
+   }
+  },
+  "E1": {
+   "rgb": [
+    246,
+    212,
+    203
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K03",
+     "delta_e": 1.74
+    },
+    "manman278": {
+     "code": "E1",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "18",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "18",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E1",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME1",
+     "delta_e": 2.0
+    },
+    "youken174": {
+     "code": "C22",
+     "delta_e": 3.95
+    }
+   }
+  },
+  "E2": {
+   "rgb": [
+    252,
+    193,
+    221
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K16",
+     "delta_e": 2.1
+    },
+    "manman278": {
+     "code": "A7",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "38",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "38",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E2",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME18",
+     "delta_e": 5.01
+    },
+    "youken174": {
+     "code": "C63",
+     "delta_e": 3.93
+    }
+   }
+  },
+  "E3": {
+   "rgb": [
+    246,
+    189,
+    232
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K16",
+     "delta_e": 6.35
+    },
+    "manman278": {
+     "code": "A8",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "62",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "74",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E3",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME2",
+     "delta_e": 7.0
+    },
+    "youken174": {
+     "code": "C63",
+     "delta_e": 2.89
+    }
+   }
+  },
+  "E4": {
+   "rgb": [
+    233,
+    99,
+    158
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K19",
+     "delta_e": 3.36
+    },
+    "manman278": {
+     "code": "A9",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "6",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "6",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E4",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME5",
+     "delta_e": 3.57
+    },
+    "youken174": {
+     "code": "C08",
+     "delta_e": 3.7
+    }
+   }
+  },
+  "E5": {
+   "rgb": [
+    241,
+    85,
+    159
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K19",
+     "delta_e": 4.69
+    },
+    "manman278": {
+     "code": "A10",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "40",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "40",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E5",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME5",
+     "delta_e": 3.89
+    },
+    "youken174": {
+     "code": "C08",
+     "delta_e": 3.25
+    }
+   }
+  },
+  "E6": {
+   "rgb": [
+    236,
+    64,
+    114
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K22",
+     "delta_e": 4.1
+    },
+    "manman278": {
+     "code": "A11",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "20",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "20",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E6",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME6",
+     "delta_e": 4.67
+    },
+    "youken174": {
+     "code": "C09",
+     "delta_e": 6.34
+    }
+   }
+  },
+  "E7": {
+   "rgb": [
+    198,
+    54,
+    116
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "GB7",
+     "delta_e": 2.6
+    },
+    "manman278": {
+     "code": "A12",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "41",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "41",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E7",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME10",
+     "delta_e": 2.22
+    },
+    "youken174": {
+     "code": "C64",
+     "delta_e": 4.32
+    }
+   }
+  },
+  "E8": {
+   "rgb": [
+    253,
+    219,
+    233
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M19",
+     "delta_e": 1.25
+    },
+    "manman278": {
+     "code": "A13",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "84",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "103",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E8",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME18",
+     "delta_e": 3.25
+    },
+    "youken174": {
+     "code": "CE16",
+     "delta_e": 4.49
+    }
+   }
+  },
+  "E9": {
+   "rgb": [
+    229,
+    117,
+    199
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "N1",
+     "delta_e": 6.49
+    },
+    "manman278": {
+     "code": "A14",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "98",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "95",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E9",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME9",
+     "delta_e": 2.6
+    },
+    "youken174": {
+     "code": "C07",
+     "delta_e": 5.74
+    }
+   }
+  },
+  "E10": {
+   "rgb": [
+    211,
+    57,
+    151
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K23",
+     "delta_e": 5.88
+    },
+    "manman278": {
+     "code": "A16",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "83",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "94",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E10",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME13",
+     "delta_e": 6.52
+    },
+    "youken174": {
+     "code": "C09",
+     "delta_e": 6.57
+    }
+   }
+  },
+  "E11": {
+   "rgb": [
+    247,
+    218,
+    212
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K03",
+     "delta_e": 1.35
+    },
+    "manman278": {
+     "code": "A19",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "125",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "131",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E11",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF16",
+     "delta_e": 3.65
+    },
+    "youken174": {
+     "code": "C22",
+     "delta_e": 2.81
+    }
+   }
+  },
+  "E12": {
+   "rgb": [
+    248,
+    147,
+    191
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K17",
+     "delta_e": 3.92
+    },
+    "manman278": {
+     "code": "A20",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "126",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "112",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E12",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME3",
+     "delta_e": 3.4
+    },
+    "youken174": {
+     "code": "C36",
+     "delta_e": 4.24
+    }
+   }
+  },
+  "E13": {
+   "rgb": [
+    181,
+    2,
+    106
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K25",
+     "delta_e": 5.52
+    },
+    "manman278": {
+     "code": "A21",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "127",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "124",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E13",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME7",
+     "delta_e": 4.87
+    },
+    "youken174": {
+     "code": "C64",
+     "delta_e": 5.11
+    }
+   }
+  },
+  "E14": {
+   "rgb": [
+    250,
+    212,
+    191
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K36",
+     "delta_e": 2.04
+    },
+    "manman278": {
+     "code": "E21",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "137",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "140",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E14",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG2",
+     "delta_e": 1.62
+    },
+    "youken174": {
+     "code": "C47",
+     "delta_e": 3.4
+    }
+   }
+  },
+  "E15": {
+   "rgb": [
+    245,
+    201,
+    202
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K38",
+     "delta_e": 2.1
+    },
+    "manman278": {
+     "code": "A23",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "135",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "139",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E15",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF22",
+     "delta_e": 2.51
+    },
+    "youken174": {
+     "code": "C22",
+     "delta_e": 4.8
+    }
+   }
+  },
+  "E16": {
+   "rgb": [
+    251,
+    244,
+    236
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K01",
+     "delta_e": 1.73
+    },
+    "manman278": {
+     "code": "IC2",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "221",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "206",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E16",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME16",
+     "delta_e": 0.63
+    },
+    "youken174": {
+     "code": "C87",
+     "delta_e": 4.85
+    }
+   }
+  },
+  "E17": {
+   "rgb": [
+    247,
+    227,
+    236
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K14",
+     "delta_e": 1.52
+    },
+    "manman278": {
+     "code": "IC7",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "220",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "205",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E17",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME20",
+     "delta_e": 2.1
+    },
+    "youken174": {
+     "code": "C126",
+     "delta_e": 5.17
+    }
+   }
+  },
+  "E18": {
+   "rgb": [
+    251,
+    203,
+    219
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K16",
+     "delta_e": 2.4
+    },
+    "manman278": {
+     "code": "IC13",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "210",
+     "delta_e": 1.21
+    },
+    "mixiaowo290": {
+     "code": "210",
+     "delta_e": 1.21
+    },
+    "mard291": {
+     "code": "E18",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME18",
+     "delta_e": 2.23
+    },
+    "youken174": {
+     "code": "CE16",
+     "delta_e": 1.01
+    }
+   }
+  },
+  "E19": {
+   "rgb": [
+    246,
+    187,
+    209
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M20",
+     "delta_e": 1.77
+    },
+    "manman278": {
+     "code": "IC12",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "215",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "215",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E19",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME18",
+     "delta_e": 5.81
+    },
+    "youken174": {
+     "code": "CE16",
+     "delta_e": 4.49
+    }
+   }
+  },
+  "E20": {
+   "rgb": [
+    215,
+    198,
+    206
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Y10",
+     "delta_e": 4.86
+    },
+    "manman278": {
+     "code": "Q1",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "241",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "241",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E20",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME15",
+     "delta_e": 4.82
+    },
+    "youken174": {
+     "code": "C22",
+     "delta_e": 6.96
+    }
+   }
+  },
+  "E21": {
+   "rgb": [
+    192,
+    157,
+    164
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K28",
+     "delta_e": 7.01
+    },
+    "manman278": {
+     "code": "Q2",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "253",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "238",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E21",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME21",
+     "delta_e": 0.74
+    },
+    "youken174": {
+     "code": "C128",
+     "delta_e": 6.89
+    }
+   }
+  },
+  "E22": {
+   "rgb": [
+    181,
+    139,
+    159
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K29",
+     "delta_e": 6.14
+    },
+    "manman278": {
+     "code": "Q4",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "252",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "237",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E22",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MM10",
+     "delta_e": 4.24
+    },
+    "youken174": {
+     "code": "CE08",
+     "delta_e": 4.64
+    }
+   }
+  },
+  "E23": {
+   "rgb": [
+    147,
+    125,
+    138
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K29",
+     "delta_e": 4.71
+    },
+    "manman278": {
+     "code": "Q3",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "250",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "235",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E23",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MM8",
+     "delta_e": 7.25
+    },
+    "youken174": {
+     "code": "CE08",
+     "delta_e": 9.6
+    }
+   }
+  },
+  "E24": {
+   "rgb": [
+    222,
+    190,
+    229
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M10",
+     "delta_e": 3.62
+    },
+    "manman278": {
+     "code": "G8",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "282",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "267",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "E24",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD26",
+     "delta_e": 6.23
+    },
+    "youken174": {
+     "code": "C130",
+     "delta_e": 4.59
+    }
+   }
+  },
+  "F1": {
+   "rgb": [
+    255,
+    146,
+    128
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K08",
+     "delta_e": 2.6
+    },
+    "manman278": {
+     "code": "A1",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "35",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "35",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F1",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF17",
+     "delta_e": 4.08
+    },
+    "youken174": {
+     "code": "C94",
+     "delta_e": 4.04
+    }
+   }
+  },
+  "F2": {
+   "rgb": [
+    247,
+    61,
+    72
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "C06",
+     "delta_e": 3.05
+    },
+    "manman278": {
+     "code": "A2",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "31",
+     "delta_e": 0.79
+    },
+    "mixiaowo290": {
+     "code": "31",
+     "delta_e": 0.79
+    },
+    "mard291": {
+     "code": "F2",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF3",
+     "delta_e": 4.71
+    },
+    "youken174": {
+     "code": "C62",
+     "delta_e": 2.33
+    }
+   }
+  },
+  "F3": {
+   "rgb": [
+    239,
+    77,
+    62
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "C06",
+     "delta_e": 3.48
+    },
+    "manman278": {
+     "code": "A3",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "53",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "72",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F3",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF3",
+     "delta_e": 2.83
+    },
+    "youken174": {
+     "code": "C62",
+     "delta_e": 3.21
+    }
+   }
+  },
+  "F4": {
+   "rgb": [
+    249,
+    43,
+    64
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "C06",
+     "delta_e": 2.58
+    },
+    "manman278": {
+     "code": "A4",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "54",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "73",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F4",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF3",
+     "delta_e": 5.73
+    },
+    "youken174": {
+     "code": "C62",
+     "delta_e": 3.17
+    }
+   }
+  },
+  "F5": {
+   "rgb": [
+    227,
+    3,
+    40
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "L1",
+     "delta_e": 3.35
+    },
+    "manman278": {
+     "code": "DH8",
+     "delta_e": 2.99
+    },
+    "panpan289": {
+     "code": "5",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "5",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F5",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF13",
+     "delta_e": 5.76
+    },
+    "youken174": {
+     "code": "C05",
+     "delta_e": 4.16
+    }
+   }
+  },
+  "F6": {
+   "rgb": [
+    145,
+    54,
+    53
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "C09",
+     "delta_e": 8.15
+    },
+    "manman278": {
+     "code": "E9",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "16",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "16",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F6",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF8",
+     "delta_e": 7.1
+    },
+    "youken174": {
+     "code": "C30",
+     "delta_e": 5.01
+    }
+   }
+  },
+  "F7": {
+   "rgb": [
+    145,
+    25,
+    50
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "C10",
+     "delta_e": 8.55
+    },
+    "manman278": {
+     "code": "A6",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "47",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "47",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F7",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF8",
+     "delta_e": 7.8
+    },
+    "youken174": {
+     "code": "C145",
+     "delta_e": 4.97
+    }
+   }
+  },
+  "F8": {
+   "rgb": [
+    187,
+    1,
+    38
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "C09",
+     "delta_e": 3.58
+    },
+    "manman278": {
+     "code": "A17",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "81",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "92",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F8",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF5",
+     "delta_e": 0.92
+    },
+    "youken174": {
+     "code": "C43",
+     "delta_e": 2.63
+    }
+   }
+  },
+  "F9": {
+   "rgb": [
+    224,
+    103,
+    122
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K20",
+     "delta_e": 3.92
+    },
+    "manman278": {
+     "code": "A15",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "82",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "93",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F9",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA19",
+     "delta_e": 5.76
+    },
+    "youken174": {
+     "code": "C131",
+     "delta_e": 6.5
+    }
+   }
+  },
+  "F10": {
+   "rgb": [
+    135,
+    70,
+    40
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "S9",
+     "delta_e": 9.26
+    },
+    "manman278": {
+     "code": "E15",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "116",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "115",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F10",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF6",
+     "delta_e": 2.21
+    },
+    "youken174": {
+     "code": "C30",
+     "delta_e": 9.44
+    }
+   }
+  },
+  "F11": {
+   "rgb": [
+    111,
+    50,
+    29
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "S9",
+     "delta_e": 4.57
+    },
+    "manman278": {
+     "code": "E8",
+     "delta_e": 4.42
+    },
+    "panpan289": {
+     "code": "12",
+     "delta_e": 4.42
+    },
+    "mixiaowo290": {
+     "code": "12",
+     "delta_e": 4.42
+    },
+    "mard291": {
+     "code": "F11",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF6",
+     "delta_e": 6.64
+    },
+    "youken174": {
+     "code": "CE17",
+     "delta_e": 10.99
+    }
+   }
+  },
+  "F12": {
+   "rgb": [
+    248,
+    81,
+    109
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K22",
+     "delta_e": 3.47
+    },
+    "manman278": {
+     "code": "A22",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "136",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "134",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F12",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF25",
+     "delta_e": 2.87
+    },
+    "youken174": {
+     "code": "C131",
+     "delta_e": 7.47
+    }
+   }
+  },
+  "F13": {
+   "rgb": [
+    244,
+    92,
+    69
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "C04",
+     "delta_e": 3.17
+    },
+    "manman278": {
+     "code": "A24",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "148",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "148",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F13",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF2",
+     "delta_e": 1.97
+    },
+    "youken174": {
+     "code": "C62",
+     "delta_e": 5.83
+    }
+   }
+  },
+  "F14": {
+   "rgb": [
+    252,
+    173,
+    178
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M04",
+     "delta_e": 3.49
+    },
+    "manman278": {
+     "code": "A25",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "154",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "154",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F14",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF14",
+     "delta_e": 5.34
+    },
+    "youken174": {
+     "code": "C66",
+     "delta_e": 4.75
+    }
+   }
+  },
+  "F15": {
+   "rgb": [
+    213,
+    5,
+    39
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "L1",
+     "delta_e": 2.15
+    },
+    "manman278": {
+     "code": "DH8",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "204",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "191",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F15",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF5",
+     "delta_e": 4.83
+    },
+    "youken174": {
+     "code": "C43",
+     "delta_e": 4.93
+    }
+   }
+  },
+  "F16": {
+   "rgb": [
+    248,
+    192,
+    169
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M18",
+     "delta_e": 2.21
+    },
+    "manman278": {
+     "code": "IC10",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "211",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "211",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F16",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA12",
+     "delta_e": 3.39
+    },
+    "youken174": {
+     "code": "C23",
+     "delta_e": 3.41
+    }
+   }
+  },
+  "F17": {
+   "rgb": [
+    232,
+    155,
+    125
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M07",
+     "delta_e": 2.42
+    },
+    "manman278": {
+     "code": "Q9",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "245",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "245",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F17",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA9",
+     "delta_e": 3.9
+    },
+    "youken174": {
+     "code": "C65",
+     "delta_e": 4.25
+    }
+   }
+  },
+  "F18": {
+   "rgb": [
+    208,
+    126,
+    74
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K32",
+     "delta_e": 4.69
+    },
+    "manman278": {
+     "code": "Q10",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "246",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "246",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F18",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG13",
+     "delta_e": 2.57
+    },
+    "youken174": {
+     "code": "C73",
+     "delta_e": 3.04
+    }
+   }
+  },
+  "F19": {
+   "rgb": [
+    190,
+    69,
+    74
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "C08",
+     "delta_e": 5.64
+    },
+    "manman278": {
+     "code": "Q5",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "243",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "243",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F19",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF19",
+     "delta_e": 2.44
+    },
+    "youken174": {
+     "code": "C30",
+     "delta_e": 8.11
+    }
+   }
+  },
+  "F20": {
+   "rgb": [
+    198,
+    148,
+    149
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M22",
+     "delta_e": 6.94
+    },
+    "manman278": {
+     "code": "R04",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "275",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "260",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F20",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME21",
+     "delta_e": 5.47
+    },
+    "youken174": {
+     "code": "C93",
+     "delta_e": 9.92
+    }
+   }
+  },
+  "F21": {
+   "rgb": [
+    242,
+    187,
+    198
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M20",
+     "delta_e": 2.82
+    },
+    "manman278": {
+     "code": "R03",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "266",
+     "delta_e": 1.23
+    },
+    "mixiaowo290": {
+     "code": "251",
+     "delta_e": 1.23
+    },
+    "mard291": {
+     "code": "F21",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF24",
+     "delta_e": 2.82
+    },
+    "youken174": {
+     "code": "CE16",
+     "delta_e": 5.19
+    }
+   }
+  },
+  "F22": {
+   "rgb": [
+    247,
+    195,
+    208
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M20",
+     "delta_e": 2.32
+    },
+    "manman278": {
+     "code": "R02",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "272",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "257",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F22",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF24",
+     "delta_e": 3.35
+    },
+    "youken174": {
+     "code": "CE16",
+     "delta_e": 3.14
+    }
+   }
+  },
+  "F23": {
+   "rgb": [
+    236,
+    128,
+    109
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "C02",
+     "delta_e": 4.67
+    },
+    "manman278": {
+     "code": "R05",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "264",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "249",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F23",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF23",
+     "delta_e": 1.49
+    },
+    "youken174": {
+     "code": "C94",
+     "delta_e": 3.54
+    }
+   }
+  },
+  "F24": {
+   "rgb": [
+    224,
+    157,
+    175
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K28",
+     "delta_e": 4.04
+    },
+    "manman278": {
+     "code": "G9",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "283",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "268",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F24",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF21",
+     "delta_e": 3.22
+    },
+    "youken174": {
+     "code": "C36",
+     "delta_e": 3.54
+    }
+   }
+  },
+  "F25": {
+   "rgb": [
+    232,
+    72,
+    84
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K39",
+     "delta_e": 3.16
+    },
+    "manman278": {
+     "code": "G10",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "284",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "269",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "F25",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF12",
+     "delta_e": 3.88
+    },
+    "youken174": {
+     "code": "C62",
+     "delta_e": 4.17
+    }
+   }
+  },
+  "G1": {
+   "rgb": [
+    255,
+    228,
+    211
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K06",
+     "delta_e": 2.56
+    },
+    "manman278": {
+     "code": "E3",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "76",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "81",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G1",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME11",
+     "delta_e": 1.68
+    },
+    "youken174": {
+     "code": "C47",
+     "delta_e": 1.83
+    }
+   }
+  },
+  "G2": {
+   "rgb": [
+    252,
+    198,
+    172
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K09",
+     "delta_e": 1.37
+    },
+    "manman278": {
+     "code": "E4",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "49",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "49",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G2",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG2",
+     "delta_e": 4.72
+    },
+    "youken174": {
+     "code": "C23",
+     "delta_e": 1.81
+    }
+   }
+  },
+  "G3": {
+   "rgb": [
+    241,
+    196,
+    165
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Z06",
+     "delta_e": 3.68
+    },
+    "manman278": {
+     "code": "E5",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "80",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "85",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G3",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA23",
+     "delta_e": 2.68
+    },
+    "youken174": {
+     "code": "C23",
+     "delta_e": 2.1
+    }
+   }
+  },
+  "G4": {
+   "rgb": [
+    220,
+    179,
+    135
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Y13",
+     "delta_e": 3.71
+    },
+    "manman278": {
+     "code": "E6",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "19",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "19",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G4",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG12",
+     "delta_e": 2.43
+    },
+    "youken174": {
+     "code": "C154",
+     "delta_e": 3.08
+    }
+   }
+  },
+  "G5": {
+   "rgb": [
+    231,
+    179,
+    78
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Z12",
+     "delta_e": 4.11
+    },
+    "manman278": {
+     "code": "B7",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "43",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "43",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G5",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA20",
+     "delta_e": 4.48
+    },
+    "youken174": {
+     "code": "CE13",
+     "delta_e": 3.74
+    }
+   }
+  },
+  "G6": {
+   "rgb": [
+    243,
+    160,
+    20
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M17",
+     "delta_e": 2.98
+    },
+    "manman278": {
+     "code": "B8",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "179",
+     "delta_e": 2.98
+    },
+    "mixiaowo290": {
+     "code": "179",
+     "delta_e": 2.98
+    },
+    "mard291": {
+     "code": "G6",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA6",
+     "delta_e": 2.58
+    },
+    "youken174": {
+     "code": "C03",
+     "delta_e": 2.71
+    }
+   }
+  },
+  "G7": {
+   "rgb": [
+    152,
+    80,
+    58
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Z21",
+     "delta_e": 5.08
+    },
+    "manman278": {
+     "code": "E7",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "199",
+     "delta_e": 4.26
+    },
+    "mixiaowo290": {
+     "code": "199",
+     "delta_e": 4.26
+    },
+    "mard291": {
+     "code": "G7",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF6",
+     "delta_e": 7.68
+    },
+    "youken174": {
+     "code": "C30",
+     "delta_e": 6.69
+    }
+   }
+  },
+  "G8": {
+   "rgb": [
+    75,
+    43,
+    28
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "S9",
+     "delta_e": 8.48
+    },
+    "manman278": {
+     "code": "S15",
+     "delta_e": 8.48
+    },
+    "panpan289": {
+     "code": "226",
+     "delta_e": 8.48
+    },
+    "mixiaowo290": {
+     "code": "226",
+     "delta_e": 8.48
+    },
+    "mard291": {
+     "code": "G8",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF11",
+     "delta_e": 9.16
+    },
+    "youken174": {
+     "code": "CE17",
+     "delta_e": 10.41
+    }
+   }
+  },
+  "G9": {
+   "rgb": [
+    228,
+    182,
+    133
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Y13",
+     "delta_e": 3.86
+    },
+    "manman278": {
+     "code": "E10",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "91",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "102",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G9",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG12",
+     "delta_e": 1.0
+    },
+    "youken174": {
+     "code": "C154",
+     "delta_e": 2.36
+    }
+   }
+  },
+  "G10": {
+   "rgb": [
+    218,
+    140,
+    66
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K32",
+     "delta_e": 3.32
+    },
+    "manman278": {
+     "code": "B9",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "87",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "101",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G10",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG10",
+     "delta_e": 5.13
+    },
+    "youken174": {
+     "code": "CE14",
+     "delta_e": 2.43
+    }
+   }
+  },
+  "G11": {
+   "rgb": [
+    218,
+    200,
+    152
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Y09",
+     "delta_e": 4.11
+    },
+    "manman278": {
+     "code": "E12",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "112",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "118",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G11",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG11",
+     "delta_e": 1.67
+    },
+    "youken174": {
+     "code": "C109",
+     "delta_e": 7.64
+    }
+   }
+  },
+  "G12": {
+   "rgb": [
+    254,
+    201,
+    147
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Z06",
+     "delta_e": 2.84
+    },
+    "manman278": {
+     "code": "E13",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "113",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "127",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G12",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA18",
+     "delta_e": 1.65
+    },
+    "youken174": {
+     "code": "C74",
+     "delta_e": 3.84
+    }
+   }
+  },
+  "G13": {
+   "rgb": [
+    178,
+    113,
+    75
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Z19",
+     "delta_e": 4.17
+    },
+    "manman278": {
+     "code": "E17",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "115",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "114",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G13",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG20",
+     "delta_e": 3.41
+    },
+    "youken174": {
+     "code": "C31",
+     "delta_e": 4.8
+    }
+   }
+  },
+  "G14": {
+   "rgb": [
+    139,
+    104,
+    76
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Z19",
+     "delta_e": 6.79
+    },
+    "manman278": {
+     "code": "E14",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "114",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "123",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G14",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG14",
+     "delta_e": 2.98
+    },
+    "youken174": {
+     "code": "C31",
+     "delta_e": 8.2
+    }
+   }
+  },
+  "G15": {
+   "rgb": [
+    252,
+    249,
+    224
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Z03",
+     "delta_e": 3.33
+    },
+    "manman278": {
+     "code": "C8",
+     "delta_e": 1.33
+    },
+    "panpan289": {
+     "code": "133",
+     "delta_e": 2.38
+    },
+    "mixiaowo290": {
+     "code": "143",
+     "delta_e": 2.38
+    },
+    "mard291": {
+     "code": "G15",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG15",
+     "delta_e": 2.08
+    },
+    "youken174": {
+     "code": "C61",
+     "delta_e": 2.71
+    }
+   }
+  },
+  "G16": {
+   "rgb": [
+    242,
+    216,
+    193
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K05",
+     "delta_e": 2.7
+    },
+    "manman278": {
+     "code": "E20",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "134",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "138",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G16",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME14",
+     "delta_e": 3.52
+    },
+    "youken174": {
+     "code": "C92",
+     "delta_e": 1.32
+    }
+   }
+  },
+  "G17": {
+   "rgb": [
+    121,
+    84,
+    78
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Z23",
+     "delta_e": 8.25
+    },
+    "manman278": {
+     "code": "E22",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "144",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "137",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G17",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG8",
+     "delta_e": 4.69
+    },
+    "youken174": {
+     "code": "C32",
+     "delta_e": 6.75
+    }
+   }
+  },
+  "G18": {
+   "rgb": [
+    255,
+    228,
+    214
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K12",
+     "delta_e": 2.83
+    },
+    "manman278": {
+     "code": "DH5",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "203",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "203",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G18",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME11",
+     "delta_e": 1.67
+    },
+    "youken174": {
+     "code": "C47",
+     "delta_e": 1.51
+    }
+   }
+  },
+  "G19": {
+   "rgb": [
+    221,
+    125,
+    65
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K32",
+     "delta_e": 3.61
+    },
+    "manman278": {
+     "code": "DH3",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "208",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "195",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G19",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF18",
+     "delta_e": 1.57
+    },
+    "youken174": {
+     "code": "CE15",
+     "delta_e": 4.26
+    }
+   }
+  },
+  "G20": {
+   "rgb": [
+    165,
+    69,
+    47
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "C09",
+     "delta_e": 6.48
+    },
+    "manman278": {
+     "code": "DH13",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "199",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "199",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G20",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MF13",
+     "delta_e": 7.33
+    },
+    "youken174": {
+     "code": "C30",
+     "delta_e": 4.07
+    }
+   }
+  },
+  "G21": {
+   "rgb": [
+    179,
+    133,
+    97
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Z14",
+     "delta_e": 3.16
+    },
+    "manman278": {
+     "code": "Q8",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "247",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "247",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "G21",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG21",
+     "delta_e": 4.07
+    },
+    "youken174": {
+     "code": "C73",
+     "delta_e": 6.68
+    }
+   }
+  },
+  "H1": {
+   "rgb": [
+    251,
+    251,
+    251
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M01",
+     "delta_e": 0.4
+    },
+    "manman278": {
+     "code": "F1",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "15",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "15",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H1",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH1",
+     "delta_e": 0.8
+    },
+    "youken174": {
+     "code": "C01",
+     "delta_e": 0.8
+    }
+   }
+  },
+  "H2": {
+   "rgb": [
+    255,
+    255,
+    255
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "A01",
+     "delta_e": 0.0
+    },
+    "manman278": {
+     "code": "F2",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "15",
+     "delta_e": 0.8
+    },
+    "mixiaowo290": {
+     "code": "1",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H2",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH1",
+     "delta_e": 0.0
+    },
+    "youken174": {
+     "code": "C01",
+     "delta_e": 0.0
+    }
+   }
+  },
+  "H3": {
+   "rgb": [
+    180,
+    180,
+    180
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M02",
+     "delta_e": 2.53
+    },
+    "manman278": {
+     "code": "F3",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "13",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "13",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H3",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH11",
+     "delta_e": 2.6
+    },
+    "youken174": {
+     "code": "C33",
+     "delta_e": 0.27
+    }
+   }
+  },
+  "H4": {
+   "rgb": [
+    135,
+    135,
+    135
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "B05",
+     "delta_e": 5.41
+    },
+    "manman278": {
+     "code": "F4",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "78",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "83",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H4",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH3",
+     "delta_e": 6.73
+    },
+    "youken174": {
+     "code": "C155",
+     "delta_e": 4.57
+    }
+   }
+  },
+  "H5": {
+   "rgb": [
+    70,
+    70,
+    72
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "B07",
+     "delta_e": 3.81
+    },
+    "manman278": {
+     "code": "F5",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "45",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "45",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H5",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH5",
+     "delta_e": 2.68
+    },
+    "youken174": {
+     "code": "C69",
+     "delta_e": 3.97
+    }
+   }
+  },
+  "H6": {
+   "rgb": [
+    44,
+    44,
+    44
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "B08",
+     "delta_e": 0.32
+    },
+    "manman278": {
+     "code": "F6",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "51",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "70",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H6",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH6",
+     "delta_e": 4.5
+    },
+    "youken174": {
+     "code": "C157",
+     "delta_e": 4.48
+    }
+   }
+  },
+  "H7": {
+   "rgb": [
+    1,
+    1,
+    1
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "B09",
+     "delta_e": 0.16
+    },
+    "manman278": {
+     "code": "F7",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "14",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "14",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H7",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH7",
+     "delta_e": 0.16
+    },
+    "youken174": {
+     "code": "C02",
+     "delta_e": 0.16
+    }
+   }
+  },
+  "H8": {
+   "rgb": [
+    231,
+    214,
+    220
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K26",
+     "delta_e": 4.6
+    },
+    "manman278": {
+     "code": "F8",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "85",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "86",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H8",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME17",
+     "delta_e": 2.96
+    },
+    "youken174": {
+     "code": "C22",
+     "delta_e": 4.93
+    }
+   }
+  },
+  "H9": {
+   "rgb": [
+    239,
+    237,
+    238
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M01",
+     "delta_e": 2.69
+    },
+    "manman278": {
+     "code": "F10",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "95",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "87",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H9",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH1",
+     "delta_e": 3.79
+    },
+    "youken174": {
+     "code": "C01",
+     "delta_e": 3.79
+    }
+   }
+  },
+  "H10": {
+   "rgb": [
+    236,
+    234,
+    235
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M12",
+     "delta_e": 3.05
+    },
+    "manman278": {
+     "code": "F9",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "86",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "88",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H10",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH10",
+     "delta_e": 3.67
+    },
+    "youken174": {
+     "code": "CE01",
+     "delta_e": 3.7
+    }
+   }
+  },
+  "H11": {
+   "rgb": [
+    205,
+    205,
+    205
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "L12",
+     "delta_e": 2.69
+    },
+    "manman278": {
+     "code": "F11",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "123",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "121",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H11",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH11",
+     "delta_e": 5.66
+    },
+    "youken174": {
+     "code": "C89",
+     "delta_e": 2.53
+    }
+   }
+  },
+  "H12": {
+   "rgb": [
+    253,
+    246,
+    238
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K01",
+     "delta_e": 1.56
+    },
+    "manman278": {
+     "code": "E18",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "132",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "144",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H12",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME16",
+     "delta_e": 0.94
+    },
+    "youken174": {
+     "code": "C01",
+     "delta_e": 4.69
+    }
+   }
+  },
+  "H13": {
+   "rgb": [
+    244,
+    239,
+    209
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "E02",
+     "delta_e": 2.72
+    },
+    "manman278": {
+     "code": "E23",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "145",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "146",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H13",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MA1",
+     "delta_e": 2.39
+    },
+    "youken174": {
+     "code": "C61",
+     "delta_e": 3.35
+    }
+   }
+  },
+  "H14": {
+   "rgb": [
+    206,
+    215,
+    212
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "B01",
+     "delta_e": 2.46
+    },
+    "manman278": {
+     "code": "F12",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "146",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "145",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H14",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MC23",
+     "delta_e": 2.91
+    },
+    "youken174": {
+     "code": "C88",
+     "delta_e": 4.12
+    }
+   }
+  },
+  "H15": {
+   "rgb": [
+    152,
+    166,
+    166
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Y15",
+     "delta_e": 2.99
+    },
+    "manman278": {
+     "code": "DH4",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "201",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "201",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H15",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH15",
+     "delta_e": 1.92
+    },
+    "youken174": {
+     "code": "C34",
+     "delta_e": 3.98
+    }
+   }
+  },
+  "H16": {
+   "rgb": [
+    27,
+    18,
+    19
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "B09",
+     "delta_e": 6.96
+    },
+    "manman278": {
+     "code": "DH11",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "200",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "200",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H16",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH7",
+     "delta_e": 6.96
+    },
+    "youken174": {
+     "code": "C02",
+     "delta_e": 6.96
+    }
+   }
+  },
+  "H17": {
+   "rgb": [
+    240,
+    238,
+    239
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "M01",
+     "delta_e": 2.5
+    },
+    "manman278": {
+     "code": "IC6",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "214",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "214",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H17",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH1",
+     "delta_e": 3.59
+    },
+    "youken174": {
+     "code": "C01",
+     "delta_e": 3.59
+    }
+   }
+  },
+  "H18": {
+   "rgb": [
+    252,
+    255,
+    248
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "A12",
+     "delta_e": 2.49
+    },
+    "manman278": {
+     "code": "IC1",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "219",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "204",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H18",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH17",
+     "delta_e": 1.32
+    },
+    "youken174": {
+     "code": "C01",
+     "delta_e": 4.06
+    }
+   }
+  },
+  "H19": {
+   "rgb": [
+    242,
+    238,
+    229
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "A06",
+     "delta_e": 2.35
+    },
+    "manman278": {
+     "code": "IC11",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "209",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "209",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H19",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH22",
+     "delta_e": 2.12
+    },
+    "youken174": {
+     "code": "C87",
+     "delta_e": 3.38
+    }
+   }
+  },
+  "H20": {
+   "rgb": [
+    150,
+    160,
+    159
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Y15",
+     "delta_e": 2.39
+    },
+    "manman278": {
+     "code": "Q12",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "251",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "236",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H20",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH15",
+     "delta_e": 4.17
+    },
+    "youken174": {
+     "code": "C34",
+     "delta_e": 2.45
+    }
+   }
+  },
+  "H21": {
+   "rgb": [
+    255,
+    251,
+    225
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Z03",
+     "delta_e": 3.2
+    },
+    "manman278": {
+     "code": "C8",
+     "delta_e": 1.37
+    },
+    "panpan289": {
+     "code": "145",
+     "delta_e": 2.82
+    },
+    "mixiaowo290": {
+     "code": "146",
+     "delta_e": 2.82
+    },
+    "mard291": {
+     "code": "H21",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG15",
+     "delta_e": 2.67
+    },
+    "youken174": {
+     "code": "C61",
+     "delta_e": 2.82
+    }
+   }
+  },
+  "H22": {
+   "rgb": [
+    202,
+    202,
+    218
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "J09",
+     "delta_e": 6.54
+    },
+    "manman278": {
+     "code": "G2",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "277",
+     "delta_e": 3.5
+    },
+    "mixiaowo290": {
+     "code": "277",
+     "delta_e": 3.5
+    },
+    "mard291": {
+     "code": "H22",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MD23",
+     "delta_e": 2.79
+    },
+    "youken174": {
+     "code": "C89",
+     "delta_e": 6.15
+    }
+   }
+  },
+  "H23": {
+   "rgb": [
+    155,
+    156,
+    148
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Y15",
+     "delta_e": 5.08
+    },
+    "manman278": {
+     "code": "G11",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "278",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "278",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "H23",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH3",
+     "delta_e": 4.44
+    },
+    "youken174": {
+     "code": "C34",
+     "delta_e": 5.56
+    }
+   }
+  },
+  "M1": {
+   "rgb": [
+    187,
+    198,
+    182
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "B10",
+     "delta_e": 6.38
+    },
+    "manman278": {
+     "code": "YX11",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "168",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "168",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "M1",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MM1",
+     "delta_e": 3.39
+    },
+    "youken174": {
+     "code": "C60",
+     "delta_e": 7.91
+    }
+   }
+  },
+  "M2": {
+   "rgb": [
+    144,
+    153,
+    148
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Y15",
+     "delta_e": 2.65
+    },
+    "manman278": {
+     "code": "YX12",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "172",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "172",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "M2",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH3",
+     "delta_e": 5.83
+    },
+    "youken174": {
+     "code": "C34",
+     "delta_e": 4.56
+    }
+   }
+  },
+  "M3": {
+   "rgb": [
+    105,
+    126,
+    128
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Y03",
+     "delta_e": 4.36
+    },
+    "manman278": {
+     "code": "YX2",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "166",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "166",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "M3",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MM3",
+     "delta_e": 4.73
+    },
+    "youken174": {
+     "code": "C90",
+     "delta_e": 8.49
+    }
+   }
+  },
+  "M4": {
+   "rgb": [
+    224,
+    212,
+    188
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Y04",
+     "delta_e": 1.84
+    },
+    "manman278": {
+     "code": "YX15",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "167",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "167",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "M4",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH13",
+     "delta_e": 2.59
+    },
+    "youken174": {
+     "code": "C153",
+     "delta_e": 5.41
+    }
+   }
+  },
+  "M5": {
+   "rgb": [
+    208,
+    203,
+    174
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Y05",
+     "delta_e": 3.83
+    },
+    "manman278": {
+     "code": "YX6",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "174",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "159",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "M5",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG11",
+     "delta_e": 6.78
+    },
+    "youken174": {
+     "code": "C112",
+     "delta_e": 4.88
+    }
+   }
+  },
+  "M6": {
+   "rgb": [
+    176,
+    170,
+    134
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Y06",
+     "delta_e": 3.99
+    },
+    "manman278": {
+     "code": "YX1",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "169",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "169",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "M6",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MM6",
+     "delta_e": 3.62
+    },
+    "youken174": {
+     "code": "C113",
+     "delta_e": 4.31
+    }
+   }
+  },
+  "M7": {
+   "rgb": [
+    176,
+    167,
+    150
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Y06",
+     "delta_e": 5.72
+    },
+    "manman278": {
+     "code": "YX13",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "171",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "171",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "M7",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MM4",
+     "delta_e": 3.88
+    },
+    "youken174": {
+     "code": "C112",
+     "delta_e": 6.41
+    }
+   }
+  },
+  "M8": {
+   "rgb": [
+    174,
+    128,
+    130
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K29",
+     "delta_e": 8.8
+    },
+    "manman278": {
+     "code": "YX14",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "177",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "162",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "M8",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MM10",
+     "delta_e": 8.69
+    },
+    "youken174": {
+     "code": "C147",
+     "delta_e": 7.29
+    }
+   }
+  },
+  "M9": {
+   "rgb": [
+    168,
+    135,
+    100
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Z17",
+     "delta_e": 4.31
+    },
+    "manman278": {
+     "code": "YX10",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "170",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "170",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "M9",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG21",
+     "delta_e": 7.28
+    },
+    "youken174": {
+     "code": "C31",
+     "delta_e": 8.86
+    }
+   }
+  },
+  "M10": {
+   "rgb": [
+    198,
+    178,
+    187
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Y10",
+     "delta_e": 2.88
+    },
+    "manman278": {
+     "code": "YX9",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "164",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "164",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "M10",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME15",
+     "delta_e": 6.73
+    },
+    "youken174": {
+     "code": "C128",
+     "delta_e": 4.27
+    }
+   }
+  },
+  "M11": {
+   "rgb": [
+    157,
+    118,
+    147
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "K29",
+     "delta_e": 8.51
+    },
+    "manman278": {
+     "code": "YX4",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "176",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "161",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "M11",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "ME23",
+     "delta_e": 2.13
+    },
+    "youken174": {
+     "code": "CE08",
+     "delta_e": 5.33
+    }
+   }
+  },
+  "M12": {
+   "rgb": [
+    100,
+    75,
+    81
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Y12",
+     "delta_e": 6.46
+    },
+    "manman278": {
+     "code": "YX5",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "173",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "173",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "M12",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG8",
+     "delta_e": 7.16
+    },
+    "youken174": {
+     "code": "C32",
+     "delta_e": 10.25
+    }
+   }
+  },
+  "M13": {
+   "rgb": [
+    199,
+    146,
+    102
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "Z14",
+     "delta_e": 4.38
+    },
+    "manman278": {
+     "code": "YX8",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "175",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "160",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "M13",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MG21",
+     "delta_e": 4.67
+    },
+    "youken174": {
+     "code": "C75",
+     "delta_e": 3.45
+    }
+   }
+  },
+  "M14": {
+   "rgb": [
+    195,
+    116,
+    99
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "S12",
+     "delta_e": 4.21
+    },
+    "manman278": {
+     "code": "YX3",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "165",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "165",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "M14",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MM14",
+     "delta_e": 4.57
+    },
+    "youken174": {
+     "code": "C77",
+     "delta_e": 6.95
+    }
+   }
+  },
+  "M15": {
+   "rgb": [
+    116,
+    125,
+    122
+   ],
+   "name": "",
+   "matches": {
+    "coco291": {
+     "code": "B05",
+     "delta_e": 5.11
+    },
+    "manman278": {
+     "code": "YX7",
+     "delta_e": 0.0
+    },
+    "panpan289": {
+     "code": "178",
+     "delta_e": 0.0
+    },
+    "mixiaowo290": {
+     "code": "163",
+     "delta_e": 0.0
+    },
+    "mard291": {
+     "code": "M15",
+     "delta_e": 0.0
+    },
+    "artkalM221": {
+     "code": "MH4",
+     "delta_e": 7.64
+    },
+    "youken174": {
+     "code": "C90",
+     "delta_e": 6.71
+    }
+   }
+  }
+ }
+}

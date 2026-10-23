@@ -1,0 +1,30 @@
+# 构建产物
+bin/
+obj/
+*.user
+
+# 大型二进制（不入库，保留在工作区）
+runtime/
+models/
+发行版/
+
+# 用户数据（含 API Key，禁止入库）
+userdata/
+
+# 临时scratch
+_scratch/
+
+# 站点上传分片（安装包 100MB+，由发行版重新切分）
+site/uploads/
+
+# Pages 构建时从 Release 生成，不入库
+site/dist/download/
+
+# 生成的示例图纸（约 187MB，可用程序重新导出）
+示例/风铃挂件_图纸/
+
+# 本地工具配置
+.claude/
+
+# Qoder 站点绑定描述符（本地生成）
+*.qoder.site

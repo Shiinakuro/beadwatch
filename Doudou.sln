@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EC40AA1F-1CE5-4B1B-869E-9597C40E7A93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doudou.Core", "src\Doudou.Core\Doudou.Core.csproj", "{7B4777AB-ED76-4147-A604-B435A7E5C276}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doudou.App", "src\Doudou.App\Doudou.App.csproj", "{D83A297C-28B9-488A-A3DB-05D8F3524FA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doudou.Cli", "src\Doudou.Cli\Doudou.Cli.csproj", "{DFE0AD2D-9960-4A10-A5D6-5B74C0EDBFA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doudou.Editor", "src\Doudou.Editor\Doudou.Editor.csproj", "{C6890934-6297-4B38-AA2C-BB59EB463759}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Doudou.WinUI", "src\Doudou.WinUI\Doudou.WinUI.csproj", "{65731BFE-E7D8-40A0-BD73-09426DA91F0B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7B4777AB-ED76-4147-A604-B435A7E5C276}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B4777AB-ED76-4147-A604-B435A7E5C276}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B4777AB-ED76-4147-A604-B435A7E5C276}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B4777AB-ED76-4147-A604-B435A7E5C276}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D83A297C-28B9-488A-A3DB-05D8F3524FA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D83A297C-28B9-488A-A3DB-05D8F3524FA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D83A297C-28B9-488A-A3DB-05D8F3524FA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D83A297C-28B9-488A-A3DB-05D8F3524FA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFE0AD2D-9960-4A10-A5D6-5B74C0EDBFA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFE0AD2D-9960-4A10-A5D6-5B74C0EDBFA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFE0AD2D-9960-4A10-A5D6-5B74C0EDBFA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFE0AD2D-9960-4A10-A5D6-5B74C0EDBFA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6890934-6297-4B38-AA2C-BB59EB463759}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6890934-6297-4B38-AA2C-BB59EB463759}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6890934-6297-4B38-AA2C-BB59EB463759}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6890934-6297-4B38-AA2C-BB59EB463759}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65731BFE-E7D8-40A0-BD73-09426DA91F0B}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{65731BFE-E7D8-40A0-BD73-09426DA91F0B}.Debug|Any CPU.Build.0 = Debug|x64
+		{65731BFE-E7D8-40A0-BD73-09426DA91F0B}.Release|Any CPU.ActiveCfg = Release|x64
+		{65731BFE-E7D8-40A0-BD73-09426DA91F0B}.Release|Any CPU.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7B4777AB-ED76-4147-A604-B435A7E5C276} = {EC40AA1F-1CE5-4B1B-869E-9597C40E7A93}
+		{D83A297C-28B9-488A-A3DB-05D8F3524FA8} = {EC40AA1F-1CE5-4B1B-869E-9597C40E7A93}
+		{DFE0AD2D-9960-4A10-A5D6-5B74C0EDBFA9} = {EC40AA1F-1CE5-4B1B-869E-9597C40E7A93}
+		{C6890934-6297-4B38-AA2C-BB59EB463759} = {EC40AA1F-1CE5-4B1B-869E-9597C40E7A93}
+		{65731BFE-E7D8-40A0-BD73-09426DA91F0B} = {EC40AA1F-1CE5-4B1B-869E-9597C40E7A93}
+	EndGlobalSection
+EndGlobal

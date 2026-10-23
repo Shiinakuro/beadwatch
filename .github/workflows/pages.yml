@@ -1,0 +1,66 @@
+name: Deploy site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/dist/**"
+      - "tools/prepare_pages.py"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  RELEASE_TAG: v1.0
+  VERSION: "1.0"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Fetch installer from GitHub Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p release
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release download "$RELEASE_TAG" --pattern "*.exe" --dir release
+          else
+            echo "Release $RELEASE_TAG not found yet; deploying the site without the installer bundle."
+          fi
+
+      - name: Split installer for Pages
+        run: |
+          if [ -n "$(find release -name '*.exe' -print -quit)" ]; then
+            python tools/prepare_pages.py --release-dir release --dist site/dist --version "$VERSION"
+          else
+            echo "No installer asset; skipping the download bundle."
+          fi
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

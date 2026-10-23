@@ -1,0 +1,208 @@
+{
+ "generated_by": "doudou.palette",
+ "palettes": [
+  {
+   "id": "mard221",
+   "title": "MARD 221 色",
+   "count": 221,
+   "groups": {
+    "A": 26,
+    "B": 32,
+    "C": 29,
+    "D": 26,
+    "E": 24,
+    "F": 25,
+    "G": 21,
+    "H": 23,
+    "M": 15
+   },
+   "file": "mard221.json"
+  },
+  {
+   "id": "mard291",
+   "title": "MARD 291 色",
+   "count": 291,
+   "groups": {
+    "A": 26,
+    "B": 32,
+    "C": 29,
+    "D": 26,
+    "E": 24,
+    "F": 25,
+    "G": 21,
+    "H": 23,
+    "M": 15,
+    "P": 23,
+    "R": 28,
+    "T": 1,
+    "Y": 5,
+    "ZG": 8,
+    "Q": 5
+   },
+   "file": "mard291.json"
+  },
+  {
+   "id": "mard221_alfonse",
+   "title": "MARD 221 色（豆豆工坊版）",
+   "count": 221,
+   "groups": {
+    "A": 26,
+    "B": 32,
+    "C": 29,
+    "D": 26,
+    "E": 24,
+    "F": 25,
+    "G": 21,
+    "H": 23,
+    "M": 15
+   },
+   "file": "mard221_alfonse.json"
+  },
+  {
+   "id": "coco291",
+   "title": "COCO 291 色",
+   "count": 291,
+   "groups": {
+    "A": 12,
+    "B": 11,
+    "C": 10,
+    "D": 8,
+    "E": 15,
+    "F": 25,
+    "G": 8,
+    "GB": 8,
+    "H": 32,
+    "J": 22,
+    "K": 39,
+    "L": 14,
+    "M": 23,
+    "N": 5,
+    "S": 15,
+    "W": 5,
+    "Y": 15,
+    "Z": 24
+   },
+   "file": "coco291.json"
+  },
+  {
+   "id": "mixiaowo290",
+   "title": "味小窝 290 色",
+   "count": 290,
+   "groups": {
+    "黄": 25,
+    "橙棕": 49,
+    "红粉": 52,
+    "灰白黑": 47,
+    "紫": 35,
+    "绿": 30,
+    "青蓝": 52
+   },
+   "file": "mixiaowo290.json"
+  },
+  {
+   "id": "manman278",
+   "title": "漫漫 278 色",
+   "count": 278,
+   "groups": {
+    "A": 25,
+    "B": 15,
+    "C": 19,
+    "D": 36,
+    "DH": 15,
+    "E": 23,
+    "F": 12,
+    "G": 15,
+    "IC": 15,
+    "N": 5,
+    "Q": 15,
+    "R": 15,
+    "YX": 15,
+    "Y": 5,
+    "L": 3,
+    "P": 23,
+    "T": 7,
+    "S": 15
+   },
+   "file": "manman278.json"
+  },
+  {
+   "id": "panpan289",
+   "title": "盼盼 289 色",
+   "count": 289,
+   "groups": {
+    "黄": 25,
+    "橙棕": 49,
+    "红粉": 52,
+    "灰白黑": 47,
+    "紫": 35,
+    "绿": 30,
+    "青蓝": 51
+   },
+   "file": "panpan289.json"
+  },
+  {
+   "id": "youken174",
+   "title": "有肯 174 色",
+   "count": 174,
+   "groups": {
+    "C": 157,
+    "CE": 17
+   },
+   "file": "youken174.json"
+  },
+  {
+   "id": "artkalC197",
+   "title": "Artkal C 197 色（2.6mm）",
+   "count": 197,
+   "groups": {
+    "C": 157,
+    "CE": 17,
+    "CG": 7,
+    "CP": 7,
+    "CT": 9
+   },
+   "file": "artkalC197.json"
+  },
+  {
+   "id": "artkalM221",
+   "title": "Artkal M 221 色（2.6mm）",
+   "count": 221,
+   "groups": {
+    "MA": 26,
+    "MB": 32,
+    "MC": 29,
+    "MD": 26,
+    "ME": 24,
+    "MF": 25,
+    "MG": 21,
+    "MH": 23,
+    "MM": 15
+   },
+   "file": "artkalM221.json"
+  },
+  {
+   "id": "artkalCM418",
+   "title": "Artkal C+M 418 色",
+   "count": 418,
+   "groups": {
+    "C": 157,
+    "CE": 17,
+    "CG": 7,
+    "CP": 7,
+    "CT": 9,
+    "MA": 26,
+    "MB": 32,
+    "MC": 29,
+    "MD": 26,
+    "ME": 24,
+    "MF": 25,
+    "MG": 21,
+    "MH": 23,
+    "MM": 15
+   },
+   "file": "artkalCM418.json"
+  }
+ ],
+ "errors": {},
+ "crossbrand": "crossbrand_mard221.json"
+}

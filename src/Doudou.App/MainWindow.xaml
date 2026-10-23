@@ -1,0 +1,127 @@
+﻿<Window x:Class="Doudou.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vp="clr-namespace:Doudou.App.Viewport"
+        Title="豆豆工坊 · 立体拼豆设计" Width="1560" Height="960" MinWidth="1100" MinHeight="700"
+        Background="{StaticResource Bg}" Icon="Assets/app.png" WindowStartupLocation="CenterScreen"
+        AllowDrop="True">
+    <Window.Resources>
+        <Style x:Key="StepButton" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="{StaticResource Muted}"/>
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="b" CornerRadius="8" Padding="12,10" Background="Transparent">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="b" Property="Background" Value="{StaticResource AccentSoft}"/>
+                                <Setter Property="Foreground" Value="{StaticResource Fg}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="{StaticResource Fg}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="MenuItem">
+            <Setter Property="Foreground" Value="{StaticResource Fg}"/>
+        </Style>
+    </Window.Resources>
+
+    <DockPanel>
+        <!-- 菜单 -->
+        <Menu DockPanel.Dock="Top" Background="{StaticResource Panel}" Padding="4,2">
+            <MenuItem Header="文件(_F)">
+                <MenuItem Header="新建空白模型…" Click="OnNew" Foreground="Black" InputGestureText="Ctrl+N"/>
+                <MenuItem Header="打开工程…" Click="OnOpen" Foreground="Black" InputGestureText="Ctrl+O"/>
+                <MenuItem Header="保存工程" Click="OnSave" Foreground="Black" InputGestureText="Ctrl+S"/>
+                <MenuItem Header="另存为…" Click="OnSaveAs" Foreground="Black"/>
+                <Separator/>
+                <MenuItem Header="导入 MagicaVoxel (.vox)…" Click="OnImportVox" Foreground="Black"/>
+                <MenuItem Header="导入三维网格 (.obj/.glb/.stl)…" Click="OnImportMesh" Foreground="Black"/>
+                <MenuItem Header="导出 MagicaVoxel (.vox)…" Click="OnExportVox" Foreground="Black"/>
+                <Separator/>
+                <MenuItem Header="设置…" Click="OnSettings" Foreground="Black"/>
+                <MenuItem Header="退出" Click="OnExit" Foreground="Black"/>
+            </MenuItem>
+            <MenuItem Header="编辑(_E)">
+                <MenuItem x:Name="MiUndo" Header="撤销" Click="OnUndo" Foreground="Black" InputGestureText="Ctrl+Z"/>
+                <MenuItem x:Name="MiRedo" Header="重做" Click="OnRedo" Foreground="Black" InputGestureText="Ctrl+Y"/>
+            </MenuItem>
+            <MenuItem Header="视图(_V)">
+                <MenuItem Header="居中模型" Click="OnFrame" Foreground="Black" InputGestureText="F"/>
+                <MenuItem Header="正面" Click="OnViewFront" Foreground="Black"/>
+                <MenuItem Header="左侧" Click="OnViewLeft" Foreground="Black"/>
+                <MenuItem Header="顶部" Click="OnViewTop" Foreground="Black"/>
+                <MenuItem Header="斜视" Click="OnViewIso" Foreground="Black"/>
+            </MenuItem>
+            <MenuItem Header="帮助(_H)">
+                <MenuItem Header="快捷键说明" Click="OnHelp" Foreground="Black"/>
+            </MenuItem>
+        </Menu>
+
+        <!-- 状态栏 -->
+        <Border DockPanel.Dock="Bottom" Background="{StaticResource Panel}" Padding="10,4">
+            <DockPanel>
+                <TextBlock x:Name="StatusRight" DockPanel.Dock="Right" Foreground="{StaticResource Muted}"/>
+                <ProgressBar x:Name="Busy" DockPanel.Dock="Right" Width="140" Height="8" Margin="10,0" IsIndeterminate="True" Visibility="Collapsed"/>
+                <TextBlock x:Name="StatusText" Text="就绪" TextTrimming="CharacterEllipsis"/>
+            </DockPanel>
+        </Border>
+
+        <!-- 工作流 -->
+        <Border DockPanel.Dock="Left" Width="168" Background="{StaticResource Panel}" Padding="10,14">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="4,0,0,18">
+                    <Image Source="Assets/app.png" Width="30" Height="30"/>
+                    <TextBlock Text="豆豆工坊" FontSize="18" FontWeight="Bold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                </StackPanel>
+                <RadioButton x:Name="Step1" Style="{StaticResource StepButton}" GroupName="steps" IsChecked="True" Checked="OnStep">
+                    <StackPanel><TextBlock Text="① 图片导入" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/><TextBlock Text="多视图 → 三维重建" Style="{StaticResource Hint}"/></StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="Step2" Style="{StaticResource StepButton}" GroupName="steps" Checked="OnStep">
+                    <StackPanel><TextBlock Text="② 模型编辑" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/><TextBlock Text="贴豆 · 擦除 · 上色" Style="{StaticResource Hint}"/></StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="Step3" Style="{StaticResource StepButton}" GroupName="steps" Checked="OnStep">
+                    <StackPanel><TextBlock Text="③ 零件拆分" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/><TextBlock Text="分层 · 面板 · 齿口" Style="{StaticResource Hint}"/></StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="Step4" Style="{StaticResource StepButton}" GroupName="steps" Checked="OnStep">
+                    <StackPanel><TextBlock Text="④ 检查" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/><TextBlock Text="漏色 · 装配验证" Style="{StaticResource Hint}"/></StackPanel>
+                </RadioButton>
+                <RadioButton x:Name="Step5" Style="{StaticResource StepButton}" GroupName="steps" Checked="OnStep">
+                    <StackPanel><TextBlock Text="⑤ 图纸导出" FontSize="14" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}"/><TextBlock Text="颗粒图 · 爆炸图 · 清单" Style="{StaticResource Hint}"/></StackPanel>
+                </RadioButton>
+            </StackPanel>
+        </Border>
+
+        <!-- 右侧面板 -->
+        <Border DockPanel.Dock="Right" Width="360" Background="{StaticResource Panel}">
+            <ContentControl x:Name="PanelHost"/>
+        </Border>
+
+        <!-- 中央：视口 / 图纸预览 -->
+        <Grid>
+            <vp:VoxelViewport x:Name="View"/>
+            <Border x:Name="PreviewHost" Background="{StaticResource Bg}" Visibility="Collapsed">
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="10,8">
+                        <TextBlock Text="图纸预览" Style="{StaticResource H1}" Margin="0,0,16,0"/>
+                        <ComboBox x:Name="PreviewPick" Width="220" SelectionChanged="OnPreviewPick"/>
+                        <Button Content="返回三维视图" Click="OnClosePreview" Margin="10,0,0,0"/>
+                        <TextBlock Text="  滚轮缩放 · 拖动平移" Style="{StaticResource Hint}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <ScrollViewer x:Name="PreviewScroll" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Background="#15171A"
+                                  PreviewMouseWheel="OnPreviewWheel">
+                        <Image x:Name="PreviewImage" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Top" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    </ScrollViewer>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </DockPanel>
+</Window>
