@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "version": "1.0",
-  "site": "https://beadwatch-7c28q17g8xc.qoder.zone",
+  "site": "https://shiinakuro.github.io/beadwatch",
   "python": {
     "name": "Python 3.11.9 便携运行时",
     "version": "3.11.9",
@@ -47,7 +47,35 @@
         "https://mirrors.aliyun.com/pytorch-wheels/cu121/torchvision-0.19.1%2Bcu121-cp311-cp311-win_amd64.whl"
       ],
       "sha256": "952dedd29ddd6010b7bda16a5e58e55eb051a46db941cc676bb880918c694ed8"
-    }
+    },
+    "variants": [
+      {
+        "name": "PyTorch CUDA 12.8",
+        "version": "2.7.1+cu128",
+        "torchvisionVersion": "0.22.1+cu128",
+        "torch": {
+          "name": "PyTorch 2.7.1 CUDA 12.8",
+          "size": 3273066072,
+          "urls": [
+            "https://mirror.sjtu.edu.cn/pytorch-wheels/cu128/torch-2.7.1%2Bcu128-cp311-cp311-win_amd64.whl",
+            "https://download.pytorch.org/whl/cu128/torch-2.7.1%2Bcu128-cp311-cp311-win_amd64.whl",
+            "https://mirrors.aliyun.com/pytorch-wheels/cu128/torch-2.7.1%2Bcu128-cp311-cp311-win_amd64.whl"
+          ],
+          "sha256": "138c66dcd0ed2f07aafba3ed8b7958e2bed893694990e0b4b55b6b2b4a336aa6"
+        },
+        "torchvision": {
+          "name": "TorchVision 0.22.1 CUDA 12.8",
+          "size": 7638405,
+          "urls": [
+            "https://mirror.sjtu.edu.cn/pytorch-wheels/cu128/torchvision-0.22.1%2Bcu128-cp311-cp311-win_amd64.whl",
+            "https://download.pytorch.org/whl/cu128/torchvision-0.22.1%2Bcu128-cp311-cp311-win_amd64.whl",
+            "https://mirrors.aliyun.com/pytorch-wheels/cu128/torchvision-0.22.1%2Bcu128-cp311-cp311-win_amd64.whl"
+          ],
+          "sha256": "85ecd729c947151eccea502853be6efc2c0029dc26e6e5148e04684aed008390"
+        },
+        "minCompute": 12.0
+      }
+    ]
   },
   "torchDeps": [
     "filelock",

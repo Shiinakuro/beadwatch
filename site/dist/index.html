@@ -614,7 +614,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
       <a href="https://github.com/shiinakuro/beadwatch" target="_blank" rel="noopener">GitHub</a>
     </nav>
     <div class="top-act">
-      <span class="ver">v1.0.1</span>
+      <span class="ver">v1.0.2</span>
       <a class="btn btn-primary btn-sm" href="#download">下载</a>
     </div>
   </div>
@@ -911,10 +911,18 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
         <p class="eyebrow">RELEASE</p>
         <h2>全新发布</h2>
       </div>
-      <p class="sec-note"><b>v1.0.1 上色修复</b>。Windows 10 / 11 自包含安装程序，不需要另行安装 .NET 或 Windows App SDK。</p>
+      <p class="sec-note"><b>v1.0.2 RTX 50 系本地 AI 修复</b>。Windows 10 / 11 自包含安装程序，不需要另行安装 .NET 或 Windows App SDK。</p>
     </div>
     <div class="log">
       <article class="entry now reveal">
+        <div class="vline"><span class="badge">RELEASE</span><h3>v1.0.2</h3><time>2026-10-24</time></div>
+        <ul>
+          <li><b>RTX 50 系本地 AI：</b>按显卡计算能力自动选择 PyTorch；RTX 5080/5090 使用 CUDA 12.8 构建，修复混元3D 报 <code>no kernel image is available</code> 的问题。</li>
+          <li><b>老显卡不受影响：</b>RTX 20/30/40 继续使用 CUDA 12.1；已安装的旧 PyTorch 会检测版本并升级，不会重复下载模型。</li>
+          <li><b>升级方式：</b>覆盖安装后，在「设置 → 本地 AI 模型」重新点一次一键安装即可。</li>
+        </ul>
+      </article>
+      <article class="entry reveal">
         <div class="vline"><span class="badge">RELEASE</span><h3>v1.0.1</h3><time>2026-10-23</time></div>
         <ul>
           <li><b>上色修复：</b>多视图取色改为按表面朝向优先选择正/背/侧视图，并清理表面零散串色；头发不再出现肤色斑块，衣服不再串入蝴蝶结/披风的颜色。</li>
@@ -958,8 +966,8 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
       </div>
       <div class="dl-side">
         <div class="dl-box">
-          <div class="dl-name" id="dlName">拼豆先锋_v1.0.1_安装程序.exe</div>
-          <div class="dl-sub"><span>v1.0.1 · SELF-CONTAINED</span><span>102.6 MB</span></div>
+          <div class="dl-name" id="dlName">拼豆先锋_v1.0.2_安装程序.exe</div>
+          <div class="dl-sub"><span>v1.0.2 · SELF-CONTAINED</span><span>102.7 MB</span></div>
           <div class="dl-actions">
             <button class="btn btn-primary dl-btn" id="dlBtn" type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 21h14"/></svg>
@@ -976,7 +984,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
           <a class="dl-alt" href="https://github.com/shiinakuro/beadwatch/releases/latest" target="_blank" rel="noopener">GitHub Releases 直链</a>
           <details class="sha">
             <summary>SHA-256 校验</summary>
-            <code id="shaText">1f7163769cf4ee10cd8cd64ede5686fa649c21b2e26892565427d8d5f6b13a9c</code>
+            <code id="shaText">4e36f3dc396aff13f0e04c062ef887a59352b4c050fe541db63d74be612ca1a2</code>
             <button class="copy" id="shaCopy" type="button">复制校验值</button>
           </details>
         </div>
@@ -1026,7 +1034,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
   const cancel = document.getElementById("dlCancel");
   const shaCopy = document.getElementById("shaCopy");
   const shaText = document.getElementById("shaText");
-  const meta = { name: "拼豆先锋_v1.0.1_安装程序.exe", size: 107629422 };
+  const meta = { name: "拼豆先锋_v1.0.2_安装程序.exe", size: 107727820 };
   let busy = false;
   let ac = null;
 

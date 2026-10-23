@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO.Compression;
 using System.Net;
 using System.Net.Http.Headers;
@@ -150,32 +151,98 @@ public sealed class DependencyInstaller
         Report(p, "pip", 8, "pip 就绪。");
     }
 
+    private static async Task<TorchSpec> SelectTorchAsync(DepManifest m, CancellationToken ct)
+    {
+        if (m.Torch.Variants.Count == 0) return m.Torch;
+        double maxCompute = 0;
+        var candidates = new[]
+        {
+            "nvidia-smi",
+            Path.Combine(Environment.SystemDirectory, "nvidia-smi.exe"),
+            @"C:\Program Files\NVIDIA Corporation\NVSMI\nvidia-smi.exe",
+        };
+        foreach (var exe in candidates)
+        {
+            try
+            {
+                var r = await RunAsync(exe, new[] { "--query-gpu=compute_cap", "--format=csv,noheader" }, ct);
+                if (r.Code != 0) continue;
+                foreach (var raw in r.Tail.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+                    if (double.TryParse(raw, NumberStyles.Float, CultureInfo.InvariantCulture, out var cap))
+                        maxCompute = Math.Max(maxCompute, cap);
+                if (maxCompute > 0) break;
+            }
+            catch (Exception) { }
+        }
+        if (maxCompute <= 0) return m.Torch;
+        return m.Torch.Variants
+            .Where(v => maxCompute + 1e-6 >= v.MinCompute)
+            .OrderByDescending(v => v.MinCompute)
+            .FirstOrDefault() ?? m.Torch;
+    }
+
+    private static int CudaTag(string version)
+    {
+        int i = version.IndexOf("+cu", StringComparison.OrdinalIgnoreCase);
+        if (i < 0) return 0;
+        int j = i + 3, k = j;
+        while (k < version.Length && char.IsDigit(version[k])) k++;
+        return k > j && int.TryParse(version[j..k], out var n) ? n : 0;
+    }
+
+    private static bool Covers(string actual, TorchSpec expected)
+    {
+        var parts = actual.Split('|');
+        if (parts.Length != 2) return false;
+        if (string.Equals(parts[0], expected.Version, StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(parts[1], expected.TorchvisionVersion, StringComparison.OrdinalIgnoreCase))
+            return true;
+        // 已装的 CUDA 构建比目标新（例如老卡上已有 cu128）时不要降级。
+        int at = CudaTag(parts[0]), av = CudaTag(parts[1]);
+        int et = CudaTag(expected.Version), ev = CudaTag(expected.TorchvisionVersion);
+        return et > 0 && ev > 0 && at >= et && av >= ev;
+    }
+
     private static async Task InstallTorchAsync(DepManifest m, IProgress<DepProgress> p, CancellationToken ct)
     {
-        var site = SitePackages;
-        if (Directory.Exists(Path.Combine(site, "torch")) && Directory.Exists(Path.Combine(site, "torchvision")))
+        var torch = await SelectTorchAsync(m, ct);
+        var current = await RunAsync(AppPaths.Python, new[]
         {
-            Report(p, "PyTorch", 41, "已检测到 PyTorch/CUDA，跳过下载。");
-            return;
+            "-c", "import torch, torchvision; print(torch.__version__ + '|' + torchvision.__version__)"
+        }, ct);
+        if (current.Code == 0)
+        {
+            var actual = current.Tail.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .LastOrDefault(line => line.Contains('|'));
+            if (actual != null && Covers(actual, torch))
+            {
+                Report(p, "PyTorch", 41, $"已检测到可用的 PyTorch {actual.Replace('|', '/')}，跳过下载。");
+                return;
+            }
+            if (!string.IsNullOrEmpty(actual))
+                Report(p, "PyTorch", 8, $"检测到 PyTorch {actual.Replace('|', '/')}，将使用 {torch.Name}。");
         }
 
-        Report(p, "PyTorch", 8, "安装 PyTorch 基础依赖…");
+        Report(p, "PyTorch", 8, $"安装 {torch.Name} 基础依赖…");
         var deps = await PipAsync(m, m.TorchDeps, ct);
         if (deps.Code != 0) throw new InvalidOperationException("PyTorch 基础依赖安装失败：" + ResultTail(deps));
 
-        var torchFile = Path.Combine(Downloads, "torch-2.4.1+cu121-cp311-cp311-win_amd64.whl");
-        var visionFile = Path.Combine(Downloads, "torchvision-0.19.1+cu121-cp311-cp311-win_amd64.whl");
-        Report(p, "PyTorch", 9, "下载 PyTorch CUDA（约 2.4 GB，可断点续传）");
-        await DownloadAsync(m.Torch.Torch, torchFile, (done, total, speed) => MapProgress(p, "PyTorch", 9, 38, done, total, speed), ct);
-        Report(p, "PyTorch", 38, "下载 TorchVision（约 6 MB）");
-        await DownloadAsync(m.Torch.Torchvision, visionFile, (done, total, speed) => MapProgress(p, "PyTorch", 38, 40, done, total, speed), ct);
+        var torchFile = Path.Combine(Downloads, $"torch-{torch.Version}-cp311-cp311-win_amd64.whl");
+        var visionFile = Path.Combine(Downloads, $"torchvision-{torch.TorchvisionVersion}-cp311-cp311-win_amd64.whl");
+        Report(p, "PyTorch", 9, $"下载 PyTorch CUDA（约 {torch.Torch.Size / 1073741824.0:F1} GB，可断点续传）");
+        await DownloadAsync(torch.Torch, torchFile, (done, total, speed) => MapProgress(p, "PyTorch", 9, 38, done, total, speed), ct);
+        Report(p, "PyTorch", 38, "下载 TorchVision…");
+        await DownloadAsync(torch.Torchvision, visionFile, (done, total, speed) => MapProgress(p, "PyTorch", 38, 40, done, total, speed), ct);
 
-        Report(p, "PyTorch", 40, "安装 PyTorch CUDA（约 2–5 分钟）…");
-        var install = await RunPipAsync(m, new[] { "install", "--no-deps", torchFile, visionFile }, ct);
+        Report(p, "PyTorch", 40, "安装 PyTorch CUDA（约 3–8 分钟）…");
+        var install = await RunPipAsync(m, new[] { "install", "--no-deps", "--force-reinstall", torchFile, visionFile }, ct);
         if (install.Code != 0) throw new InvalidOperationException("PyTorch 安装失败：" + ResultTail(install));
+        var verify = await RunAsync(AppPaths.Python, new[] { "-c", "import torch; print(torch.__version__)" }, ct);
+        if (verify.Code != 0 || !verify.Tail.Contains(torch.Version, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("PyTorch 版本未更新到 " + torch.Version + "：" + ResultTail(verify));
         try { File.Delete(torchFile); } catch (Exception) { }
         try { File.Delete(visionFile); } catch (Exception) { }
-        Report(p, "PyTorch", 42, "PyTorch CUDA 就绪。");
+        Report(p, "PyTorch", 42, $"{torch.Name} 就绪。");
     }
 
     private static async Task PipPackagesAsync(DepManifest m, IReadOnlyList<string> packages, double from, double to,
@@ -928,6 +995,9 @@ public sealed class TorchSpec
     public string TorchvisionVersion { get; set; } = "";
     public FileSpec Torch { get; set; } = new();
     public FileSpec Torchvision { get; set; } = new();
+    /// <summary>变体适用的最低 NVIDIA 计算能力（例如 RTX 50 系为 12.0）。</summary>
+    public double MinCompute { get; set; }
+    public List<TorchSpec> Variants { get; set; } = new();
 }
 
 public sealed class ModelSpec : FileSpec

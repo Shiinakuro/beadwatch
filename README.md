@@ -7,7 +7,7 @@
 
 ## 安装与启动
 
-**安装版（推荐）**：从 [GitHub Releases](https://github.com/shiinakuro/beadwatch/releases/latest) 下载 `beadwatch-1.0.1-setup.exe`（页面内显示为 `拼豆先锋_v1.0.1_安装程序.exe`），双击后选好位置安装。只装到当前用户，无需管理员权限；自动创建开始菜单 / 桌面快捷方式，卸载入口进入 Windows「设置 → 应用」。
+**安装版（推荐）**：从 [GitHub Releases](https://github.com/shiinakuro/beadwatch/releases/latest) 下载 `beadwatch-1.0.2-setup.exe`（页面内显示为 `拼豆先锋_v1.0.2_安装程序.exe`），双击后选好位置安装。只装到当前用户，无需管理员权限；自动创建开始菜单 / 桌面快捷方式，卸载入口进入 Windows「设置 → 应用」。
 **本地 AI 依赖**：安装程序只带主程序和混元代码，不含 Python / PyTorch / 模型。打开「设置 → 本地 AI 模型」可一键安装（完整约 10 GB；只装 ISNet 抠图约 300 MB）。下载会自动测速选择最快镜像，大文件多线程分段，支持断点续传；装在程序目录下，卸载时按需保留。
 **便携版**：双击 `启动拼豆先锋.cmd`（或 `app\拼豆先锋.exe`）；示例工程在 `示例\`，可直接拖进窗口打开。
 
@@ -21,7 +21,7 @@
 | 完整版（目录，约 12GB） | 程序 + 本地混元3D（Python 运行时与模型） | 有 NVIDIA 显卡（≥6GB 显存），离线三维重建 |
 | 精简版（zip，约 280MB） | 程序 + 色卡 + 示例 | 无独显：用 AI 视图 + 轮廓雕刻重建，编辑/拆件/图纸功能完整 |
 
-重新打包：`python tools\make_release.py 1.0.1`（目录版）、`python tools\make_installer.py 1.0.1`（安装程序）。
+重新打包：`python tools\make_release.py 1.0.2`（目录版）、`python tools\make_installer.py 1.0.2`（安装程序）。
 
 站点源码在 `site/dist`。推送到 `main` 后，`.github/workflows/pages.yml` 会从 GitHub Releases 拉取安装程序、切成 Pages 可承载的分片，并部署到 GitHub Pages；安装包本体不进入 Git 仓库。
 
@@ -81,6 +81,7 @@
 
 - **完整安装（约 10 GB）**：Python 3.11 + PyTorch CUDA + 混元3D 权重 + ISNet。照片在本机重建出厚度、凹槽和背面，形体比纯轮廓准；不上传照片、不消耗生图额度，装好后断网也能用。
 - **仅装抠图（约 300 MB）**：ISNet + 基础运行库，CPU 即可。发丝、透明边缘和杂乱背景抠得更干净，可配合生图 API 或纯 CPU 轮廓雕刻。
+- **RTX 50 系**：5080/5090 需要 CUDA 12.8 版 PyTorch；安装器会按显卡计算能力自动选择，RTX 20/30/40 继续使用 CUDA 12.1。
 - 下载支持断点续传、镜像回退与 SHA-256 校验；取消后下次从已下载的部分继续。
 
 ## 目录
@@ -112,6 +113,11 @@ dotnet run --project src\Doudou.Cli -- make <模型.vox> <图纸目录> [壁厚]
 - 高度 100 层的模型按水平分层会得到上百个零件；想要更少零件可降低高度，或在零件页对局部改用竖切/面板拆分。
 
 ## 更新日志
+
+### 1.0.2 · RTX 50 系本地 AI 修复（2026-10-24）
+- 依赖清单按显卡计算能力选择 PyTorch：RTX 50 系（sm_120）自动使用 CUDA 12.8 构建，修复混元3D 报 `no kernel image is available` 的问题。
+- RTX 20/30/40 继续使用 CUDA 12.1；已安装的旧 PyTorch 会检测版本并升级，不会重复下载模型。
+- 覆盖安装后，在「设置 → 本地 AI 模型」重新点一次一键安装即可触发 PyTorch 升级。
 
 ### 1.0.1 · 上色修复（2026-10-23）
 - 多视图取色改为按表面朝向优先选择正/背/侧视图，再对表面做多数色清理；头发不再出现肤色斑块，衣服不再串入蝴蝶结/披风的颜色。
