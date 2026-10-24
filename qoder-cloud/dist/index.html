@@ -1236,8 +1236,8 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
       if (e && e.name === "AbortError") {
         fail("已取消下载。已写入的部分不会保留。");
       } else if (String(e && e.message).startsWith("manifest")) {
-        fail("此站点不存放安装包，正在打开 GitHub Releases…");
-        window.open("https://github.com/Shiinakuro/beadwatch/releases/latest", "_blank", "noopener");
+        fail("此站点不存放安装包，正在前往 GitHub Releases…");
+        window.location.href = "https://github.com/Shiinakuro/beadwatch/releases/latest";
       } else {
         console.error(e);
         fail("下载服务暂时不可用，请稍后重试。");
