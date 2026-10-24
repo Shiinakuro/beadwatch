@@ -134,11 +134,17 @@ async function saveSettings(db, userId, payload) {
   const now = new Date().toISOString();
   for (let attempt = 0; attempt < 4; attempt += 1) {
     const found = rows(await db.from('settings')
-      .select('version').eq('user_id', userId).limit(1));
+      .select('payload,version').eq('user_id', userId).limit(1));
+    // A web save only edits the visible fields; keep the encrypted key envelope.
+    const existing = found[0];
+    const effective = existing && !Object.prototype.hasOwnProperty.call(payload, 'Secrets')
+      && existing.payload && typeof existing.payload === 'object' && existing.payload.Secrets
+      ? { ...payload, Secrets: existing.payload.Secrets }
+      : payload;
     if (found.length === 0) {
       const created = rows(await db.from('settings').insertIfAbsent({
         user_id: userId,
-        payload,
+        payload: effective,
         version: 1,
         updated_at: now,
       }, { onConflict: 'user_id' }).select('payload,version,updated_at'));
@@ -147,7 +153,7 @@ async function saveSettings(db, userId, payload) {
     }
     const version = Number.isSafeInteger(found[0].version) ? found[0].version : 0;
     const updated = rows(await db.from('settings').update({
-      payload,
+      payload: effective,
       version: version + 1,
       updated_at: now,
     }).eq('user_id', userId).eq('version', version).select('payload,version,updated_at'));

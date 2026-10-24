@@ -100,7 +100,7 @@ public sealed class SettingsPage : IStepPage
         depActions.Children.Add(_depCancel);
 
         var root = new StackPanel();
-        root.Children.Add(Card("账号与同步", "登录后同步品牌、作者、水印、豆径、生图模型和历史摘要；API Key、本地文件路径永不上传。",
+        root.Children.Add(Card("账号与同步", "登录后同步设置、历史摘要和加密 API Key。",
             _accountState,
             Flow(Btn("登录 / 注册", () => _h.OpenAccount(), G.Account, accent: true),
                  Btn("打开账号网页", () => System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
@@ -112,13 +112,13 @@ public sealed class SettingsPage : IStepPage
             Row("接口地址", _api), Row("API Key", _key), Row("模型", modelRow),
             _apiStatus,
             Caption("可用模型：gpt-image、Gemini Nano Banana、Seedream、Qwen-Image 等；只要服务商支持 OpenAI 兼容的 /v1/images/edits 就能用。"),
-            Caption("Key 只保存在本机。启用 API 后照片会发送到你填写的服务商；不想上传照片就别配置，纯本地也能完成重建与取色。"),
+            Caption("Key 保存在本机；登录后加密同步。照片会发送到所填服务商。"),
             Flow(providerHint, affiliate, providerTail)));
         root.Children.Add(Card("混元 3D 在线 API",
             "可选。用腾讯混元 3.1 在线生成网格，适合显存不足或想要更高形体质量；会消耗腾讯云积分，照片会上传到腾讯云。",
             Row("接口地址", _hyBase), Row("API Key", _hyKey), _hyStatus,
             Flow(Btn("测试 Key", async () => await TestHunyuan3dApiAsync(), G.Refresh),
-                 Caption("单图约 20 积分/次；Key 只保存在本机。建议用正面图。")),
+                 Caption("单图约 20 积分/次；Key 加密同步。建议用正面图。")),
             Caption("默认 endpoint：https://api.ai3d.cloud.tencent.com/v1/ai3d/submit；模型 3.1。")));
         root.Children.Add(Card("默认", null, Row("色卡", _brand), Row("作者/拆图", _author), Row("图纸水印", _wm), Row("豆径 mm", _pitch)));
         root.Children.Add(Card("本地 AI 模型",
@@ -134,7 +134,7 @@ public sealed class SettingsPage : IStepPage
         root.Children.Add(Card("关于", null,
             Theme.Heading(Theme.AppName, Theme.AppNameEn + " · v" + typeof(SettingsPage).Assembly.GetName().Version?.ToString(3), 22),
             Caption(Theme.Slogan + "。\n三维重建 · 编辑 · 拆件 · 检查 · 图纸导出"),
-            Caption("数据与设置保存在本机 userdata 目录。")));
+            Caption("数据保存在本机 userdata；登录后设置同步到云端。")));
         View = root;
     }
 
@@ -160,11 +160,11 @@ public sealed class SettingsPage : IStepPage
         var a = _h.Accounts;
         if (!a.IsLoggedIn)
         {
-            _accountState.Text = "未登录。设置与历史只保存在本机；登录后可跨设备同步。";
+            _accountState.Text = "未登录，只保存在本机。";
             return;
         }
         var s = a.Session;
-        _accountState.Text = $"已登录 · {s?.DisplayName} <{s?.Email}>。保存设置会自动上传；历史摘要在账号窗口同步。" +
+        _accountState.Text = $"已登录 · {s?.DisplayName} <{s?.Email}>。保存设置会自动上传。" +
             (string.IsNullOrWhiteSpace(a.LastSyncError) ? "" : " " + a.LastSyncError);
     }
 

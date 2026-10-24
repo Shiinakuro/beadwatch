@@ -39,6 +39,7 @@ public sealed class AccountClient
         [JsonPropertyName("Watermark")] public string? Watermark { get; set; }
         [JsonPropertyName("BeadPitchMm")] public double? BeadPitchMm { get; set; }
         [JsonPropertyName("ImageModel")] public string? ImageModel { get; set; }
+        [JsonPropertyName("Secrets")] public EncryptedSecrets? Secrets { get; set; }
 
         public void ApplyTo(AppSettings s, bool save)
         {
@@ -58,6 +59,7 @@ public sealed class AccountClient
         [JsonPropertyName("Watermark")] public string Watermark { get; set; } = "";
         [JsonPropertyName("BeadPitchMm")] public double BeadPitchMm { get; set; } = 2.6;
         [JsonPropertyName("ImageModel")] public string ImageModel { get; set; } = "";
+        [JsonPropertyName("Secrets")] public EncryptedSecrets? Secrets { get; set; }
 
         public static SyncedSettings From(AppSettings s) => new()
         {

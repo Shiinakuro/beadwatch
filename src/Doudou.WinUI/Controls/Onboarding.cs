@@ -329,7 +329,7 @@ public sealed class Onboarding : Grid
         _apiPage.Children.Add(Row("模型", modelRow));
         _apiPage.Children.Add(_apiStatus);
         _apiPage.Children.Add(Caption("可用模型：gpt-image、Gemini Nano Banana、Seedream、Qwen-Image 等；只要服务商支持 OpenAI 兼容的 /v1/images/edits 就能用。"));
-        _apiPage.Children.Add(Caption("Key 只保存在本机。启用 API 后照片会发送到你填写的服务商；不想上传照片就留空，纯本地也能完成重建与取色。"));
+        _apiPage.Children.Add(Caption("Key 保存在本机；登录账号后会加密同步。照片会发送到所填服务商。"));
         _apiPage.Children.Add(Flow(providerHint, affiliate, providerTail));
         _apiPage.Children.Add(skip);
         SetApiStatus("填写地址和 Key 后点「获取模型」，会自动列出可用模型。", null);

@@ -64,6 +64,35 @@ r = await call('/api/settings', {
 });
 assert.equal(r.status, 400);
 
+const envelope = {
+  v: 1, kdf: 'PBKDF2-SHA256', iterations: 210000,
+  salt: 'AAAAAAAAAAAAAAAAAAAAAA==',
+  iv: 'AAAAAAAAAAAAAAAA',
+  data: 'YQ==',
+  tag: 'AAAAAAAAAAAAAAAAAAAAAA==',
+};
+r = await call('/api/settings', {
+  method: 'PUT', headers: { cookie, origin: ORIGIN },
+  body: { settings: { Author: 'Shiin', Secrets: envelope } },
+});
+assert.equal(r.status, 200);
+assert.equal(r.data.settings.Secrets.data, envelope.data);
+
+// A web save only sends the visible fields; the encrypted envelope must survive.
+r = await call('/api/settings', {
+  method: 'PUT', headers: { cookie, origin: ORIGIN },
+  body: { settings: { DefaultBrand: 'coco291', Author: 'Shiin2' } },
+});
+assert.equal(r.status, 200);
+assert.equal(r.data.settings.DefaultBrand, 'coco291');
+assert.equal(r.data.settings.Secrets.data, envelope.data);
+
+r = await call('/api/settings', {
+  method: 'PUT', headers: { cookie, origin: ORIGIN },
+  body: { settings: { Secrets: { ...envelope, data: '' } } },
+});
+assert.equal(r.status, 400);
+
 r = await call('/api/history', {
   method: 'POST', headers: { cookie, origin: ORIGIN },
   body: {
@@ -99,14 +128,14 @@ assert.match(token, /^[A-Za-z0-9_-]{43}$/);
 
 r = await call('/api/settings', { headers: { authorization: `Bearer ${token}` } });
 assert.equal(r.status, 200);
-assert.equal(r.data.version, 1);
+assert.equal(r.data.version, 3);
 
 r = await call('/api/settings', {
   method: 'PUT', headers: { authorization: `Bearer ${token}` },
   body: { settings: { DefaultBrand: 'coco291', Watermark: 'BEADWATCH' } },
 });
 assert.equal(r.status, 200);
-assert.equal(r.data.version, 2);
+assert.equal(r.data.version, 4);
 
 r = await call('/api/desktop/logout', { method: 'POST', headers: { authorization: `Bearer ${token}` } });
 assert.equal(r.status, 200);

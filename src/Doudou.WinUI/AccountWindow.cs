@@ -132,7 +132,7 @@ public sealed class AccountWindow : Window
     {
         var card = new StackPanel { Spacing = 8, MaxWidth = 520, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
         card.Children.Add(Theme.Heading("把设置与历史带到每一台电脑", "BEADWATCH ACCOUNT", 26));
-        card.Children.Add(Caption("桌面端与网页共用同一个账号。只同步品牌、作者、水印、豆径、生图模型和历史摘要；API Key 永不上传。"));
+        card.Children.Add(Caption("登录后同步设置、历史记录和加密 API Key。"));
         var tabs = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 16, Margin = new Thickness(0, 12, 0, 0) };
         tabs.Children.Add(_loginRadio);
         tabs.Children.Add(_registerRadio);
@@ -145,7 +145,7 @@ public sealed class AccountWindow : Window
         _displayName.Visibility = Visibility.Collapsed;
         card.Children.Add(_submit);
         card.Children.Add(_authMsg);
-        card.Children.Add(Caption("这是拼豆先锋自己的同步账号，不是 Qoder 账号。密码只保存 PBKDF2 派生值；当前不发送验证邮件，也没有自助找回密码。"));
+        card.Children.Add(Caption("桌面端与网页共用同一个账号。"));
         var border = Card(null, null, card);
         border.MaxWidth = 620;
         border.HorizontalAlignment = HorizontalAlignment.Center;
@@ -175,7 +175,7 @@ public sealed class AccountWindow : Window
         who.Children.Add(names);
         account.Children.Add(who);
         account.Children.Add(Flow(_logout));
-        account.Children.Add(Caption("登录令牌用 Windows 当前用户凭据保护，保存在 userdata；不会写进工程或安装包。"));
+        account.Children.Add(Caption("登录令牌只保存在本机。"));
         left.Children.Add(Card("账号", null, account));
 
         var cloud = new StackPanel { Spacing = 8 };
@@ -186,8 +186,8 @@ public sealed class AccountWindow : Window
             Btn("应用云端设置", async () => await ApplyCloudSettingsAsync(), G.Refresh),
             Btn("刷新", async () => await RefreshAsync(), G.Refresh)));
         cloud.Children.Add(_cloudMsg);
-        cloud.Children.Add(Caption("桌面端保存设置后会自动上传；网页上修改的设置，在这里点「应用云端设置」拉取。"));
-        left.Children.Add(Card("云端设置", "品牌 / 作者 / 水印 / 豆径 / 生图模型。API Key 不在同步范围内。", cloud));
+        cloud.Children.Add(Caption("桌面端保存后自动上传；换机点「应用云端设置」。"));
+        left.Children.Add(Card("云端设置", "品牌、作者、水印、豆径、生图模型；API Key 加密同步。", cloud));
         left.Children.Add(Flow(_web));
 
         var right = new StackPanel { Spacing = 8 };
@@ -201,7 +201,7 @@ public sealed class AccountWindow : Window
             VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
             Content = _historyList,
         });
-        var historyCard = Card("历史记录", "最近的重建、导入、导出与平面图纸摘要；合并本机与云端，不上传工程文件。", right);
+        var historyCard = Card("历史记录", "最近的重建、导入、导出和平面图纸记录；合并本机与云端。", right);
         Grid.SetColumn(historyCard, 1);
         grid.Children.Add(left);
         grid.Children.Add(historyCard);

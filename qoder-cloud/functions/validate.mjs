@@ -31,7 +31,32 @@ export function validateDisplayName(raw, fallbackEmail) {
   return name;
 }
 
-const SETTINGS_KEYS = new Set(['DefaultBrand', 'Author', 'Watermark', 'BeadPitchMm', 'ImageModel']);
+const SETTINGS_KEYS = new Set(['DefaultBrand', 'Author', 'Watermark', 'BeadPitchMm', 'ImageModel', 'Secrets']);
+
+function base64Bytes(text, min, max) {
+  if (typeof text !== 'string' || !/^[A-Za-z0-9+/]+={0,2}$/.test(text)) throw new AppError('invalid_settings', 400);
+  let bytes;
+  try { bytes = atob(text).length; } catch { throw new AppError('invalid_settings', 400); }
+  if (bytes < min || bytes > max) throw new AppError('invalid_settings', 400);
+  return text;
+}
+
+function validateSecrets(raw) {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw new AppError('invalid_settings', 400);
+  if (raw.v !== 1 || raw.kdf !== 'PBKDF2-SHA256') throw new AppError('invalid_settings', 400);
+  if (!Number.isSafeInteger(raw.iterations) || raw.iterations < 100000 || raw.iterations > 1000000) {
+    throw new AppError('invalid_settings', 400);
+  }
+  return {
+    v: 1,
+    kdf: 'PBKDF2-SHA256',
+    iterations: raw.iterations,
+    salt: base64Bytes(raw.salt, 16, 32),
+    iv: base64Bytes(raw.iv, 12, 12),
+    data: base64Bytes(raw.data, 1, 16384),
+    tag: base64Bytes(raw.tag, 16, 16),
+  };
+}
 
 export function validateSettings(raw) {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) throw new AppError('invalid_settings', 400);
@@ -46,6 +71,7 @@ export function validateSettings(raw) {
   if ('Author' in raw) out.Author = text(raw.Author, 80);
   if ('Watermark' in raw) out.Watermark = text(raw.Watermark, 80);
   if ('ImageModel' in raw) out.ImageModel = text(raw.ImageModel, 120);
+  if ('Secrets' in raw) out.Secrets = validateSecrets(raw.Secrets);
   if ('BeadPitchMm' in raw) {
     if (typeof raw.BeadPitchMm !== 'number' || !Number.isFinite(raw.BeadPitchMm) || raw.BeadPitchMm < 1 || raw.BeadPitchMm > 10) {
       throw new AppError('invalid_settings', 400);

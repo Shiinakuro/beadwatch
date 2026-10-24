@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>账号与同步 · 拼豆先锋 BEADWATCH</title>
-<meta name="description" content="登录拼豆先锋账号，在桌面端与网页之间同步偏好设置和历史记录。API Key 永不上传。">
+<meta name="description" content="登录拼豆先锋账号，同步设置、历史记录和加密 API Key。">
 <meta name="theme-color" content="#0a111b">
 <link rel="icon" href="assets/app.png">
 <style>
@@ -124,13 +124,12 @@ input::placeholder{color:#5d6b80}
     <div>
       <p class="eyebrow">BEADWATCH ACCOUNT</p>
       <h1>把设置与历史，<br>带到<em>每一台电脑</em>。</h1>
-      <p class="lead">登录后，品牌、作者、水印、豆径和生图模型会跟着账号走；每次重建、导入和导出的记录也会保存下来。桌面端与网页共用同一个账号。</p>
+      <p class="lead">登录后同步设置、历史记录和加密 API Key。桌面端与网页共用同一个账号。</p>
       <ul class="feature-list">
-        <li><span><b>只同步该同步的。</b> 品牌、作者、水印、豆径、生图模型和历史摘要；API Key、混元 Key、本地文件路径不会上传。</span></li>
-        <li><span><b>桌面端直接登录。</b> 在「设置 → 账号与同步」或标题栏账号入口登录，令牌保存在 Windows 凭据保护的用户目录。</span></li>
-        <li><span><b>换机不丢记录。</b> 历史以摘要形式保存：作品名、豆数、尺寸、颜色数和时间；不上传工程文件本身。</span></li>
+        <li><span><b>同步内容：</b>品牌、作者、水印、豆径、生图模型、历史摘要和加密 API Key。</span></li>
+        <li><span><b>桌面端：</b>登录后保存设置会自动上传；换机可应用云端设置。</span></li>
+        <li><span><b>历史：</b>作品名、豆数、尺寸、颜色数和时间。</span></li>
       </ul>
-      <p class="section-note">这是拼豆先锋自己的同步账号，不是 Qoder 账号。密码只保存 PBKDF2 派生值；当前版本不发送验证邮件，也没有自助找回密码，请妥善保存。</p>
     </div>
 
     <div class="card auth-card">
@@ -152,7 +151,7 @@ input::placeholder{color:#5d6b80}
         </label>
         <button class="btn btn-primary" id="authSubmit" type="submit">登录</button>
         <p class="msg" id="authMsg" role="status" aria-live="polite"></p>
-        <p class="fine">注册后会自动登录。账号只用于同步偏好与历史摘要；不保存工程文件，也不保存 API Key。</p>
+        <p class="fine">注册后自动登录。只同步设置、历史记录和加密 API Key。</p>
       </form>
     </div>
   </section>
@@ -169,7 +168,7 @@ input::placeholder{color:#5d6b80}
     <div class="dash-grid">
       <section class="card" aria-labelledby="settingsTitle">
         <h2 id="settingsTitle">云端设置</h2>
-        <p class="sub">这些字段会同步到桌面端。API Key 与本地路径不会出现在这里。</p>
+        <p class="sub">这些字段会同步到桌面端；API Key 加密同步。</p>
         <form id="settingsForm">
           <div class="form-grid">
             <label>默认色卡
@@ -205,13 +204,13 @@ input::placeholder{color:#5d6b80}
 
       <section class="card" aria-labelledby="historyTitle">
         <h2 id="historyTitle">历史记录</h2>
-        <p class="sub">最近 100 条重建、导入、导出与平面图纸记录，按时间倒序。</p>
+        <p class="sub">最近 100 条重建、导入、导出和平面图纸记录。</p>
         <ul class="hist" id="historyList"></ul>
         <div class="empty" id="historyEmpty" hidden>还没有云端历史。桌面端生成或导出作品后会自动同步。</div>
         <p class="msg" id="historyMsg" role="status" aria-live="polite"></p>
       </section>
     </div>
-    <p class="section-note">桌面端与网页共用同一个账号。网页保存设置后，在桌面端「账号与同步」点「应用云端设置」即可拉取；桌面端保存设置时也会自动上传。</p>
+    <p class="section-note">桌面端与网页共用同一个账号；保存设置会自动同步。</p>
   </section>
 </main>
 
@@ -259,7 +258,7 @@ input::placeholder{color:#5d6b80}
     $("tabLogin").classList.toggle("active", mode === "login");
     $("tabRegister").classList.toggle("active", mode === "register");
     $("authTitle").textContent = mode === "login" ? "欢迎回来" : "创建同步账号";
-    $("authSub").textContent = mode === "login" ? "用同一个账号，在桌面端和网页之间同步。" : "只需要邮箱和密码，不发送验证邮件。";
+    $("authSub").textContent = mode === "login" ? "用同一个账号，在桌面端和网页之间同步。" : "只需要邮箱和密码。";
     $("nameRow").hidden = mode !== "register";
     $("password").autocomplete = mode === "login" ? "current-password" : "new-password";
     $("authSubmit").textContent = mode === "login" ? "登录" : "注册并登录";

@@ -315,6 +315,26 @@ switch (args[0])
         foreach (var f in outp.Files) Console.WriteLine("  " + f);
         return 0;
     }
+    case "crypt":
+    {
+        // crypt <password>：自测 AES-GCM/PBKDF2 加密信封往返（不涉及真实 Key）。
+        var password = args.Length > 1 ? args[1] : "test-password";
+        var salt = KeySyncCrypto.NewSalt();
+        var key = KeySyncCrypto.DeriveKey(password, salt);
+        var source = new SecretBundle
+        {
+            ImageApiKey = "sk-test-image", Hunyuan3dApiKey = "sk-test-hunyuan",
+            ImageApiBase = "https://example.test", Hunyuan3dApiBase = "https://api.example.test",
+        };
+        var envelope = KeySyncCrypto.Encrypt(source, key, salt);
+        var restored = KeySyncCrypto.Decrypt(envelope, KeySyncCrypto.KeyFromPassword(password, envelope));
+        var ok = restored.ImageApiKey == source.ImageApiKey
+            && restored.Hunyuan3dApiKey == source.Hunyuan3dApiKey
+            && restored.ImageApiBase == source.ImageApiBase
+            && restored.Hunyuan3dApiBase == source.Hunyuan3dApiBase;
+        Console.WriteLine(ok ? "crypt roundtrip ok" : "crypt roundtrip FAILED");
+        return ok ? 0 : 1;
+    }
     case "render":
     {
         var m = Path.GetExtension(args[1]).Equals(".doudou", StringComparison.OrdinalIgnoreCase)

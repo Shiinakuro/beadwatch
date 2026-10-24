@@ -5,7 +5,7 @@ using Doudou.Core.Services;
 
 namespace Doudou.WinUI;
 
-public sealed record StoredAccount(string Token, string Email, string DisplayName, DateTimeOffset ExpiresAt);
+public sealed record StoredAccount(string Token, string Email, string DisplayName, DateTimeOffset ExpiresAt, string? KeyKey = null, string? KeySalt = null);
 
 /// <summary>用 Windows DPAPI（当前用户）保存云端令牌；明文令牌不落盘。</summary>
 public static class AccountVault

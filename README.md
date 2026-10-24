@@ -4,14 +4,14 @@
 
 也可以只做**平面拼豆**：上传 1 张图，AI 卡通平涂后像素化成豆格图，导出带色号的 PNG / PDF / 材料清单。
 
-登录账号后，品牌、作者、水印、豆径、生图模型和历史摘要可在桌面端与网页之间同步；API Key 与本地文件不上传。
+登录账号后，设置、历史摘要和 API Key 可在桌面端与网页之间同步；API Key 以密文保存。
 
 - 在线站点：<https://shiinakuro.github.io/beadwatch/>
 - 源码与发行版：<https://github.com/shiinakuro/beadwatch>
 
 ## 安装与启动
 
-**安装版（推荐）**：从 [GitHub Releases](https://github.com/shiinakuro/beadwatch/releases/latest) 下载 `beadwatch-1.3.0-setup.exe`（页面内显示为 `拼豆先锋_v1.3.0_安装程序.exe`），双击后选好位置安装。只装到当前用户，无需管理员权限；自动创建开始菜单 / 桌面快捷方式，卸载入口进入 Windows「设置 → 应用」。
+**安装版（推荐）**：从 [GitHub Releases](https://github.com/shiinakuro/beadwatch/releases/latest) 下载 `beadwatch-1.3.1-setup.exe`（页面内显示为 `拼豆先锋_v1.3.1_安装程序.exe`），双击后选好位置安装。只装到当前用户，无需管理员权限；自动创建开始菜单 / 桌面快捷方式，卸载入口进入 Windows「设置 → 应用」。
 **本地 AI 依赖**：安装程序只带主程序和混元代码，不含 Python / PyTorch / 模型。打开「设置 → 本地 AI 模型」可一键安装（完整约 10 GB；只装 ISNet 抠图约 300 MB）。下载会自动测速选择最快镜像，大文件多线程分段，支持断点续传；装在程序目录下，卸载时按需保留。
 **便携版**：双击 `启动拼豆先锋.cmd`（或 `app\拼豆先锋.exe`）；示例工程在 `示例\`，可直接拖进窗口打开。
 
@@ -25,7 +25,7 @@
 | 完整版（目录，约 12GB） | 程序 + 本地混元3D（Python 运行时与模型） | 有 NVIDIA 显卡（≥6GB 显存），离线三维重建 |
 | 精简版（zip，约 280MB） | 程序 + 色卡 + 示例 | 无独显：用 AI 视图 + 轮廓雕刻重建，编辑/拆件/图纸功能完整 |
 
-重新打包：`python tools\make_release.py 1.3.0`（目录版）、`python tools\make_installer.py 1.3.0`（安装程序）。
+重新打包：`python tools\make_release.py 1.3.1`（目录版）、`python tools\make_installer.py 1.3.1`（安装程序）。
 
 站点源码在 `site/dist`。推送到 `main` 后，`.github/workflows/pages.yml` 会从 GitHub Releases 拉取安装程序、切成 Pages 可承载的分片，并部署到 GitHub Pages；安装包本体不进入 Git 仓库。
 
@@ -120,11 +120,16 @@ dotnet run --project src\Doudou.Cli -- make <模型.vox> <图纸目录> [壁厚]
 
 - 桌面端入口：标题栏账号按钮，或「设置 → 账号与同步」。
 - 网页入口：<https://beadwatch-cloud-7c28q17g8xc.qoder.zone/account.html>
-- 同步内容：默认色卡、作者、水印、豆径、生图模型，以及重建 / 导入 / 导出 / 平面图纸的历史摘要。
-- **不同步**：生图 API Key、混元 3D Key、本地文件路径、工程文件本身。
-- 账号使用 PBKDF2 派生密码，会话令牌只保存摘要；桌面端令牌用 Windows DPAPI 保护。当前版本不发送验证邮件，也没有自助找回密码。
+- 同步内容：默认色卡、作者、水印、豆径、生图模型、重建 / 导入 / 导出 / 平面图纸的历史摘要，以及加密后的 API Key。
+- API Key 用账号密码派生的密钥做 AES-GCM 加密；服务端只保存密文。工程文件本身不同步。
+- 桌面端令牌与加密密钥用 Windows DPAPI 保护。
 
 ## 更新日志
+
+### 1.3.1 · 加密同步 API Key（2026-10-24）
+- API Key 与接口地址改为客户端 AES-GCM 加密后同步；网页保存设置不会清掉已加密的 Key。
+- 桌面端登录后自动解锁；换机时可随「应用云端设置」一起拉取。
+- 精简账号与同步说明，只保留同步内容。
 
 ### 1.3.0 · 账号与云同步（2026-10-24）
 - 新增账号登录 / 注册：桌面端与网页共用同一个拼豆先锋账号。
