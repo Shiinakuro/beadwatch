@@ -1,6 +1,7 @@
 using Doudou.Core.Color;
 using Doudou.Core.Imaging;
 using Doudou.Core.IO;
+using Doudou.Core.Model;
 using Doudou.Core.Recon;
 using Doudou.Core.Services;
 using Doudou.WinUI.Controls;
@@ -570,6 +571,9 @@ public sealed class ImportPage : IStepPage
                     MeshPath = path, Name = title, Height = _height,
                     BrandId = brandId, MaxColors = _maxColors, Views = views,
                 };
+                if (reuseSource == null)
+                    RecordHistory("import", title, res.Model, System.IO.Path.GetExtension(path).TrimStart('.').ToLowerInvariant(),
+                        res.UsedTexture ? "texture" : res.UsedViews ? "views" : "plain");
                 var how = res.UsedTexture ? "模型自带纹理上色" : res.UsedViews ? "参考视图投影上色" : "单色（无纹理/参考图）";
                 Log($"体素化完成：{res.Model.SX}×{res.Model.SY}×{res.Model.SZ}，{res.Model.CountSolid():N0} 颗，{res.Model.Palette.Count - 1} 色；{how}{(res.RotatedZUp ? "；已转正" : "")}");
                 _h.Notify($"模型已导入：{res.Model.CountSolid():N0} 颗 · {how}。可以开始编辑了。", InfoBarSeverity.Success);
@@ -591,6 +595,26 @@ public sealed class ImportPage : IStepPage
             if (!views.ContainsKey(kind)) views[kind] = (path, it.IsAi);
         }
         return views;
+    }
+
+    private void RecordHistory(string kind, string title, VoxelModel m, string source, string? mode = null)
+    {
+        var name = string.IsNullOrWhiteSpace(title) ? "未命名" : title.Trim();
+        if (name.Length > 120) name = name[..120];
+        _h.Accounts.RecordHistory(new HistoryEntry
+        {
+            Kind = kind,
+            Title = name,
+            Summary = $"{m.SX}×{m.SY}×{m.SZ} · {m.CountSolid():N0} 颗 · {m.Palette.Count - 1} 色",
+            Meta = new HistoryMeta
+            {
+                Beads = m.CountSolid(),
+                Colors = m.Palette.Count - 1,
+                Size = $"{m.SX}×{m.SY}×{m.SZ}",
+                Source = source,
+                Mode = mode,
+            },
+        });
     }
 
     private async Task Run()
@@ -669,6 +693,7 @@ public sealed class ImportPage : IStepPage
                         MeshPath = meshPath, Name = title, Height = _height,
                         BrandId = brandId, MaxColors = _maxColors, Views = srcViews,
                     };
+                    RecordHistory("model", title, import.Model, "api", "hunyuan3.1");
                     Log($"在线 3.1 完成：{import.Model.SX}×{import.Model.SY}×{import.Model.SZ}，{import.Model.CountSolid():N0} 颗，{import.Model.Palette.Count - 1} 色");
                     _h.Notify($"在线 3.1 模型已生成：{import.Model.CountSolid():N0} 颗 · {import.Model.Palette.Count - 1} 色。可以开始编辑了。", InfoBarSeverity.Success);
                     _h.GoStep(2);
@@ -714,6 +739,7 @@ public sealed class ImportPage : IStepPage
                     MeshPath = resMeshPath, Name = opt.Name, Height = _height,
                     BrandId = resBrandId, MaxColors = _maxColors, Views = resViews,
                 };
+                RecordHistory("model", opt.Name, res.Model, "images", method == ReconMethod.Hunyuan ? "local2mv" : "hull");
                 Log($"完成：{res.Model.SX}×{res.Model.SY}×{res.Model.SZ}，{res.Model.CountSolid():N0} 颗，{res.Model.Palette.Count - 1} 色");
                 _h.Notify($"模型已生成：{res.Model.CountSolid():N0} 颗 · {res.Model.Palette.Count - 1} 色。可以开始编辑了。", InfoBarSeverity.Success);
                 _h.GoStep(2);

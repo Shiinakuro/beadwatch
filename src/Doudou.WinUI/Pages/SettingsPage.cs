@@ -34,6 +34,7 @@ public sealed class SettingsPage : IStepPage
     private readonly TextBlock _depNote = Caption("");
     private readonly TextBlock _depPct = Muted("");
     private readonly TextBlock _depDetail = Caption("");
+    private readonly TextBlock _accountState = Caption("");
     private readonly ProgressBar _depBar = new() { Minimum = 0, Maximum = 100, Height = 6, Visibility = Visibility.Collapsed, Margin = new Thickness(0, 6, 0, 2) };
     private readonly Button _depAll, _depCut, _depCancel;
     private readonly List<string> _brandIds;
@@ -43,6 +44,7 @@ public sealed class SettingsPage : IStepPage
     public SettingsPage(IHost h)
     {
         _h = h;
+        h.Accounts.Changed += () => h.View.DispatcherQueue.TryEnqueue(UpdateAccountState);
         var s = h.S.Settings;
         _brandIds = h.S.Lib.Brands.Keys.OrderBy(k => k).ToList();
         _brand.ItemsSource = _brandIds.Select(id => h.S.Lib.Brands[id].Title).ToList();
@@ -98,6 +100,13 @@ public sealed class SettingsPage : IStepPage
         depActions.Children.Add(_depCancel);
 
         var root = new StackPanel();
+        root.Children.Add(Card("账号与同步", "登录后同步品牌、作者、水印、豆径、生图模型和历史摘要；API Key、本地文件路径永不上传。",
+            _accountState,
+            Flow(Btn("登录 / 注册", () => _h.OpenAccount(), G.Account, accent: true),
+                 Btn("打开账号网页", () => System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                 {
+                     FileName = AccountClient.AccountPage, UseShellExecute = true,
+                 }), G.Open))));
         root.Children.Add(Card("AI 图像服务",
             "可选。只处理照片：整理成正交视图、补全缺失角度、生成平涂取色参考；最终仍由三维重建和色卡量化出图，生图 API 不直接画豆图。",
             Row("接口地址", _api), Row("API Key", _key), Row("模型", modelRow),
@@ -143,6 +152,20 @@ public sealed class SettingsPage : IStepPage
         if (ImageAi.NormalizeBase(s.ImageApiBase).Length > 0 && s.ImageApiKey.Length > 0 && _knownModels.Count == 0)
             _ = FetchModelsAsync(false);
         RefreshDeps();
+        UpdateAccountState();
+    }
+
+    private void UpdateAccountState()
+    {
+        var a = _h.Accounts;
+        if (!a.IsLoggedIn)
+        {
+            _accountState.Text = "未登录。设置与历史只保存在本机；登录后可跨设备同步。";
+            return;
+        }
+        var s = a.Session;
+        _accountState.Text = $"已登录 · {s?.DisplayName} <{s?.Email}>。保存设置会自动上传；历史摘要在账号窗口同步。" +
+            (string.IsNullOrWhiteSpace(a.LastSyncError) ? "" : " " + a.LastSyncError);
     }
 
     private void RefreshDeps()

@@ -10,4 +10,5 @@ public static class G
     public const string Cube = "", Layers = "", Magic = "", Rotate = "", Mirror = "", Crop = "";
     public const string Expand = "", Eye = "", Hide = "", Warning = "", Lightning = "", Download = "";
     public const string Grid = "", Zoom = "", Link = "", Rename = "", Flip = "", Merge = "";
+    public const string Account = "", Cloud = "";
 }

@@ -41,5 +41,11 @@ public sealed class AppSettings
         return s;
     }
 
-    public void Save() => File.WriteAllText(AppPaths.Settings, JsonSerializer.Serialize(this, Json));
+    public event Action? Saved;
+
+    public void Save()
+    {
+        File.WriteAllText(AppPaths.Settings, JsonSerializer.Serialize(this, Json));
+        Saved?.Invoke();
+    }
 }

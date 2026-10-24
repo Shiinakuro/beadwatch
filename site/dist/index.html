@@ -618,6 +618,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
     <nav class="nav" aria-label="页面导航">
       <a href="#workflow">工作流</a>
       <a href="#flat">平面拼豆</a>
+      <a href="https://beadwatch-cloud-7c28q17g8xc.qoder.zone/account.html" target="_blank" rel="noopener">账号</a>
       <a href="#interface">界面</a>
       <a href="#local-ai">本地 AI</a>
       <a href="#image-api">生图 API</a>
@@ -626,7 +627,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
       <a href="https://github.com/shiinakuro/beadwatch" target="_blank" rel="noopener">GitHub</a>
     </nav>
     <div class="top-act">
-      <span class="ver">v1.2.0</span>
+      <span class="ver">v1.3.0</span>
       <a class="btn btn-primary btn-sm" href="#download">下载</a>
     </div>
   </div>
@@ -952,10 +953,19 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
         <p class="eyebrow">RELEASE</p>
         <h2>全新发布</h2>
       </div>
-      <p class="sec-note"><b>v1.2.0 平面拼豆</b>。Windows 10 / 11 自包含安装程序，不需要另行安装 .NET 或 Windows App SDK。</p>
+      <p class="sec-note"><b>v1.3.0 账号与云同步</b>。Windows 10 / 11 自包含安装程序，不需要另行安装 .NET 或 Windows App SDK。</p>
     </div>
     <div class="log">
       <article class="entry now reveal">
+        <div class="vline"><span class="badge">RELEASE</span><h3>v1.3.0</h3><time>2026-10-24</time></div>
+        <ul>
+          <li><b>账号与云同步：</b>桌面端与网页共用同一个拼豆先锋账号；登录后同步品牌、作者、水印、豆径、生图模型和历史摘要。</li>
+          <li><b>设置跟着账号走：</b>桌面端保存设置后自动上传；换一台电脑可「应用云端设置」拉取。API Key、混元 Key 和本地文件路径不上传。</li>
+          <li><b>历史摘要：</b>重建、导入、导出和平面图纸都会记录作品名、豆数、尺寸、色数与时间；不保存工程文件。</li>
+          <li><b>账号中心：</b>官网与账号系统已发布到 Qoder Sites，<a href="https://beadwatch-cloud-7c28q17g8xc.qoder.zone/account.html" target="_blank" rel="noopener">打开账号页</a>。</li>
+        </ul>
+      </article>
+      <article class="entry reveal">
         <div class="vline"><span class="badge">RELEASE</span><h3>v1.2.0</h3><time>2026-10-24</time></div>
         <ul>
           <li><b>平面拼豆：</b>新增平行入口「平面 · 拼豆」：上传 1 张图 → AI 卡通平涂 → 按品牌色卡像素化 → 带色号的平面图纸。</li>
@@ -1042,8 +1052,8 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
       </div>
       <div class="dl-side">
         <div class="dl-box">
-          <div class="dl-name" id="dlName">拼豆先锋_v1.2.0_安装程序.exe</div>
-          <div class="dl-sub"><span>v1.2.0 · SELF-CONTAINED</span><span>117.0 MB</span></div>
+          <div class="dl-name" id="dlName">拼豆先锋_v1.3.0_安装程序.exe</div>
+          <div class="dl-sub"><span>v1.3.0 · SELF-CONTAINED</span><span>117.0 MB</span></div>
           <div class="dl-actions">
             <button class="btn btn-primary dl-btn" id="dlBtn" type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 21h14"/></svg>
@@ -1080,6 +1090,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
     <nav aria-label="页脚导航">
       <a href="#workflow">工作流</a>
       <a href="#flat">平面拼豆</a>
+      <a href="https://beadwatch-cloud-7c28q17g8xc.qoder.zone/account.html" target="_blank" rel="noopener">账号</a>
       <a href="#download">下载</a>
       <a href="#log">发布</a>
       <a href="https://github.com/shiinakuro/beadwatch" target="_blank" rel="noopener">GitHub</a>
@@ -1111,7 +1122,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
   const cancel = document.getElementById("dlCancel");
   const shaCopy = document.getElementById("shaCopy");
   const shaText = document.getElementById("shaText");
-  const meta = { name: "拼豆先锋_v1.2.0_安装程序.exe", size: 122706179 };
+  const meta = { name: "拼豆先锋_v1.3.0_安装程序.exe", size: 122706179 };
   let busy = false;
   let ac = null;
 

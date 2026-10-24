@@ -21,6 +21,7 @@ namespace Doudou.WinUI;
 public sealed class FlatPatternWindow : Window
 {
     private readonly Session _s;
+    private readonly AccountManager _accounts;
     private readonly IntPtr _hwnd;
     private readonly List<string> _brandIds;
     private readonly List<string> _brandTitles;
@@ -62,9 +63,10 @@ public sealed class FlatPatternWindow : Window
     private int _style, _longSide = 64, _brand, _maxColors = 16;
     private bool _removeBg = true, _letters = true, _force;
 
-    public FlatPatternWindow(Session s)
+    public FlatPatternWindow(Session s, AccountManager accounts)
     {
         _s = s;
+        _accounts = accounts;
         _hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
         _brandIds = s.Lib.Brands.Keys.OrderBy(k => k).ToList();
         _brandTitles = _brandIds.Select(id => s.Lib.Brands[id].Title).ToList();
@@ -467,6 +469,19 @@ public sealed class FlatPatternWindow : Window
             _exportFolder = outp.Folder;
             _openBtn.IsEnabled = true;
             _status.Text = $"已导出 {outp.Files.Count} 个文件到：{outp.Folder}";
+            _accounts.RecordHistory(new HistoryEntry
+            {
+                Kind = "flat",
+                Title = string.IsNullOrWhiteSpace(_title.Text) ? "平面拼豆" : _title.Text.Trim(),
+                Summary = $"{model.SX}×{model.SY} · {model.CountSolid():N0} 颗 · {model.Palette.Count - 1} 色",
+                Meta = new HistoryMeta
+                {
+                    Beads = model.CountSolid(),
+                    Colors = model.Palette.Count - 1,
+                    Size = $"{model.SX}×{model.SY}",
+                    Source = "flat",
+                },
+            });
             ShowInfo("平面图纸已导出。", InfoBarSeverity.Success);
         }
         catch (Exception e) { ShowInfo("导出失败：" + e.Message, InfoBarSeverity.Error); }

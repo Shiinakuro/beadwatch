@@ -1,4 +1,5 @@
 using Doudou.Core.Drawing;
+using Doudou.Core.Services;
 using Doudou.Editor;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -104,6 +105,19 @@ public sealed class ExportPage : IStepPage
                 using var comp = new DrawingComposer(model, m, S.Lib, opt);
                 return comp.ExportAll(folder, progress);
             }, ct);
+            _h.Accounts.RecordHistory(new HistoryEntry
+            {
+                Kind = "export",
+                Title = string.IsNullOrWhiteSpace(m.Title) ? "图纸" : m.Title,
+                Summary = $"整套图纸 · {outp.Files.Count} 个文件",
+                Meta = new HistoryMeta
+                {
+                    Beads = model.CountSolid(),
+                    Colors = model.Palette.Count - 1,
+                    Parts = model.PartList.Count,
+                    Source = "drawing",
+                },
+            });
             _out.Children.Clear();
             var potg = new StackPanel { Spacing = 4, Margin = new Thickness(0, 10, 0, 4) };
             potg.Children.Add(Theme.Tag("导出完成 · EXPORTED", Theme.Orange, 13));

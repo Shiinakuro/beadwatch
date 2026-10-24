@@ -36,12 +36,15 @@ public interface IHost
     Task<bool> ConfirmAsync(string title, string text, string ok = "确定", string cancel = "取消");
     Task OpenProjectAsync(string path);
     void OpenFlatPattern();
+    AccountManager Accounts { get; }
+    void OpenAccount();
 }
 
 /// <summary>主窗口：自绘标题栏 + 左侧步骤导航 + 中央三维视口（浮动工具栏）+ 右侧步骤面板。</summary>
 public sealed class MainWindow : Window, IHost
 {
     public Session S { get; }
+    public AccountManager Accounts { get; }
     public VoxelView View { get; } = new();
     public XamlRoot XamlRoot => _root.XamlRoot;
     public IntPtr Hwnd { get; }
@@ -64,6 +67,7 @@ public sealed class MainWindow : Window, IHost
     private readonly Grid _welcome = new();
     private readonly Grid _preview = new() { Visibility = Visibility.Collapsed };
     private FlatPatternWindow? _flatWindow;
+    private AccountWindow? _accountWindow;
     private readonly ComboBox _previewPick = new() { MinWidth = 260 };
     private readonly ScrollViewer _previewScroll = new() { ZoomMode = ZoomMode.Enabled, MinZoomFactor = 0.1f, MaxZoomFactor = 4f, HorizontalScrollBarVisibility = ScrollBarVisibility.Auto, HorizontalScrollMode = ScrollMode.Enabled };
     private readonly Image _previewImage = new() { Stretch = Stretch.None };
@@ -109,6 +113,7 @@ public sealed class MainWindow : Window, IHost
         AppWindow.MoveAndResize(new RectInt32(area.X + (area.Width - w) / 2, area.Y + (area.Height - h) / 2, w, h));
 
         S = new Session();
+        Accounts = new AccountManager(S);
         _undo = IconBtn("", "撤销 (Ctrl+Z)", () => S.History.Undo());
         _redo = IconBtn("", "重做 (Ctrl+Y)", () => S.History.Redo());
         _tools = new ViewportTools(this);
@@ -162,6 +167,7 @@ public sealed class MainWindow : Window, IHost
         _root.Loaded += async (_, _) =>
         {
             GoStep(1);
+            _ = Accounts.RestoreAsync();
             UpdateChrome();
             UpdateWelcome();
             if (!_onboarding.Done) _onboarding.Show();   // 第一次打开：先看使用引导
@@ -208,6 +214,7 @@ public sealed class MainWindow : Window, IHost
         actions.Children.Add(_undo);
         actions.Children.Add(_redo);
         actions.Children.Add(new AppBarSeparator());
+        actions.Children.Add(IconBtn(G.Account, "账号与云端同步", () => OpenAccount()));
         var help = IconBtn("", "使用帮助与快捷键", async () => await ShowHelpAsync());
         _helpButton = help;
         actions.Children.Add(help);
@@ -677,9 +684,17 @@ public sealed class MainWindow : Window, IHost
     public void OpenFlatPattern()
     {
         if (_flatWindow != null) { _flatWindow.Activate(); return; }
-        _flatWindow = new FlatPatternWindow(S);
+        _flatWindow = new FlatPatternWindow(S, Accounts);
         _flatWindow.Closed += (_, _) => _flatWindow = null;
         _flatWindow.Activate();
+    }
+
+    public void OpenAccount()
+    {
+        if (_accountWindow != null) { _accountWindow.Activate(); return; }
+        _accountWindow = new AccountWindow(S, Accounts);
+        _accountWindow.Closed += (_, _) => _accountWindow = null;
+        _accountWindow.Activate();
     }
 
     public void ShowPreview(IReadOnlyList<string> images, string folder)
@@ -802,6 +817,7 @@ public sealed class MainWindow : Window, IHost
                 var m = VoxFile.Read(path);
                 Quantizer.RemapToBrand(m, S.Lib, S.Settings.DefaultBrand);
                 S.Replace(m, new ProjectMeta { Title = Path.GetFileNameWithoutExtension(path) }, new());
+                RecordOpen(Path.GetFileNameWithoutExtension(path), m, "vox");
                 _welcomeDismissed = true;
                 RecentFiles.Add(path);
                 Notify($"已导入 {m.CountSolid():N0} 颗，颜色已映射到 {S.Lib.Get(m.BrandId).Title}", InfoBarSeverity.Success);
@@ -836,12 +852,33 @@ public sealed class MainWindow : Window, IHost
                     SourceBrand = S.Settings.DefaultBrand,
                     SourceMaxColors = 32,
                 }, new());
+                RecordOpen(Path.GetFileNameWithoutExtension(path), m, "mesh");
                 _welcomeDismissed = true;
                 var how = res.UsedTexture ? "模型自带纹理上色" : "单色（无纹理/参考图，请在编辑中上色）";
                 Notify($"网格已体素化：{m.SX}×{m.SY}×{m.SZ}，{m.CountSolid():N0} 颗；{how}{(res.RotatedZUp ? "；Z-up 已转正" : "")}", InfoBarSeverity.Success);
                 GoStep(2);
             });
         }
+    }
+
+    private void RecordOpen(string title, Core.Model.VoxelModel model, string mode)
+    {
+        var name = string.IsNullOrWhiteSpace(title) ? "未命名" : title.Trim();
+        if (name.Length > 120) name = name[..120];
+        Accounts.RecordHistory(new HistoryEntry
+        {
+            Kind = "open",
+            Title = name,
+            Summary = $"{model.CountSolid():N0} 颗 · {model.PartList.Count} 个零件 · {model.Palette.Count - 1} 色",
+            Meta = new HistoryMeta
+            {
+                Beads = model.CountSolid(),
+                Colors = model.Palette.Count - 1,
+                Parts = model.PartList.Count,
+                Size = $"{model.SX}×{model.SY}×{model.SZ}",
+                Source = mode,
+            },
+        });
     }
 
     public async Task OpenProjectAsync(string path)
@@ -852,6 +889,7 @@ public sealed class MainWindow : Window, IHost
             var dir = AppPaths.NewWorkDir("open");
             var (m, meta, views) = ProjectFile.Load(path, dir);
             S.Replace(m, meta, views, path);
+            RecordOpen(meta.Title, m, "project");
             _welcomeDismissed = true;
             RecentFiles.Add(path);
             Notify($"已打开 {Path.GetFileName(path)}：{m.CountSolid():N0} 颗，{m.PartList.Count} 个零件", InfoBarSeverity.Success);

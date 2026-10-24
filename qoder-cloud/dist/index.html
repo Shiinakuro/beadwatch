@@ -1,0 +1,1610 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>拼豆先锋 BEADWATCH · 立体拼豆设计</title>
+<meta name="description" content="从照片生成立体拼豆模型，或上传 1 张图生成平面拼豆图纸。逐颗修形、拆件、检查装配，导出整套可施工图纸。Windows 10/11。">
+<meta name="theme-color" content="#0a111b">
+<meta property="og:title" content="拼豆先锋 BEADWATCH">
+<meta property="og:description" content="把照片变成能真正拼起来的立体模型。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://beadwatch-cloud-7c28q17g8xc.qoder.zone/">
+<meta property="og:image" content="https://beadwatch-cloud-7c28q17g8xc.qoder.zone/assets/shots/editor.png">
+<link rel="canonical" href="https://beadwatch-cloud-7c28q17g8xc.qoder.zone/">
+<link rel="icon" href="assets/app.png">
+<style>
+:root{
+  --bg:#0a111b; --bg2:#0d1522; --panel:#131d2c; --panel2:#0f1825;
+  --line:#24354a; --line2:#334963; --text:#edf3fb; --muted:#8d9db3;
+  --orange:#f99e1a; --orange2:#ffb64a; --blue:#218ffe; --green:#3ddc84;
+  --max:1180px; --pad:32px;
+  --font:"Microsoft YaHei UI","PingFang SC","Hiragino Sans GB","Noto Sans CJK SC",sans-serif;
+  --mono:"Bahnschrift","Consolas","SFMono-Regular",monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.75 var(--font);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background-image:linear-gradient(rgba(120,160,210,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(120,160,210,.045) 1px,transparent 1px);
+  background-size:88px 88px;
+  mask-image:radial-gradient(ellipse 90% 65% at 50% 20%,#000 20%,transparent 78%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 65% at 50% 20%,#000 20%,transparent 78%);
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(700px 420px at 82% 6%,rgba(249,158,26,.14),transparent 65%),radial-gradient(760px 520px at 8% 28%,rgba(33,143,254,.12),transparent 68%);
+}
+::selection{background:var(--orange);color:#101010}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--orange);outline-offset:3px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad);position:relative;z-index:1}
+.mono{font-family:var(--mono);letter-spacing:.18em}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:60;background:rgba(8,13,21,.84);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.07)}
+.top-in{height:70px;display:flex;align-items:center;gap:28px}
+.brand{display:flex;align-items:center;gap:11px;flex:none}
+.brand img{width:34px;height:34px;border-radius:7px;box-shadow:0 0 0 1px rgba(249,158,26,.35),0 8px 24px rgba(0,0,0,.35)}
+.brand b{display:block;font-size:16px;letter-spacing:.06em;line-height:1.15}
+.brand i{display:block;font-style:normal;font-family:var(--mono);font-size:9px;letter-spacing:.32em;color:var(--muted)}
+.nav{display:flex;gap:26px;margin-left:auto;font-size:13px;color:#b7c4d6}
+.nav a{position:relative;padding:6px 0;transition:color .2s}
+.nav a:hover{color:var(--orange)}
+.nav a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;background:var(--orange);transition:right .25s}
+.nav a:hover::after{right:0}
+.top-act{display:flex;align-items:center;gap:14px;margin-left:26px}
+.ver{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--muted);border:1px solid var(--line);padding:4px 8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid transparent;cursor:pointer;font-weight:700;letter-spacing:.04em;transition:transform .15s,background .2s,border-color .2s,color .2s;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));white-space:nowrap}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--orange);color:#141414;padding:13px 24px}
+.btn-primary:hover{background:var(--orange2)}
+.btn-ghost{background:rgba(255,255,255,.03);border-color:var(--line2);color:var(--text);padding:12px 22px}
+.btn-ghost:hover{border-color:var(--orange);color:var(--orange)}
+.btn-sm{padding:9px 16px;font-size:12px}
+.btn svg{width:16px;height:16px;flex:none}
+
+/* hero */
+.hero{position:relative;padding:76px 0 0}
+.hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:56px;align-items:center;min-height:calc(100vh - 70px);padding-bottom:72px}
+.kicker{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:#a7b6ca;margin:0 0 24px}
+.kicker::before{content:"";width:26px;height:2px;background:var(--orange);display:block}
+h1{margin:0;font-size:clamp(40px,4.9vw,68px);line-height:1.16;letter-spacing:-.02em;font-weight:900}
+h1 em{font-style:normal;color:var(--orange);position:relative;display:inline-block}
+h1 em::after{content:"";position:absolute;left:0;right:0;bottom:3px;height:7px;background:rgba(249,158,26,.2);z-index:-1}
+.lead{max-width:540px;margin:26px 0 0;color:#a9b7c9;font-size:16.5px;line-height:1.9}
+.hero-btns{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+.meta{display:flex;flex-wrap:wrap;gap:0;margin-top:40px;border-top:1px solid var(--line)}
+.meta div{padding:16px 26px 0 0;margin-right:26px;border-right:1px solid var(--line)}
+.meta div:last-child{border-right:0;margin-right:0}
+.meta b{display:block;font-family:var(--mono);font-size:15px;letter-spacing:.06em;color:var(--text);line-height:1.2}
+.meta span{display:block;font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.08em}
+
+.shot-wrap{position:relative}
+.shot{position:relative;border:1px solid var(--line2);background:#0c1420;padding:8px;clip-path:polygon(0 0,calc(100% - 30px) 0,100% 30px,100% 100%,30px 100%,0 calc(100% - 30px));box-shadow:0 40px 80px -20px rgba(0,0,0,.65),0 0 0 1px rgba(249,158,26,.1)}
+.shot img{width:100%;height:auto;filter:saturate(1.02)}
+.shot::before,.shot::after{content:"";position:absolute;width:34px;height:34px;border-color:var(--orange);border-style:solid;pointer-events:none}
+.shot::before{left:-1px;top:-1px;border-width:2px 0 0 2px}
+.shot::after{right:-1px;bottom:-1px;border-width:0 2px 2px 0}
+.shot-scan{position:absolute;inset:8px;overflow:hidden;pointer-events:none;mix-blend-mode:screen;opacity:.55}
+.shot-scan::after{content:"";position:absolute;left:0;right:0;height:90px;top:-120px;background:linear-gradient(180deg,transparent,rgba(33,143,254,.14),transparent);animation:scan 7s linear infinite}
+@keyframes scan{0%{top:-120px}55%{top:105%}100%{top:105%}}
+.chip{position:absolute;background:rgba(10,17,27,.94);border:1px solid var(--line2);padding:9px 13px;font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:#b9c7d9;backdrop-filter:blur(8px);z-index:2}
+.chip b{color:var(--orange)}
+.chip-tl{left:-18px;top:42px}
+.chip-br{right:-14px;bottom:64px;border-left:2px solid var(--orange)}
+.chip-br strong{display:block;font-family:var(--font);font-size:15px;letter-spacing:.02em;color:#fff}
+.chip-br span{color:var(--muted)}
+.hero-side{position:absolute;right:-12px;top:50%;transform:translateY(-50%) rotate(90deg);transform-origin:center;font-family:var(--mono);font-size:9px;letter-spacing:.34em;color:#52637a}
+
+/* ticker */
+.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(11,18,28,.7);overflow:hidden;position:relative;z-index:1}
+.ticker-in{display:flex;width:max-content;animation:march 34s linear infinite}
+.ticker span{display:flex;align-items:center;gap:22px;padding:15px 26px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:#8fa0b6;white-space:nowrap}
+.ticker span::before{content:"◆";color:var(--orange);font-size:7px}
+@keyframes march{to{transform:translateX(-50%)}}
+.ticker:hover .ticker-in{animation-play-state:paused}
+
+/* sections */
+.section{padding:112px 0;position:relative;z-index:1}
+.sec-head{display:grid;grid-template-columns:78px 1fr 330px;gap:28px;align-items:end;padding-bottom:30px;border-bottom:1px solid var(--line);margin-bottom:52px}
+.sec-no{font-family:var(--mono);font-size:42px;line-height:1;color:transparent;-webkit-text-stroke:1px #3b5069;letter-spacing:-.03em}
+.eyebrow{margin:0 0 10px;font-family:var(--mono);font-size:10px;letter-spacing:.28em;color:var(--orange)}
+h2{margin:0;font-size:clamp(30px,3.2vw,44px);line-height:1.2;letter-spacing:-.01em;font-weight:900}
+.sec-note{margin:0;color:var(--muted);font-size:13.5px;line-height:1.9}
+.sec-note b{color:#c6d3e3;font-weight:600}
+
+/* workflow */
+.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;position:relative}
+.flow::before{content:"";position:absolute;left:2%;right:2%;top:43px;height:1px;background:linear-gradient(90deg,transparent,var(--line2) 8%,var(--line2) 92%,transparent);z-index:0}
+.step{position:relative;z-index:1;background:linear-gradient(165deg,rgba(24,36,53,.96),rgba(13,21,32,.96));border:1px solid var(--line);padding:22px 20px 24px;min-height:318px;display:flex;flex-direction:column;transition:transform .25s,border-color .25s,background .25s}
+.step:hover{transform:translateY(-5px);border-color:#3d5a78;background:linear-gradient(165deg,rgba(28,43,63,.98),rgba(14,23,35,.98))}
+.step::after{content:"";position:absolute;right:-1px;top:-1px;width:26px;height:26px;background:linear-gradient(225deg,transparent 49%,var(--line) 50%,var(--line) 53%,transparent 54%)}
+.step-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:26px}
+.step-ico{width:40px;height:40px;border:1px solid #3a5068;display:grid;place-items:center;color:var(--orange);background:rgba(249,158,26,.06)}
+.step-ico svg{width:19px;height:19px}
+.step-num{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:#5d7189;padding-top:4px}
+.step h3{margin:0;font-size:19px;letter-spacing:.02em;line-height:1.3}
+.step .en{display:block;font-family:var(--mono);font-size:8.5px;letter-spacing:.26em;color:#6f8199;margin-top:6px}
+.step p{margin:13px 0 18px;font-size:12.5px;line-height:1.85;color:#99a9bd;flex:1}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags i{font-style:normal;font-size:10px;letter-spacing:.04em;color:#a8b8cb;border:1px solid #2b3e54;padding:3px 7px;background:rgba(255,255,255,.02)}
+.step:nth-child(1) .step-ico{color:var(--orange)}
+.step:nth-child(2) .step-ico{color:#ffc46b}
+.step:nth-child(3) .step-ico{color:var(--blue)}
+.step:nth-child(4) .step-ico{color:#7bb6ff}
+.step:nth-child(5) .step-ico{color:var(--green)}
+
+/* interface */
+.bento{display:grid;grid-template-columns:1.55fr .8fr;grid-template-rows:auto auto;gap:14px}
+.bento figure{margin:0;position:relative;background:var(--panel2);border:1px solid var(--line);overflow:hidden}
+.bento figure.big{grid-row:1/3}
+.bento img{width:100%;height:100%;object-fit:cover;object-position:top center;transition:transform .6s ease}
+.bento figure:hover img{transform:scale(1.012)}
+.bento figcaption{position:absolute;left:0;right:0;bottom:0;padding:26px 22px 16px;background:linear-gradient(transparent,rgba(7,12,19,.92));display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.bento figcaption b{font-size:15px;letter-spacing:.03em}
+.bento figcaption span{font-family:var(--mono);font-size:8px;letter-spacing:.2em;color:#91a2b8}
+.bento figcaption em{font-style:normal;display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.bento .tall img,.bento .small img{height:100%}
+.bento .tall{min-height:250px}
+.bento .small{min-height:250px}
+
+/* ai */
+.ai-panel{display:grid;grid-template-columns:1.08fr .92fr;gap:0;border:1px solid var(--line2);background:linear-gradient(140deg,rgba(22,34,50,.96),rgba(10,16,25,.98));position:relative;overflow:hidden}
+.ai-panel::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--orange)}
+.ai-copy{padding:48px 46px 46px 50px}
+.ai-copy h3{margin:6px 0 14px;font-size:clamp(26px,2.7vw,36px);line-height:1.25;font-weight:900}
+.ai-copy p{color:#a6b5c8;font-size:14px;line-height:1.95;max-width:520px}
+.path{display:flex;align-items:center;gap:10px;margin:26px 0;flex-wrap:wrap;font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#a2b2c6}
+.path b{color:var(--orange);font-weight:400}
+.path i{font-style:normal;color:#4c6078}
+.note{display:flex;gap:11px;align-items:flex-start;padding:14px 16px;border:1px solid #2c4056;background:rgba(33,143,254,.05);font-size:12px;color:#9fb0c5;line-height:1.8}
+.note svg{width:16px;height:16px;flex:none;color:var(--blue);margin-top:3px}
+.profiles{display:flex;flex-direction:column;justify-content:center;gap:12px;padding:30px 34px;border-left:1px solid var(--line);background:rgba(6,11,18,.45)}
+.prof{border:1px solid var(--line);background:rgba(17,27,41,.8);padding:20px 22px;position:relative;transition:border-color .2s}
+.prof:hover{border-color:#3d5875}
+.prof.hot{border-color:rgba(249,158,26,.45)}
+.prof .tag{position:absolute;right:14px;top:14px;font-family:var(--mono);font-size:8px;letter-spacing:.16em;color:var(--orange);border:1px solid rgba(249,158,26,.35);padding:2px 6px}
+.prof h4{margin:0 0 6px;font-size:16px;letter-spacing:.02em}
+.prof p{margin:0;font-size:12px;color:#94a4b8;line-height:1.75}
+.prof .size{font-family:var(--mono);font-size:22px;color:#dbe6f2;letter-spacing:.02em;margin-top:10px}
+.prof .size small{font-size:10px;color:var(--muted);letter-spacing:.06em;margin-left:5px}
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
+.why{border-top:2px solid #2d4057;background:rgba(17,27,41,.55);padding:18px 18px 20px}
+.why b{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--orange);font-weight:400;margin-bottom:8px}
+.why strong{display:block;font-size:14px;color:#dce6f2;margin-bottom:5px}
+.why p{margin:0;font-size:12px;line-height:1.8;color:#91a2b7}
+
+/* image api */
+.api-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:0;border:1px solid var(--line2);background:linear-gradient(150deg,rgba(20,31,46,.96),rgba(9,15,24,.98));position:relative;overflow:hidden}
+.api-grid::before{content:"";position:absolute;inset:0;background:radial-gradient(520px 260px at 88% 0,rgba(33,143,254,.12),transparent 70%);pointer-events:none}
+.api-main{padding:44px 46px 42px;position:relative;z-index:1}
+.api-main h3{margin:6px 0 14px;font-size:clamp(24px,2.5vw,34px);line-height:1.3}
+.api-main>p{color:#a6b5c8;font-size:14px;line-height:1.9;margin:0 0 26px;max-width:520px}
+.api-uses{list-style:none;margin:0 0 26px;padding:0;display:grid;border-top:1px solid var(--line)}
+.api-uses li{display:grid;grid-template-columns:46px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+.api-uses li>b{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--orange);font-weight:400;padding-top:3px}
+.api-uses strong{display:block;font-size:14px;color:#dfe8f4;margin-bottom:3px;letter-spacing:.02em}
+.api-uses span{font-size:12.5px;line-height:1.8;color:#98a9bd}
+.api-side{border-left:1px solid var(--line);background:rgba(6,11,18,.42);padding:30px;display:flex;flex-direction:column;justify-content:center}
+.api-card{position:relative;border:1px solid var(--line);background:linear-gradient(165deg,rgba(23,36,53,.94),rgba(12,20,31,.96));padding:28px 26px 24px}
+.api-card::after{content:"";position:absolute;right:-1px;top:-1px;width:30px;height:30px;background:linear-gradient(225deg,transparent 49%,rgba(249,158,26,.55) 50%,transparent 53%)}
+.api-card .tag{display:inline-block;font-family:var(--mono);font-size:8px;letter-spacing:.18em;color:var(--orange);border:1px solid rgba(249,158,26,.35);padding:2px 7px}
+.api-card h4{margin:12px 0 8px;font-size:19px;letter-spacing:.02em}
+.api-card>p{margin:0 0 18px;font-size:12.5px;line-height:1.8;color:#93a4b8}
+.api-card code{font-family:var(--mono);font-size:10px;color:#d7e4f2;background:#101c2b;border:1px solid #2a3e55;padding:1px 5px}
+.model-list{list-style:none;margin:0 0 20px;padding:0;display:grid;border-top:1px solid var(--line)}
+.model-list li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:11.5px;color:#8498ad}
+.model-list b{font-family:var(--mono);font-size:11.5px;font-weight:400;color:#e2ebf5;letter-spacing:.02em}
+.api-path{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:#93a6ba;margin-bottom:16px}
+.api-path b{font-weight:400;color:var(--orange)}
+.api-path i{font-style:normal;color:#4c6078}
+.promo{margin:0;padding-top:14px;border-top:1px solid var(--line);font-size:11px;line-height:1.8;color:#788ba1}
+.promo a{color:#b8c8da;border-bottom:1px solid rgba(249,158,26,.45);padding-bottom:1px}
+.promo a:hover{color:var(--orange)}
+.promo em{font-style:normal;font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:#8d9db3;border:1px solid #2b3e54;padding:1px 5px;margin-left:6px;vertical-align:1px}
+
+/* shortcuts */
+.keys{display:grid;grid-template-columns:1fr 1fr;gap:0 42px;border-top:1px solid var(--line)}
+.keygroup{padding:26px 0 8px;border-bottom:1px solid var(--line)}
+.keygroup h3{margin:0 0 16px;font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--orange);font-weight:400}
+.keyrow{display:flex;align-items:center;gap:16px;padding:6px 0;font-size:13px;color:#a9b8ca}
+.keyrow .lab{flex:1}
+kbd{display:inline-flex;align-items:center;justify-content:center;min-width:25px;height:24px;padding:0 7px;border:1px solid #3a5068;border-bottom-width:2px;background:#121c2a;color:#d8e3f0;font-family:var(--mono);font-size:10px;letter-spacing:.04em;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.kg{display:flex;flex-wrap:wrap;gap:4px}
+.plus{color:#5d7188;font-size:10px;margin:0 1px}
+
+/* changelog */
+.log{border-left:1px solid var(--line);margin-left:10px}
+.entry{position:relative;padding:0 0 42px 38px}
+.entry:last-child{padding-bottom:0}
+.entry::before{content:"";position:absolute;left:-5px;top:9px;width:9px;height:9px;background:var(--bg);border:2px solid #46617e}
+.entry.now::before{background:var(--orange);border-color:var(--orange);box-shadow:0 0 0 5px rgba(249,158,26,.12)}
+.entry .vline{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.entry h3{margin:0;font-family:var(--mono);font-size:19px;letter-spacing:.04em}
+.entry time{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:#6e8198}
+.badge{font-size:9px;letter-spacing:.12em;color:#1a1205;background:var(--orange);padding:2px 7px;font-family:var(--mono)}
+.entry ul{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.entry li{position:relative;padding-left:16px;font-size:13px;line-height:1.85;color:#9dadc0}
+.entry li::before{content:"";position:absolute;left:0;top:.72em;width:5px;height:5px;background:#45607d}
+.entry li b{color:#d4dfec;font-weight:600}
+.entry code{font-family:var(--mono);font-size:11px;color:#c8d8e8;background:#101c2b;border:1px solid #22364a;padding:1px 4px}
+
+/* download */
+.dl{position:relative;border:1px solid var(--line2);background:linear-gradient(135deg,rgba(26,38,55,.98),rgba(9,15,24,.99));padding:52px;display:grid;grid-template-columns:1.1fr .9fr;gap:52px;overflow:hidden}
+.dl::before{content:"";position:absolute;right:-120px;top:-160px;width:420px;height:420px;background:radial-gradient(circle,rgba(249,158,26,.15),transparent 65%);pointer-events:none}
+.dl .kicker{margin-bottom:16px}
+.dl h2{margin-bottom:14px}
+.dl p.sub{color:#a3b2c5;font-size:14px;line-height:1.9;margin:0 0 26px;max-width:520px}
+.reqs{display:grid;gap:9px;margin:0 0 30px;padding:0;list-style:none}
+.reqs li{display:flex;gap:10px;font-size:12.5px;color:#9fafc2}
+.reqs svg{width:14px;height:14px;color:var(--green);flex:none;margin-top:4px}
+.dl-side{border-left:1px solid var(--line);padding-left:44px;display:flex;flex-direction:column;justify-content:center}
+.dl-box{background:rgba(7,12,19,.6);border:1px solid #2b3f55;padding:26px}
+.dl-name{font-size:12px;color:#c6d3e2;word-break:break-all;line-height:1.6}
+.dl-sub{display:flex;justify-content:space-between;gap:12px;margin:8px 0 20px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:#7f90a6}
+.dl-btn{width:100%}
+.dl-btn[disabled]{opacity:.55;cursor:wait}
+.dl-actions{display:grid;grid-template-columns:1fr 112px;gap:8px;align-items:stretch}
+.dl-android{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;border:1px dashed rgba(61,220,132,.38);background:rgba(61,220,132,.045);color:#9fe8bb;padding:4px 6px;text-align:center;line-height:1.25}
+.dl-android b{display:block;font-size:11.5px;font-weight:600;letter-spacing:.02em}
+.dl-android small{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:#72b98b}
+.dl-android svg{display:none}
+@media(max-width:520px){.dl-actions{grid-template-columns:1fr}.dl-android{min-height:44px}}
+.bar{height:4px;background:#0a121d;border:1px solid #23364a;margin-top:18px;overflow:hidden;display:none}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--orange),var(--orange2));transition:width .25s}
+.status{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-size:11px;color:#8a9bb0;min-height:18px}
+.status .pct{font-family:var(--mono);color:#b9c7d8}
+.status.err{color:#ff8b7a}
+.dl-cancel{display:none;margin-top:12px;background:none;border:0;padding:0;color:#7f90a6;font-size:11px;text-decoration:underline;cursor:pointer;align-self:flex-start}
+.dl-alt{display:inline-block;margin-top:10px;font-size:11px;color:#7f90a6;text-decoration:none;border-bottom:1px dashed #35485f}
+.dl-alt:hover{color:var(--orange);border-color:var(--orange)}
+.sha{margin-top:18px;border-top:1px solid #213347;padding-top:14px}
+.sha summary{cursor:pointer;font-size:11px;color:#7e90a6;list-style:none;display:flex;align-items:center;gap:7px}
+.sha summary::-webkit-details-marker{display:none}
+.sha summary::before{content:"▸";font-size:9px;color:var(--orange)}
+.sha[open] summary::before{content:"▾"}
+.sha code{display:block;margin-top:10px;font-family:var(--mono);font-size:9.5px;line-height:1.7;color:#94a6bb;word-break:break-all;background:#080e17;border:1px solid #1e2f43;padding:10px}
+.copy{margin-top:8px;background:none;border:1px solid #2b3f55;color:#8fa1b7;font-size:10px;padding:4px 10px;cursor:pointer}
+.copy:hover{border-color:var(--orange);color:var(--orange)}
+.steps{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:8px;font-size:11.5px;color:#8fa1b6}
+.steps b{color:var(--orange);font-family:var(--mono);font-weight:400;margin-right:6px}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:34px 0 46px;position:relative;z-index:1}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.foot .brand img{width:28px;height:28px}
+.foot .brand b{font-size:13px}
+.foot .brand i{font-size:8px}
+.foot p{margin:0;font-size:11px;color:#63758b;font-family:var(--mono);letter-spacing:.06em}
+.foot nav{display:flex;gap:20px;font-size:11px;color:#7d8fa5}
+.foot nav a:hover{color:var(--orange)}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media (max-width:1080px){
+  .nav{display:none}
+  .hero-grid{grid-template-columns:1fr;gap:72px;min-height:0;padding-top:18px}
+  .hero-side{display:none}
+  .flow{grid-template-columns:repeat(3,1fr)}
+  .flow::before{display:none}
+  .step{min-height:0}
+  .bento{grid-template-columns:1fr 1fr}
+  .bento figure.big{grid-column:1/3;grid-row:auto}
+  .ai-panel{grid-template-columns:1fr}
+  .profiles{border-left:0;border-top:1px solid var(--line)}
+  .api-grid{grid-template-columns:1fr}
+  .api-side{border-left:0;border-top:1px solid var(--line)}
+  .why-grid{grid-template-columns:repeat(2,1fr)}
+  .dl{grid-template-columns:1fr;padding:42px;gap:36px}
+  .dl-side{border-left:0;border-top:1px solid var(--line);padding:32px 0 0}
+  .sec-head{grid-template-columns:60px 1fr;gap:20px}
+  .sec-note{grid-column:2;max-width:520px}
+}
+@media (max-width:760px){
+  :root{--pad:20px}
+  .top-in{height:62px;gap:14px}
+  .top-act{margin-left:auto}
+  .ver{display:none}
+  .brand b{font-size:14px}
+  .hero{padding-top:48px}
+  .hero-grid{padding-bottom:48px;gap:52px}
+  h1{font-size:clamp(34px,9.6vw,46px)}
+  .lead{font-size:14.5px}
+  .meta div{padding-right:16px;margin-right:16px}
+  .meta b{font-size:13px}
+  .chip-tl{left:0;top:-18px}
+  .chip-br{right:0;bottom:-18px}
+  .section{padding:74px 0}
+  .sec-head{grid-template-columns:1fr;gap:12px;margin-bottom:34px}
+  .sec-no{font-size:30px}
+  .sec-note{grid-column:auto}
+  .flow{grid-template-columns:1fr;gap:12px}
+  .step{min-height:0;padding:20px}
+  .step p{margin-bottom:14px}
+  .bento{grid-template-columns:1fr}
+  .bento figure.big{grid-column:auto}
+  .bento .tall,.bento .small{min-height:0}
+  .ai-copy{padding:32px 24px}
+  .profiles{padding:24px}
+  .api-main{padding:30px 24px}
+  .api-side{padding:24px}
+  .why-grid{grid-template-columns:1fr}
+  .keys{grid-template-columns:1fr}
+  .dl{padding:30px 24px}
+  .entry{padding-left:26px}
+  .foot{flex-direction:column;align-items:flex-start;gap:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+}
+
+.flat-grid{display:grid;grid-template-columns:1.12fr .88fr;gap:34px;align-items:center;margin-top:28px}
+.flat-shot{margin:0;border:1px solid var(--line2);background:#0c1420;padding:8px;clip-path:polygon(0 0,calc(100% - 24px) 0,100% 24px,100% 100%,24px 100%,0 calc(100% - 24px));box-shadow:0 36px 70px -24px rgba(0,0,0,.7),0 0 0 1px rgba(33,143,254,.12)}
+.flat-shot img{width:100%;height:auto}
+.flat-copy h3{margin:0 0 12px;font-size:24px;letter-spacing:-.01em}
+.flat-copy p{margin:0 0 18px;color:#a9b7c9;font-size:14.5px;line-height:1.9}
+.flat-list{list-style:none;padding:0;margin:0;display:grid;gap:12px}
+.flat-list li{display:grid;grid-template-columns:96px 1fr;gap:12px;padding-top:12px;border-top:1px solid var(--line);font-size:13.5px;color:#a9b7c9;line-height:1.8}
+.flat-list b{color:var(--orange);font-size:11px;letter-spacing:.08em;padding-top:2px}
+@media(max-width:1080px){.flat-grid{grid-template-columns:1fr}.flat-shot{order:2}}
+
+</style>
+<style id="fx">
+/* ===== BEADWATCH // TACTICAL HUD FX LAYER ===== */
+:root{
+  --display:"Bahnschrift","DIN Alternate","Arial Narrow","Microsoft YaHei UI","PingFang SC",sans-serif;
+  --fx-orange:249,158,26;
+  --fx-blue:33,143,254;
+}
+html{scroll-padding-top:84px}
+body{--cx:70vw;--cy:32vh}
+.fx-progress{position:fixed;left:0;top:0;height:2px;width:100%;z-index:210;background:rgba(255,255,255,.04);pointer-events:none}
+.fx-progress i{display:block;height:100%;width:100%;transform:scaleX(0);transform-origin:left;background:linear-gradient(90deg,var(--orange),#ffd08a 45%,var(--blue));box-shadow:0 0 14px rgba(var(--fx-orange),.7)}
+.fx-corners{position:fixed;inset:10px;z-index:95;pointer-events:none;opacity:.42;background:
+  linear-gradient(var(--orange),var(--orange)) left top/26px 1px no-repeat,
+  linear-gradient(var(--orange),var(--orange)) left top/1px 26px no-repeat,
+  linear-gradient(var(--blue),var(--blue)) right top/26px 1px no-repeat,
+  linear-gradient(var(--blue),var(--blue)) right top/1px 26px no-repeat,
+  linear-gradient(var(--blue),var(--blue)) left bottom/26px 1px no-repeat,
+  linear-gradient(var(--blue),var(--blue)) left bottom/1px 26px no-repeat,
+  linear-gradient(var(--orange),var(--orange)) right bottom/26px 1px no-repeat,
+  linear-gradient(var(--orange),var(--orange)) right bottom/1px 26px no-repeat}
+.fx-glow{position:fixed;inset:0;z-index:0;pointer-events:none;background:
+  radial-gradient(440px 440px at var(--cx) var(--cy),rgba(var(--fx-orange),.075),transparent 70%),
+  radial-gradient(620px 620px at calc(100% - var(--cx)) calc(100% - var(--cy)),rgba(var(--fx-blue),.045),transparent 72%)}
+.fx-noise{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:.035;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E")}
+.fx-scan{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.5;background:repeating-linear-gradient(180deg,rgba(255,255,255,.016) 0 1px,transparent 1px 4px);mix-blend-mode:overlay}
+.fx-rail{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;align-items:center;gap:12px;opacity:.55;transition:opacity .3s}
+.fx-rail:hover{opacity:1}
+.fx-rail-label{writing-mode:vertical-rl;font-family:var(--mono);font-size:8px;letter-spacing:.34em;color:#5f7490}
+.fx-rail-dots{display:flex;flex-direction:column;gap:10px;align-items:center}
+.fx-rail a{position:relative;width:18px;height:18px;display:grid;place-items:center}
+.fx-rail a::before{content:"";width:5px;height:5px;background:#405873;transform:rotate(45deg);transition:.25s}
+.fx-rail a:hover::before{background:#dce8f6;transform:rotate(45deg) scale(1.25)}
+.fx-rail a.active::before{width:8px;height:8px;background:var(--orange);box-shadow:0 0 12px rgba(var(--fx-orange),.9)}
+.fx-rail a::after{content:attr(data-label);position:absolute;right:24px;top:50%;transform:translate(4px,-50%);white-space:nowrap;font-family:var(--mono);font-size:8px;letter-spacing:.14em;color:#c2d0e0;background:rgba(9,15,24,.92);border:1px solid var(--line);padding:3px 7px;opacity:0;pointer-events:none;transition:.2s}
+.fx-rail a:hover::after{opacity:1;transform:translate(0,-50%)}
+.fx-cursor{position:fixed;left:0;top:0;width:34px;height:34px;z-index:190;pointer-events:none;opacity:0;will-change:transform;transition:opacity .25s}
+.fx-cursor.on{opacity:.85}
+.fx-cursor::before,.fx-cursor::after{content:"";position:absolute;background:rgba(var(--fx-orange),.9);box-shadow:0 0 8px rgba(var(--fx-orange),.6)}
+.fx-cursor::before{left:50%;top:0;width:1px;height:100%;transform:translateX(-50%)}
+.fx-cursor::after{top:50%;left:0;height:1px;width:100%;transform:translateY(-50%)}
+.fx-cursor i{position:absolute;inset:9px;border:1px solid rgba(var(--fx-orange),.9);border-radius:50%;transition:.2s}
+.fx-cursor.hot i{inset:5px;border-color:rgba(var(--fx-blue),.95);box-shadow:0 0 14px rgba(var(--fx-blue),.45)}
+.fx-reticle{position:absolute;left:0;top:0;width:46px;height:46px;z-index:6;pointer-events:none;opacity:0;border:1px solid rgba(var(--fx-orange),.35);border-radius:50%;transition:opacity .2s;will-change:transform}
+.fx-reticle.on{opacity:1}
+.fx-reticle::before,.fx-reticle::after{content:"";position:absolute;background:rgba(var(--fx-orange),.6)}
+.fx-reticle::before{left:50%;top:-7px;width:1px;height:60px;transform:translateX(-50%)}
+.fx-reticle::after{top:50%;left:-7px;height:1px;width:60px;transform:translateY(-50%)}
+.fx-reticle b{position:absolute;left:50%;top:50%;width:5px;height:5px;border:1px solid var(--orange);transform:translate(-50%,-50%) rotate(45deg)}
+
+/* display typography */
+h1,h2,h3,.step h3,.prof h4,.api-main h3,.api-card h4,.ai-copy h3,.dl h2,.entry h3,.brand b{font-family:var(--display);font-stretch:condensed}
+h1{font-weight:900;letter-spacing:-.045em;text-shadow:0 18px 60px rgba(0,0,0,.45),0 0 36px rgba(var(--fx-orange),.1)}
+h2,h3{font-weight:900;letter-spacing:-.02em}
+.nav a,.btn,.kicker,.eyebrow,.step .en,.step-num,.chip,.ver,.prof .tag,.sec-note b{font-family:var(--display)}
+.kicker,.eyebrow{letter-spacing:.32em;text-transform:uppercase}
+.kicker::after{content:"";display:inline-block;width:6px;height:6px;background:var(--orange);transform:rotate(45deg) translateY(-1px);margin-left:4px;animation:fx-blink 2.6s infinite}
+.eyebrow{display:inline-flex;align-items:center;gap:8px}
+.eyebrow::before{content:"";width:5px;height:5px;background:var(--orange);transform:rotate(45deg);box-shadow:0 0 10px rgba(var(--fx-orange),.8);animation:fx-blink 3.2s infinite}
+.sec-head{position:relative}
+.sec-head::after{content:"";position:absolute;left:0;bottom:-1px;height:1px;width:100%;background:linear-gradient(90deg,var(--orange),rgba(var(--fx-orange),.15) 32%,transparent 68%);transform:scaleX(0);transform-origin:left;transition:transform 1s .15s}
+.sec-head.in::after{transform:scaleX(1)}
+.sec-no{transition:.5s}
+.sec-head.in .sec-no{color:rgba(var(--fx-orange),.07);-webkit-text-stroke-color:rgba(var(--fx-orange),.5);text-shadow:0 0 30px rgba(var(--fx-orange),.18)}
+h2{position:relative}
+h2::before{content:"";position:absolute;left:-18px;top:.15em;bottom:.15em;width:4px;background:linear-gradient(var(--orange),var(--blue));transform:skewX(-18deg);box-shadow:0 0 16px rgba(var(--fx-orange),.45)}
+.sec-head.in h2{animation:fx-head .85s cubic-bezier(.2,.8,.2,1) both}
+h1 em{overflow:hidden}
+h1 em::before{content:"";position:absolute;left:0;top:-10%;bottom:-10%;width:32%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.5),transparent);transform:translateX(-140%) skewX(-18deg);mix-blend-mode:screen;animation:fx-sheen 5.6s 1.4s infinite}
+.sec-head.in h2:hover{text-shadow:2px 0 rgba(var(--fx-blue),.4),-2px 0 rgba(var(--fx-orange),.4)}
+
+/* hero entrance + radar */
+@keyframes fx-rise{from{transform:translateY(18px)}to{transform:none}}
+.hero-copy .kicker{animation:fx-rise .7s .05s both}
+.hero-copy h1{animation:fx-rise .9s .12s both}
+.hero-copy .lead{animation:fx-rise .8s .26s both}
+.hero-copy .hero-btns{animation:fx-rise .8s .38s both}
+.hero-copy .meta{animation:fx-rise .8s .5s both}
+.hero-copy h1{animation:fx-rise-h1 .95s .12s both;transform-origin:left bottom}
+@keyframes fx-rise-h1{from{transform:translateY(18px) skewX(-2.5deg)}to{transform:skewX(-2.5deg)}}
+.shot-wrap{animation:fx-rise 1s .3s both;perspective:1200px}
+.hero-side{animation:fx-pulse 5s ease-in-out infinite}
+.shot-wrap::before,.shot-wrap::after{content:"";position:absolute;left:50%;top:47%;border-radius:50%;pointer-events:none;z-index:0}
+.shot-wrap::before{width:min(560px,92%);aspect-ratio:1;border:1px dashed rgba(var(--fx-orange),.2);transform:translate(-50%,-50%);animation:fx-spin 46s linear infinite}
+.shot-wrap::after{width:min(430px,70%);aspect-ratio:1;border:1px solid rgba(var(--fx-blue),.14);transform:translate(-50%,-50%);animation:fx-spin 34s linear infinite reverse}
+.shot{position:relative;z-index:1;transform:perspective(1200px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--py,0px));transition:transform .18s ease-out,box-shadow .3s;will-change:transform}
+.shot:hover{box-shadow:0 50px 100px -20px rgba(0,0,0,.75),0 0 52px -12px rgba(var(--fx-orange),.2)}
+.chip{animation:fx-float 6.5s ease-in-out infinite}
+.chip-br{animation-delay:-3.2s}
+.chip-tl::after{content:"";display:inline-block;width:5px;height:5px;background:var(--green);margin-left:7px;transform:rotate(45deg);animation:fx-blink 1.8s infinite}
+
+/* buttons + downloads */
+.btn{position:relative;overflow:hidden;isolation:isolate;font-family:var(--display);font-weight:700;font-stretch:condensed;letter-spacing:.08em}
+.btn::after{content:"";position:absolute;top:-20%;bottom:-20%;left:-60%;width:36%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg);transition:left .55s ease;pointer-events:none;z-index:0}
+.btn:hover::after{left:125%}
+.btn-primary{background:linear-gradient(180deg,var(--orange2),var(--orange))}
+.btn-primary:hover{background:linear-gradient(180deg,#ffd28a,var(--orange2))}
+.dl-btn{animation:fx-pulse 4.5s ease-in-out infinite}
+.dl-btn:hover{animation:none}
+.dl-android{position:relative;overflow:hidden}
+.dl-android::after{content:"";position:absolute;top:-50%;bottom:-50%;left:-70%;width:40%;background:linear-gradient(100deg,transparent,rgba(61,220,132,.18),transparent);transform:skewX(-20deg);animation:fx-shimmer 4.8s 1s infinite;pointer-events:none}
+.fx-ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.35);transform:scale(0);opacity:.7;animation:fx-ripple .65s ease-out forwards;pointer-events:none;z-index:3}
+
+/* cards + HUD brackets */
+.step{overflow:hidden;isolation:isolate}
+.step::before{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.08) 50%,transparent 65%);transform:translateX(-120%);transition:transform .9s;pointer-events:none}
+.step:hover::before{transform:translateX(120%)}
+.step:hover .step-ico{transform:rotate(-7deg) scale(1.08);background:rgba(var(--fx-orange),.12);box-shadow:0 0 20px rgba(var(--fx-orange),.18)}
+.step-ico{transition:.3s}
+.step:hover{box-shadow:0 22px 48px -18px rgba(0,0,0,.7),inset 0 0 0 1px rgba(var(--fx-orange),.08)}
+[data-tilt]{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px));transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .7s ease,border-color .3s,background .3s,box-shadow .3s}
+[data-tilt]:hover{--ty:-4px}
+.step[data-tilt],.prof[data-tilt],.bento figure[data-tilt],.api-card[data-tilt]{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px))}
+.bento figure::before{content:"";position:absolute;left:8px;top:8px;width:22px;height:22px;border-top:2px solid var(--orange);border-left:2px solid var(--orange);opacity:.7;z-index:2;pointer-events:none}
+.bento figure::after{content:"";position:absolute;left:0;right:0;top:-20%;height:22%;background:linear-gradient(180deg,transparent,rgba(var(--fx-blue),.16),transparent);pointer-events:none;z-index:2}
+.bento figure:hover::after{animation:fx-cardscan .9s ease-out}
+.bento figure:hover img{transform:scale(1.03)}
+.prof{position:relative;overflow:hidden}
+.prof::before{content:"";position:absolute;left:8px;top:8px;width:18px;height:18px;border-top:2px solid rgba(var(--fx-orange),.75);border-left:2px solid rgba(var(--fx-orange),.75);pointer-events:none}
+.prof:hover{box-shadow:0 18px 40px -22px rgba(0,0,0,.8),0 0 24px -12px rgba(var(--fx-orange),.25)}
+.api-card::before{content:"";position:absolute;left:8px;bottom:8px;width:18px;height:18px;border-bottom:2px solid rgba(var(--fx-blue),.7);border-left:2px solid rgba(var(--fx-blue),.7);pointer-events:none}
+.ai-panel::after,.api-grid::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 40%,rgba(var(--fx-orange),.055) 50%,transparent 60%);transform:translateX(-60%);transition:transform 1s;pointer-events:none}
+.ai-panel:hover::after,.api-grid:hover::after{transform:translateX(60%)}
+.why{position:relative;overflow:hidden}
+.why::after{content:"";position:absolute;left:0;right:100%;top:0;height:2px;background:var(--orange);transition:right .4s}
+.why:hover::after{right:0}
+.entry.now::before{animation:fx-dot 2.4s infinite}
+.entry h3{transition:color .25s}
+.entry:hover h3{color:var(--orange)}
+
+/* top / ticker / download accents */
+.top{transition:background .3s,box-shadow .3s}
+.top.scrolled{background:rgba(8,13,21,.94);box-shadow:0 12px 40px -18px rgba(0,0,0,.8)}
+.brand img{transition:transform .35s,box-shadow .35s}
+.brand:hover img{transform:rotate(-7deg) scale(1.07);box-shadow:0 0 0 1px rgba(var(--fx-orange),.6),0 0 26px rgba(var(--fx-orange),.25)}
+.ver{position:relative;overflow:hidden}
+.ver::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent,rgba(249,158,26,.12),transparent);transform:translateX(-120%);animation:fx-shimmer 5s 1.5s infinite}
+.nav a.active{color:var(--orange)}
+.nav a.active::after{right:0}
+.nav a.active::before{content:"";position:absolute;left:50%;top:-8px;width:4px;height:4px;background:var(--orange);transform:translateX(-50%) rotate(45deg)}
+.ticker{position:relative}
+.ticker::before,.ticker::after{content:"";position:absolute;top:0;bottom:0;width:120px;z-index:1;pointer-events:none}
+.ticker::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+.ticker::after{right:0;background:linear-gradient(270deg,var(--bg),transparent)}
+.ticker span:nth-child(odd)::before{color:var(--blue)}
+.dl{isolation:isolate}
+.dl::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 42%,rgba(var(--fx-orange),.05) 50%,transparent 58%);transform:translateX(-70%);transition:transform 1.2s;pointer-events:none}
+.dl:hover::after{transform:translateX(70%)}
+.dl-box{position:relative;overflow:hidden;box-shadow:0 24px 60px -28px rgba(0,0,0,.8)}
+.dl-box::before{content:"";position:absolute;left:0;top:0;width:100%;height:1px;background:linear-gradient(90deg,var(--orange),transparent 70%)}
+.bar i{box-shadow:0 0 12px rgba(var(--fx-orange),.7)}
+.meta b{font-variant-numeric:tabular-nums}
+
+@keyframes fx-blink{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes fx-pulse{0%,100%{opacity:1;transform:none}50%{opacity:.86;transform:translateY(-2px)}}
+@keyframes fx-spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes fx-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes fx-dot{0%,100%{box-shadow:0 0 0 5px rgba(var(--fx-orange),.12)}50%{box-shadow:0 0 0 9px rgba(var(--fx-orange),.03)}}
+@keyframes fx-sheen{0%,55%{transform:translateX(-140%) skewX(-18deg)}80%,100%{transform:translateX(360%) skewX(-18deg)}}
+@keyframes fx-shimmer{0%,55%{transform:translateX(-120%) skewX(-20deg)}80%,100%{transform:translateX(360%) skewX(-20deg)}}
+@keyframes fx-head{from{transform:translateX(-16px)}to{transform:none}}
+@keyframes fx-cardscan{0%{top:-20%;opacity:0}15%{opacity:1}100%{top:110%;opacity:0}}
+@keyframes fx-ripple{to{transform:scale(1);opacity:0}}
+@keyframes fx-line{from{transform:scaleX(0);opacity:0}to{transform:scaleX(1);opacity:1}}
+.flow::before{animation:fx-line 1.6s .3s both;transform-origin:left}
+
+@media (max-width:1080px){
+  .fx-rail{display:none}
+  .fx-corners{opacity:.22}
+  h2::before{left:-12px;width:3px}
+}
+@media (max-width:760px){
+  .fx-cursor,.fx-reticle{display:none!important}
+  .shot-wrap::before,.shot-wrap::after{display:none}
+  .fx-corners{display:none}
+  .fx-rail{display:none}
+  .hero-side{display:none}
+}
+@media (hover:none){
+  .fx-cursor,.fx-reticle,.fx-rail{display:none!important}
+}
+@media (prefers-reduced-motion:reduce){
+  .fx-progress,.fx-corners,.fx-glow,.fx-noise,.fx-scan,.fx-rail,.fx-cursor,.fx-reticle{display:none!important}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal{opacity:1!important;transform:none!important}
+  .sec-head h2{clip-path:none!important;transform:none!important}
+  html{scroll-behavior:auto}
+}
+
+.meta b{white-space:nowrap}
+</style>
+<style id="fx2">
+/* ===== BEADWATCH // POLISH + BEAD LAYER ===== */
+.hero-copy{transform:translate3d(0,var(--hy,0px),0);will-change:transform}
+.top-in{transition:height .28s cubic-bezier(.2,.8,.2,1)}
+.top.scrolled .top-in{height:58px}
+.top.scrolled .brand img{width:30px;height:30px}
+html{scrollbar-color:var(--orange) #070c13;scrollbar-width:thin}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#070c13}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--orange),#a95b00 46%,var(--blue));border:2px solid #070c13;border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,var(--orange2),var(--orange) 46%,#4da6ff)}
+h1{font-size:clamp(42px,5.15vw,74px)}
+h2{font-size:clamp(32px,3.45vw,48px);text-shadow:0 1px 0 rgba(255,255,255,.06),0 2px 0 rgba(0,0,0,.35)}
+.section{padding:126px 0}
+h1 em{text-shadow:0 1px 0 rgba(255,255,255,.16),0 2px 0 #a45e00,0 4px 0 rgba(0,0,0,.18),0 18px 40px rgba(0,0,0,.4)}
+h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gradient(circle at 50% 35%,#ffd89a 0 1.2px,var(--orange) 1.8px 2.6px,rgba(249,158,26,.22) 3.2px,transparent 3.8px) 0 0/11px 9px repeat-x;filter:drop-shadow(0 2px 4px rgba(0,0,0,.45));animation:fx2-beadline 11s linear infinite}
+@keyframes fx2-beadline{to{background-position:11px 0}}
+
+.fx-beads{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.62;mix-blend-mode:screen}
+.fx-word{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.52;mix-blend-mode:screen;filter:drop-shadow(0 0 14px rgba(var(--fx-orange),.07));animation:fx-word-in 1.7s .25s both}
+@keyframes fx-word-in{from{transform:translateY(12px)}to{transform:none}}
+.fx-glare{position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:3;opacity:0;transition:opacity .25s;mix-blend-mode:screen;background:radial-gradient(220px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.09),transparent 65%)}
+[data-tilt]:hover .fx-glare{opacity:1}
+.api-card{overflow:hidden}
+.entry li::before{width:6px;height:6px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffd89a,var(--orange) 55%,#8a4e00);box-shadow:0 0 6px rgba(var(--fx-orange),.4);top:.62em}
+.entry::before{width:10px;height:10px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:radial-gradient(circle at 35% 30%,#8ec4ff,var(--blue) 55%,#0a3a70);box-shadow:0 0 10px rgba(var(--fx-blue),.35)}
+.entry.now::before{background:radial-gradient(circle at 35% 30%,#ffd89a,var(--orange) 55%,#7a4400);border-color:rgba(249,158,26,.65);box-shadow:0 0 14px rgba(var(--fx-orange),.55)}
+.ticker span::before{content:"";width:6px;height:6px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,currentColor 58%,transparent 72%);box-shadow:0 0 8px currentColor}
+.bar{height:20px;padding:2px;border:1px solid #4a637f;background:#080d14;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,0 100%);box-shadow:inset 0 0 12px rgba(0,0,0,.85),0 0 0 1px rgba(249,158,26,.08);position:relative;margin-top:18px}
+.bar::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.18),transparent 45%,rgba(0,0,0,.25));pointer-events:none;z-index:2}
+.bar::after{content:"";position:absolute;inset:2px;background:repeating-linear-gradient(90deg,transparent 0 9px,rgba(255,255,255,.07) 9px 10px);pointer-events:none;z-index:1}
+.bar i{display:block;height:100%;width:0;position:relative;background:linear-gradient(90deg,#ff8a00,#ffc45c 55%,#ffe2a8);clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,0 100%);box-shadow:0 0 18px rgba(var(--fx-orange),.6);transition:width .25s;z-index:1;border-right:2px solid #fff}
+.bar i::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 9px,rgba(5,10,16,.38) 9px 10px);pointer-events:none}
+.status .pct{font-family:var(--display);font-size:14px;color:var(--orange);letter-spacing:.04em}
+.dl-btn{letter-spacing:.1em}
+@media(max-width:1080px){.fx-word{display:none}}
+@media(max-width:760px){
+  .section{padding:78px 0}
+  h1{font-size:clamp(34px,9.6vw,46px)}
+  h2{font-size:clamp(28px,8vw,38px)}
+  .top.scrolled .top-in{height:54px}
+  .fx-beads{opacity:.4}
+  .hero-copy{--hy:0px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .fx-beads,.fx-word,.fx-glare{display:none!important}
+  .hero-copy{transform:none!important}
+}
+
+</style>
+</head>
+<body id="top">
+<div class="fx-progress" aria-hidden="true"><i></i></div>
+<div class="fx-corners" aria-hidden="true"></div>
+<div class="fx-glow" aria-hidden="true"></div>
+<div class="fx-noise" aria-hidden="true"></div>
+<div class="fx-scan" aria-hidden="true"></div>
+<div class="fx-rail" aria-hidden="true"><span class="fx-rail-label">SECTORS</span><div class="fx-rail-dots"></div></div>
+<div class="fx-cursor" aria-hidden="true"><i></i></div>
+
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#top" aria-label="拼豆先锋 BEADWATCH 首页">
+      <img src="assets/app.png" alt="拼豆先锋图标" width="34" height="34">
+      <span><b>拼豆先锋</b><i>BEADWATCH</i></span>
+    </a>
+    <nav class="nav" aria-label="页面导航">
+      <a href="#workflow">工作流</a>
+      <a href="#flat">平面拼豆</a>
+      <a href="#interface">界面</a>
+      <a href="#local-ai">本地 AI</a>
+      <a href="#image-api">生图 API</a>
+      <a href="#keys">快捷键</a>
+      <a href="#log">发布</a>
+      <a href="account.html">账号</a>
+      <a href="https://github.com/shiinakuro/beadwatch" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+    <div class="top-act">
+      <span class="ver">v1.3.0</span>
+      <a class="btn btn-primary btn-sm" href="#download">下载</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="kicker">WINDOWS 10 / 11 · 立体拼豆设计</p>
+      <h1>把照片变成<br><em>能真正拼起来</em><br>的立体模型。</h1>
+      <p class="lead">从 3~6 张照片重建三维结构，逐颗修形、拆件、验装配，最后导出整套可施工的图纸。全程在三维视口里完成。<br>也可以只上传 1 张图，生成带色号的平面拼豆图纸。</p>
+      <div class="hero-btns">
+        <a class="btn btn-primary" href="#download">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 21h14"/></svg>
+          下载
+        </a>
+        <a class="btn btn-ghost" href="#workflow">查看工作流</a>
+      </div>
+      <div class="meta">
+        <div><b>3~6 张</b><span>多视图重建</span></div>
+        <div><b>14,045 颗</b><span>体素可编辑</span></div>
+        <div><b>A3 整卷</b><span>图纸直出</span></div>
+        <div><b>1 张</b><span>平面拼豆</span></div>
+      </div>
+    </div>
+    <div class="shot-wrap">
+      <div class="shot">
+        <img src="assets/shots/editor.png" width="1680" height="1000" alt="拼豆先锋编辑界面：三维体素模型与笔刷、色卡、剖切工具">
+        <div class="shot-scan" aria-hidden="true"></div>
+      </div>
+      <div class="chip chip-tl">LIVE VIEWPORT <b>// 三维</b></div>
+      <div class="chip chip-br"><strong>195 零件 · 17 色</strong><span>53 × 100 × 44 豆</span></div>
+    </div>
+  </div>
+  <canvas class="fx-word" aria-hidden="true"></canvas>
+  <canvas class="fx-beads" aria-hidden="true"></canvas>
+</section>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-in">
+    <span>多视图重建</span><span>体素编辑</span><span>自动齿口</span><span>逐件装配验证</span><span>A3 图纸</span><span>品牌色卡</span><span>断点续传</span><span>本地推理</span>
+    <span>多视图重建</span><span>体素编辑</span><span>自动齿口</span><span>逐件装配验证</span><span>A3 图纸</span><span>品牌色卡</span><span>断点续传</span><span>本地推理</span>
+  </div>
+</div>
+
+<section class="section" id="workflow">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-no">01</div>
+      <div>
+        <p class="eyebrow">WORKFLOW</p>
+        <h2>五步，从一张照片到整套图纸</h2>
+      </div>
+      <p class="sec-note">左侧导航固定为 <b>导入 → 编辑 → 拆分 → 检查 → 导出</b>。每一步只显示当前需要的工具，做完就能继续。</p>
+    </div>
+    <div class="flow">
+      <article class="step reveal">
+        <div class="step-top">
+          <div class="step-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m3 17 5-4 4 3 3-2 6 5"/></svg></div>
+          <span class="step-num">01 / 05</span>
+        </div>
+        <h3>导入与重建<span class="en">IMPORT</span></h3>
+        <p>上传同一物体的正、背、左、右视图。自动抠去背景，AI 可补全缺失视角，再由混元3D 在本地重建。</p>
+        <div class="tags"><i>自动抠图</i><i>AI 补全</i><i>CPU 回退</i></div>
+      </article>
+      <article class="step reveal">
+        <div class="step-top">
+          <div class="step-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z"/><path d="M12 12v9M4 7.5l8 4.5 8-4.5"/></svg></div>
+          <span class="step-num">02 / 05</span>
+        </div>
+        <h3>逐颗修形<span class="en">EDIT</span></h3>
+        <p>贴豆、擦除、上色。单格 / 整面 / 矩形 / 直线 / 填充 / 平面笔刷，配合 X/Y/Z 镜像与逐层剖切，把轮廓修干净。</p>
+        <div class="tags"><i>体素笔刷</i><i>镜像</i><i>逐层剖切</i></div>
+      </article>
+      <article class="step reveal">
+        <div class="step-top">
+          <div class="step-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 7h7v7H4zM13 4h7v7h-7zM13 13h7v7h-7z"/><path d="M11 10h2M11 17h2"/></svg></div>
+          <span class="step-num">03 / 05</span>
+        </div>
+        <h3>零件拆分<span class="en">SPLIT</span></h3>
+        <p>一键生成水平分层、面板拆分或竖切初稿；再手工补刀。自动齿口保证咬合，碎件可合并、换向、重新编号。</p>
+        <div class="tags"><i>三种拆法</i><i>自动齿口</i><i>爆炸预览</i></div>
+      </article>
+      <article class="step reveal">
+        <div class="step-top">
+          <div class="step-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M9 11.5 11.5 14 16 9.5"/><path d="M12 3 4.5 6.5v5c0 4.4 3.2 8.2 7.5 9.5 4.3-1.3 7.5-5.1 7.5-9.5v-5L12 3Z"/></svg></div>
+          <span class="step-num">04 / 05</span>
+        </div>
+        <h3>装配检查<span class="en">CHECK</span></h3>
+        <p>扫描内芯外露、外壳破洞、悬空豆、未分零件与参考图色差；沿直线逐件试插入，确认每块都装得进去。</p>
+        <div class="tags"><i>结构检查</i><i>逐件验证</i><i>回放</i></div>
+      </article>
+      <article class="step reveal">
+        <div class="step-top">
+          <div class="step-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg></div>
+          <span class="step-num">05 / 05</span>
+        </div>
+        <h3>图纸导出<span class="en">EXPORT</span></h3>
+        <p>一次导出总图、零件分解图、分层颗粒图、拼装示意与材料清单。支持 A3 整卷 PDF，也可以导出装配动图。</p>
+        <div class="tags"><i>整套图纸</i><i>A3 PDF</i><i>装配动图</i></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="flat">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-no">02</div>
+      <div>
+        <p class="eyebrow">FLAT PATTERN</p>
+        <h2>一张图，也能做平面拼豆</h2>
+      </div>
+      <p class="sec-note">平行入口：单图上传 → <b>AI 卡通平涂</b> → 豆格像素化 → 带色号的 PNG / PDF / 材料清单。适合冰箱贴、挂件和平面摆件。</p>
+    </div>
+    <div class="flat-grid reveal">
+      <figure class="flat-shot">
+        <img src="assets/shots/flat.png" width="1360" height="940" loading="lazy" alt="平面拼豆窗口：上传图片、AI 生图、像素化预览与图纸导出">
+      </figure>
+      <div class="flat-copy">
+        <h3>从照片到可施工的平面图纸</h3>
+        <p>不需要三维重建。上传一张主体清楚的照片，先让 AI 把它重画成大色块、强轮廓的正面图案，再按品牌色卡逐格量化，直接读出每颗豆的颜色。</p>
+        <ul class="flat-list">
+          <li><b>01 / 单图</b><span>自动识别主体、去掉背景；也支持直接像素化已经平涂的图片。</span></li>
+          <li><b>02 / AI</b><span>卡通平涂提示词专为拼豆设计：大色块、少颜色、放大五官；同一张图同设置复用缓存。</span></li>
+          <li><b>03 / 豆格</b><span>最长边、品牌色卡、最多颜色、是否保留背景都可调，修改后自动更新预览。</span></li>
+          <li><b>04 / 图纸</b><span>行列标尺 + 色号字母 + 用量表；导出高清 PNG、分页 PDF 与 CSV 材料清单。</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="interface">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-no">03</div>
+      <div>
+        <p class="eyebrow">INTERFACE</p>
+        <h2>所有工具，都在模型旁边</h2>
+      </div>
+      <p class="sec-note">中央是 Direct3D 11 三维视口，左侧工具栏与右侧参数卡同步当前动作。常用开关都在视口上方，不需要翻菜单。</p>
+    </div>
+    <div class="bento">
+      <figure class="big reveal">
+        <img src="assets/shots/editor.png" width="1680" height="1000" decoding="sync" alt="三维编辑界面全貌">
+        <figcaption><span><b>三维体素视口</b><em>笔刷、镜像、剖切、成品检查都在同一屏</em></span><span>VIEWPORT // 01</span></figcaption>
+      </figure>
+      <figure class="tall reveal">
+        <img src="assets/shots/welcome.png" width="1680" height="1000" decoding="sync" alt="欢迎页：从图片开始、打开作品、空白画布">
+        <figcaption><span><b>三种开始方式</b><em>图片、工程或空白画布</em></span><span>START // 02</span></figcaption>
+      </figure>
+      <figure class="small reveal">
+        <img src="assets/shots/guide.png" width="1000" height="800" decoding="sync" alt="首次启动引导：选择本地依赖、填写生图 API、主界面聚光灯导览">
+        <figcaption><span><b>首次启动引导</b><em>先选依赖与 API，再高亮认识界面</em></span><span>GUIDE // 03</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="local-ai">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-no">04</div>
+      <div>
+        <p class="eyebrow">LOCAL AI</p>
+        <h2>本地 AI，一次装好</h2>
+      </div>
+      <p class="sec-note">安装包不带数 GB 的运行时。打开 <b>设置 → 本地 AI 模型</b>，按需补齐全套依赖，或只装抠图。</p>
+    </div>
+    <div class="ai-panel reveal">
+      <div class="ai-copy">
+        <p class="eyebrow">ONE-CLICK SETUP</p>
+        <h3>不用装 Python，<br>也不用找模型文件。</h3>
+        <p>「一键安装全部」会自动准备 Python 3.11、PyTorch CUDA、混元3D 权重与 ISNet 抠图模型。下载前自动测速选择最快镜像，大文件多线程分段，并做 SHA-256 校验；中途取消，下次从进度继续。</p>
+        <div class="path"><b>设置</b><i>›</i><b>本地 AI 模型</b><i>›</i><b>一键安装全部</b></div>
+        <div class="note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>
+          <span>没有独立显卡也能用：三维重建自动回退到纯 CPU 轮廓雕刻，编辑、拆分、检查与出图功能不受影响。</span>
+        </div>
+      </div>
+      <div class="profiles">
+        <div class="prof">
+          <span class="tag">FULL</span>
+          <h4>完整安装</h4>
+          <p>本地混元3D 多视图重建 + ISNet 抠图。建议 NVIDIA 显卡，显存 6 GB 起。</p>
+          <div class="size">约 10 GB<small>装到程序目录</small></div>
+        </div>
+        <div class="prof hot">
+          <span class="tag">CUTOUT</span>
+          <h4>仅装抠图</h4>
+          <p>只安装 ISNet 与基础运行库，CPU 即可，约一秒一张。适合只用 AI 视图 + 轮廓雕刻的流程。</p>
+          <div class="size">约 300 MB<small>无需显卡</small></div>
+        </div>
+      </div>
+    </div>
+    <div class="why-grid reveal">
+      <div class="why">
+        <b>01 / SHAPE</b>
+        <strong>形体更准</strong>
+        <p>混元3D 从多视图估出厚度、凹槽和背面，不再只靠正面的轮廓去猜。</p>
+      </div>
+      <div class="why">
+        <b>02 / CUTOUT</b>
+        <strong>抠图更干净</strong>
+        <p>ISNet 处理发丝、透明边缘与杂乱背景，框选后自动去背景，省去手修。</p>
+      </div>
+      <div class="why">
+        <b>03 / LOCAL</b>
+        <strong>照片不出本机</strong>
+        <p>本地推理不消耗生图额度，也不上传照片；装好后断网也能重建和取色。</p>
+      </div>
+      <div class="why">
+        <b>04 / ONCE</b>
+        <strong>装一次，长期用</strong>
+        <p>自动测速选源、多线程下载、断点续传与 SHA-256 校验；重装程序也不用重新找依赖。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="image-api">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-no">05</div>
+      <div>
+        <p class="eyebrow">IMAGE API</p>
+        <h2>生图 API，只做照片的前处理</h2>
+      </div>
+      <p class="sec-note">它是可选项。真正的立体形体和用量仍由本地重建与色卡决定；API 负责把照片变成能读懂的标准视图。</p>
+    </div>
+    <div class="api-grid reveal">
+      <div class="api-main">
+        <p class="eyebrow">OPTIONAL ASSIST</p>
+        <h3>不会直接生成豆图，<br>但能让重建少走弯路。</h3>
+        <p>接入任意 OpenAI 兼容的图像服务后，导入页会多三件事。三步都只处理照片，最后仍由三维重建和色卡量化出图。</p>
+        <ul class="api-uses">
+          <li>
+            <b>01</b>
+            <span><strong>整理实拍</strong>把杂乱背景、透视角度整理成干净的正交视图，主体更完整。</span>
+          </li>
+          <li>
+            <b>02</b>
+            <span><strong>补全视角</strong>只拍了正面也没关系，自动补出背面与侧面，减少缺面导致的破洞。</span>
+          </li>
+          <li>
+            <b>03</b>
+            <span><strong>平涂取色</strong>去掉反光、渐变与阴影，让量化后的颜色更接近你想要的纯色。</span>
+          </li>
+        </ul>
+        <div class="note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>
+          <span>图片会发送到你填写的服务商。不想上传照片时可以完全不配 API，只用本地重建；也可以只安装本地抠图模型。</span>
+        </div>
+      </div>
+      <aside class="api-side">
+        <div class="api-card">
+          <span class="tag">MODELS</span>
+          <h4>能用哪些模型？</h4>
+          <p>只要服务商支持 OpenAI 兼容的 <code>/v1/images/edits</code>，并且能返回图片即可。常见选择：</p>
+          <ul class="model-list">
+            <li><b>gpt-image 系列</b><span>OpenAI 及兼容服务</span></li>
+            <li><b>Nano Banana</b><span>Gemini 图像系列</span></li>
+            <li><b>Seedream</b><span>即梦 / 火山方舟</span></li>
+            <li><b>Qwen-Image</b><span>通义千问图像</span></li>
+          </ul>
+          <div class="api-path"><b>设置</b><i>›</i><b>AI 图像服务</b><i>›</i><b>获取模型</b></div>
+          <p class="promo">没有现成服务商？可以用 <a href="https://4router.net/register?aff=Rwm6" target="_blank" rel="noopener sponsored">4Router</a><em>推广</em>，OpenAI 兼容聚合，按量计费。填好地址与 Key 后会自动读取模型列表。</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="keys">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-no">06</div>
+      <div>
+        <p class="eyebrow">SHORTCUTS</p>
+        <h2>手不离模型</h2>
+      </div>
+      <p class="sec-note">视口里右键旋转、中键平移、滚轮缩放；Alt + 左键直接吸色。常用动作都给了单键。</p>
+    </div>
+    <div class="keys">
+      <div class="keygroup reveal">
+        <h3>工具 / TOOLS</h3>
+        <div class="keyrow"><span class="lab">切换动作：贴豆 / 擦除 / 上色 / 零件 / 选择</span><span class="kg"><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd><kbd>5</kbd></span></div>
+        <div class="keyrow"><span class="lab">笔刷：单格 / 整面 / 矩形 / 直线 / 填充 / 平面</span><span class="kg"><kbd>V</kbd><kbd>G</kbd><kbd>B</kbd><kbd>L</kbd><kbd>R</kbd><kbd>P</kbd></span></div>
+        <div class="keyrow"><span class="lab">镜像 X / Y / Z</span><span class="kg"><kbd>Shift</kbd><span class="plus">+</span><kbd>X</kbd><kbd>Y</kbd><kbd>Z</kbd></span></div>
+        <div class="keyrow"><span class="lab">删除选中</span><span class="kg"><kbd>Delete</kbd></span></div>
+      </div>
+      <div class="keygroup reveal">
+        <h3>视图 / VIEW</h3>
+        <div class="keyrow"><span class="lab">旋转 / 平移 / 缩放</span><span class="kg"><kbd>右键</kbd><kbd>中键</kbd><kbd>滚轮</kbd></span></div>
+        <div class="keyrow"><span class="lab">平移（备用）</span><span class="kg"><kbd>Space</kbd><span class="plus">+</span><kbd>左键</kbd></span></div>
+        <div class="keyrow"><span class="lab">居中模型 / 吸色</span><span class="kg"><kbd>F</kbd><kbd>Alt</kbd><span class="plus">+</span><kbd>左键</kbd></span></div>
+        <div class="keyrow"><span class="lab">成品检查 / 隐藏选区</span><span class="kg"><kbd>C</kbd><kbd>H</kbd></span></div>
+      </div>
+      <div class="keygroup reveal">
+        <h3>剖切 / SLICE</h3>
+        <div class="keyrow"><span class="lab">逐层上 / 下</span><span class="kg"><kbd>PageUp</kbd><kbd>PageDown</kbd></span></div>
+        <div class="keyrow"><span class="lab">逐层上 / 下（备用）</span><span class="kg"><kbd>[</kbd><kbd>]</kbd></span></div>
+        <div class="keyrow"><span class="lab">关闭剖切</span><span class="kg"><kbd>Home</kbd></span></div>
+      </div>
+      <div class="keygroup reveal">
+        <h3>文件 / FILE</h3>
+        <div class="keyrow"><span class="lab">新建 / 打开 / 保存</span><span class="kg"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>N</kbd><kbd>O</kbd><kbd>S</kbd></span></div>
+        <div class="keyrow"><span class="lab">另存为</span><span class="kg"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Shift</kbd><span class="plus">+</span><kbd>S</kbd></span></div>
+        <div class="keyrow"><span class="lab">撤销 / 重做</span><span class="kg"><kbd>Ctrl</kbd><span class="plus">+</span><kbd>Z</kbd><kbd>Y</kbd></span></div>
+        <div class="keyrow"><span class="lab">取消当前操作</span><span class="kg"><kbd>Esc</kbd></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="log">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-no">07</div>
+      <div>
+        <p class="eyebrow">RELEASE</p>
+        <h2>全新发布</h2>
+      </div>
+      <p class="sec-note"><b>v1.3.0 账号与云同步</b>。Windows 10 / 11 自包含安装程序，不需要另行安装 .NET 或 Windows App SDK。</p>
+    </div>
+    <div class="log">
+      <article class="entry now reveal">
+        <div class="vline"><span class="badge">RELEASE</span><h3>v1.3.0</h3><time>2026-10-24</time></div>
+        <ul>
+          <li><b>账号与云同步：</b>桌面端与网页共用同一个拼豆先锋账号；登录后同步品牌、作者、水印、豆径、生图模型和历史摘要。</li>
+          <li><b>设置跟着账号走：</b>桌面端保存设置后自动上传；换一台电脑可「应用云端设置」拉取。API Key、混元 Key 和本地文件路径不上传。</li>
+          <li><b>历史摘要：</b>重建、导入、导出和平面图纸都会记录作品名、豆数、尺寸、色数与时间；不保存工程文件。</li>
+          <li><b>账号中心：</b>官网与账号系统已发布到 Qoder Sites，<a href="account.html">打开账号页</a>。</li>
+        </ul>
+      </article>
+      <article class="entry reveal">
+        <div class="vline"><span class="badge">RELEASE</span><h3>v1.2.0</h3><time>2026-10-24</time></div>
+        <ul>
+          <li><b>平面拼豆：</b>新增平行入口「平面 · 拼豆」：上传 1 张图 → AI 卡通平涂 → 按品牌色卡像素化 → 带色号的平面图纸。</li>
+          <li><b>可调豆格：</b>最长边、色卡、最多颜色与去背景都可调；修改后自动更新预览，方便先看效果再导出。</li>
+          <li><b>整套输出：</b>行列标尺、色号字母、用量表；导出高清 PNG、分页 PDF 和 CSV 材料清单。</li>
+          <li><b>可选 AI：</b>未配置生图 API 或额度不足时，可直接像素化已有平涂/像素图。</li>
+        </ul>
+      </article>
+      <article class="entry reveal">
+        <div class="vline"><span class="badge">RELEASE</span><h3>v1.1.1</h3><time>2026-10-24</time></div>
+        <ul>
+          <li><b>新建工程更干净：</b>新建或打开无参考图的工程时，清空上一工程残留的参考图、主色和过程日志。</li>
+          <li><b>导入先选豆高：</b>OBJ/GLB/STL 体素化前先选成品高度；导入后改高度、色卡或颜色数，可一键重新体素化，不用再选文件。</li>
+          <li><b>更接近直接体素化：</b>默认最多颜色 16 → 32，带纹理模型的头发高光、肤色和眼睛层次不再被压成色块。</li>
+          <li><b>来源可恢复：</b>重建来源随工程保存，重新打开工程后仍可改豆高重做；VOX 会提示已是体素模型。</li>
+        </ul>
+      </article>
+      <article class="entry reveal">
+        <div class="vline"><span class="badge">RELEASE</span><h3>v1.1.0</h3><time>2026-10-24</time></div>
+        <ul>
+          <li><b>图片 + 模型统一导入：</b>第一步同时支持多视图图片和 OBJ/GLB/STL/VOX；导入前检查朝向，有参考图时按轮廓吻合度自动转正，按选定豆高体素化。</li>
+          <li><b>纹理上色：</b>GLB/OBJ 直接读取 UV 与内嵌纹理，保留眼睛、嘴、装饰等细节；STL 可用参考图投影上色。</li>
+          <li><b>硬件与 API：</b>检测 NVIDIA 显存并选择本地最大可运行模型（2mv 多视图）；设置页新增混元 3.1 在线 API Key，本地不可用时自动切换。</li>
+          <li><b>继续保留：</b>RTX 50 系 cu128 修复与「一键安装 / 修复」入口。</li>
+        </ul>
+      </article>
+      <article class="entry reveal">
+        <div class="vline"><span class="badge">RELEASE</span><h3>v1.0.3</h3><time>2026-10-24</time></div>
+        <ul>
+          <li><b>修复入口：</b>「一键安装全部」改为「一键安装 / 修复」，本地依赖已就绪时也能点击。</li>
+          <li><b>RTX 50 系：</b>点击后自动检测并升级到 CUDA 12.8 版 PyTorch，不会重下模型。</li>
+          <li><b>说明：</b>1.0.2 已修复 cu128 选择逻辑；1.0.3 补上已安装依赖时触发升级的入口。</li>
+        </ul>
+      </article>
+      <article class="entry reveal">
+        <div class="vline"><span class="badge">RELEASE</span><h3>v1.0.2</h3><time>2026-10-24</time></div>
+        <ul>
+          <li><b>RTX 50 系本地 AI：</b>按显卡计算能力自动选择 PyTorch；RTX 5080/5090 使用 CUDA 12.8 构建，修复混元3D 报 <code>no kernel image is available</code> 的问题。</li>
+          <li><b>老显卡不受影响：</b>RTX 20/30/40 继续使用 CUDA 12.1；已安装的旧 PyTorch 会检测版本并升级，不会重复下载模型。</li>
+          <li><b>升级方式：</b>覆盖安装后，在「设置 → 本地 AI 模型」重新点一次一键安装即可。</li>
+        </ul>
+      </article>
+      <article class="entry reveal">
+        <div class="vline"><span class="badge">RELEASE</span><h3>v1.0.1</h3><time>2026-10-23</time></div>
+        <ul>
+          <li><b>上色修复：</b>多视图取色改为按表面朝向优先选择正/背/侧视图，并清理表面零散串色；头发不再出现肤色斑块，衣服不再串入蝴蝶结/披风的颜色。</li>
+          <li><b>细节保留：</b>眼睛、眉毛、嘴巴等深色五官保持清晰；轮廓雕刻与本地混元3D流程都适用。</li>
+          <li><b>升级方式：</b>覆盖安装即可，本地 AI 依赖与现有工程无需重新下载。</li>
+        </ul>
+      </article>
+      <article class="entry reveal">
+        <div class="vline"><span class="badge">RELEASE</span><h3>v1.0</h3><time>2026-10-23</time></div>
+        <ul>
+          <li><b>首次发布：</b>从 3~6 张照片生成三维拼豆模型，逐颗修形、上色、拆件、装配检查，导出整套可施工图纸。</li>
+          <li><b>本地 AI 可选：</b>混元3D 负责立体形体，ISNet 负责照片抠图；照片不出本机、不消耗生图额度，断网也能继续。</li>
+          <li><b>生图 API 可选：</b>整理实拍、补全视角、生成平涂取色参考；自动读取模型列表，不直接生成豆图。</li>
+          <li><b>首次启动引导：</b>先选本地依赖、再填 API，最后在主界面上用聚光灯认识真实按钮；方向键翻页，随时可跳过。</li>
+          <li><b>多视图上色加入遮挡处理：</b>只用朝向相符的视图取色，颜色继承限制在表面层，减少前层颜色漏到背面。</li>
+          <li><b>Windows 自包含安装包：</b>自带程序、色卡与示例，无需管理员权限；Android 版正在准备中。</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="download">
+  <div class="wrap">
+    <div class="dl reveal">
+      <div>
+        <p class="kicker">DOWNLOAD / WINDOWS</p>
+        <h2>开始拼出第一件作品</h2>
+        <p class="sub">安装程序自带程序、色卡、示例与混元代码。装到当前用户，无需管理员权限；本地 AI 依赖可在装好后按需补齐。</p>
+        <ul class="reqs">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Windows 10 1809 及以上 · x64</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>程序本体约 300 MB 磁盘空间</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>本地混元3D 可选：NVIDIA 显卡，显存 6 GB 起</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>没有显卡也能完整使用编辑、拆分、检查与出图</li>
+        </ul>
+        <ol class="steps">
+          <li><b>01</b>下载并运行安装程序</li>
+          <li><b>02</b>选择安装位置，创建快捷方式</li>
+          <li><b>03</b>需要本地 AI 时，进入「设置 → 本地 AI 模型」一键安装</li>
+        </ol>
+      </div>
+      <div class="dl-side">
+        <div class="dl-box">
+          <div class="dl-name" id="dlName">拼豆先锋_v1.3.0_安装程序.exe</div>
+          <div class="dl-sub"><span>v1.3.0 · SELF-CONTAINED</span><span>117.0 MB</span></div>
+          <div class="dl-actions">
+            <button class="btn btn-primary dl-btn" id="dlBtn" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 21h14"/></svg>
+              下载 Windows 版
+            </button>
+            <div class="dl-android" aria-disabled="true" title="Android 版正在准备中">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>
+              <span><b>Android 版</b><small>敬请期待</small></span>
+            </div>
+          </div>
+          <div class="bar" id="dlBar" aria-hidden="true"><i id="dlFill"></i></div>
+          <div class="status" id="dlStatus" role="status" aria-live="polite"><span id="dlMsg">分片下载，自动合并为安装程序</span><span class="pct" id="dlPct"></span></div>
+          <button class="dl-cancel" id="dlCancel" type="button">取消下载</button>
+          <a class="dl-alt" href="https://github.com/shiinakuro/beadwatch/releases/latest" target="_blank" rel="noopener">GitHub Releases 直链</a>
+          <details class="sha">
+            <summary>SHA-256 校验</summary>
+            <code id="shaText">11388697b814f26412f8be2dca8184bd6ef8b21d314dc1d1a030af24478919c2</code>
+            <button class="copy" id="shaCopy" type="button">复制校验值</button>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <a class="brand" href="#top">
+      <img src="assets/app.png" alt="" width="28" height="28">
+      <span><b>拼豆先锋</b><i>BEADWATCH</i></span>
+    </a>
+    <p>© 2026 BEADWATCH · WINDOWS 10 / 11</p>
+    <nav aria-label="页脚导航">
+      <a href="#workflow">工作流</a>
+      <a href="#flat">平面拼豆</a>
+      <a href="#download">下载</a>
+      <a href="account.html">账号</a>
+      <a href="#log">发布</a>
+      <a href="https://github.com/shiinakuro/beadwatch" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(() => {
+  "use strict";
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      }
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+  } else {
+    document.querySelectorAll(".reveal").forEach((el) => el.classList.add("in"));
+  }
+
+  const btn = document.getElementById("dlBtn");
+  const bar = document.getElementById("dlBar");
+  const fill = document.getElementById("dlFill");
+  const msg = document.getElementById("dlMsg");
+  const pct = document.getElementById("dlPct");
+  const status = document.getElementById("dlStatus");
+  const cancel = document.getElementById("dlCancel");
+  const shaCopy = document.getElementById("shaCopy");
+  const shaText = document.getElementById("shaText");
+  const meta = { name: "拼豆先锋_v1.3.0_安装程序.exe", size: 122706179 };
+  let busy = false;
+  let ac = null;
+
+  const mb = (n) => (n / 1048576).toFixed(1);
+
+  function paint(done, total, note) {
+    const r = total > 0 ? Math.min(1, done / total) : 0;
+    bar.style.display = "block";
+    fill.style.width = (r * 100).toFixed(1) + "%";
+    pct.textContent = (r * 100).toFixed(0) + "%";
+    msg.textContent = note || (mb(done) + " / " + mb(total) + " MB");
+    status.classList.remove("err");
+  }
+
+  function fail(text) {
+    status.classList.add("err");
+    msg.textContent = text;
+    pct.textContent = "";
+    cancel.style.display = "none";
+  }
+
+  async function getManifest(signal) {
+    const res = await fetch("download/installer.json", { cache: "no-store", signal });
+    if (!res.ok) throw new Error("manifest HTTP " + res.status);
+    const data = await res.json();
+    if (!data || data.ok !== true || !Array.isArray(data.parts) || data.parts.length === 0) {
+      throw new Error("invalid manifest");
+    }
+    return data;
+  }
+
+  function saveBlob(chunks, name, size) {
+    const blob = new Blob(chunks, { type: "application/octet-stream" });
+    if (size && blob.size !== size) throw new Error("size mismatch");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+  }
+
+  btn.addEventListener("click", async () => {
+    if (busy) return;
+    busy = true;
+    btn.disabled = true;
+    cancel.style.display = "block";
+    bar.style.display = "block";
+    fill.style.width = "0%";
+    pct.textContent = "0%";
+    msg.textContent = "准备保存位置…";
+    status.classList.remove("err");
+    ac = new AbortController();
+
+    let handle = null;
+    let writable = null;
+    try {
+      if ("showSaveFilePicker" in window) {
+        try {
+          handle = await window.showSaveFilePicker({
+            suggestedName: meta.name,
+            types: [{ description: "Windows 安装程序", accept: { "application/octet-stream": [".exe"] } }],
+          });
+        } catch (e) {
+          if (e && e.name === "AbortError") { fail("已取消，未下载任何文件。"); return; }
+          handle = null;
+        }
+      }
+
+      msg.textContent = "连接下载服务…";
+      const data = await getManifest(ac.signal);
+      const total = data.parts.reduce((a, p) => a + (Number(p.size) || 0), 0);
+      const expected = Number(data.size) || total;
+      if (!total || total !== expected) throw new Error("invalid parts");
+      if (data.sha256 && shaText) shaText.textContent = data.sha256;
+      if (handle) writable = await handle.createWritable();
+      const chunks = writable ? null : [];
+
+      let done = 0;
+      for (let i = 0; i < data.parts.length; i++) {
+        if (ac.signal.aborted) throw new DOMException("aborted", "AbortError");
+        msg.textContent = "下载分片 " + (i + 1) + " / " + data.parts.length + " · " + mb(done) + " MB";
+        const res = await fetch(data.parts[i].url, { cache: "no-store", signal: ac.signal });
+        if (!res.ok || !res.body) throw new Error("HTTP " + res.status);
+        const reader = res.body.getReader();
+        while (true) {
+          const { done: end, value } = await reader.read();
+          if (end) break;
+          if (writable) await writable.write(value);
+          else chunks.push(value);
+          done += value.byteLength;
+          paint(done, total, "下载分片 " + (i + 1) + " / " + data.parts.length + " · " + mb(done) + " / " + mb(total) + " MB");
+        }
+      }
+      if (done !== total) throw new Error("incomplete");
+
+      if (writable) {
+        await writable.close();
+        writable = null;
+        paint(done, total, "已保存 · " + data.name);
+      } else {
+        saveBlob(chunks, data.name || meta.name, expected);
+        paint(done, total, "已开始保存 · 请查看浏览器下载记录");
+      }
+      pct.textContent = "100%";
+      if (data.sha256 && shaText) shaText.textContent = data.sha256;
+      cancel.style.display = "none";
+    } catch (e) {
+      if (writable) { try { await writable.abort(); } catch (_) {} }
+      if (e && e.name === "AbortError") {
+        fail("已取消下载。已写入的部分不会保留。");
+      } else if (String(e && e.message).startsWith("manifest")) {
+        fail("此站点不存放安装包，正在打开 GitHub Releases…");
+        window.open("https://github.com/Shiinakuro/beadwatch/releases/latest", "_blank", "noopener");
+      } else {
+        console.error(e);
+        fail("下载服务暂时不可用，请稍后重试。");
+      }
+    } finally {
+      busy = false;
+      btn.disabled = false;
+      ac = null;
+    }
+  });
+
+  cancel.addEventListener("click", () => {
+    if (ac) ac.abort();
+    cancel.style.display = "none";
+  });
+
+  if (shaCopy) {
+    shaCopy.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(shaText.textContent.trim());
+        shaCopy.textContent = "已复制";
+        setTimeout(() => (shaCopy.textContent = "复制校验值"), 1600);
+      } catch (_) {
+        shaCopy.textContent = "请手动选择复制";
+      }
+    });
+  }
+})();
+</script>
+<script id="fx-js">
+(() => {
+  "use strict";
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+
+  // Section rail + nav active state
+  const sections = $$("main section[id]");
+  const railDots = $(".fx-rail-dots");
+  if (railDots) {
+    sections.forEach(sec => {
+      const a = document.createElement("a");
+      a.href = "#" + sec.id;
+      const no = $(".sec-no", sec)?.textContent.trim() || "";
+      const tag = $(".eyebrow", sec)?.textContent.trim() || sec.id.toUpperCase();
+      a.dataset.label = (no ? no + " // " : "") + tag;
+      a.setAttribute("aria-label", $("h2", sec)?.textContent.trim() || sec.id);
+      a.tabIndex = -1;
+      railDots.appendChild(a);
+    });
+  }
+  const railLinks = $$(".fx-rail-dots a");
+  const navLinks = $$(".nav a");
+  const setActive = id => {
+    railLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + id));
+    navLinks.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + id));
+  };
+  if ("IntersectionObserver" in window) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); });
+    }, { rootMargin: "-42% 0px -50% 0px", threshold: 0 });
+    sections.forEach(s => io.observe(s));
+  }
+
+  // Scroll progress + top bar + hero parallax
+  const bar = $(".fx-progress i");
+  const top = $(".top");
+  const shot = $(".shot");
+  let ticking = false;
+  const onScroll = () => {
+    const h = document.documentElement.scrollHeight - innerHeight;
+    if (bar) bar.style.transform = "scaleX(" + (h > 0 ? Math.min(1, Math.max(0, scrollY / h)) : 0) + ")";
+    if (top) top.classList.toggle("scrolled", scrollY > 8);
+    if (!reduce && shot) shot.style.setProperty("--py", Math.min(18, scrollY * 0.03) + "px");
+    ticking = false;
+  };
+  addEventListener("scroll", () => {
+    if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }
+  }, { passive: true });
+  onScroll();
+
+  // Stagger reveal groups, then release the delay so hover tilts stay snappy
+  if (!reduce) {
+    $$(".flow, .why-grid, .bento, .log, .profiles").forEach(group => {
+      $$(".reveal", group).forEach((el, i) => {
+        const delay = Math.min(420, i * 70);
+        el.style.transitionDelay = delay + "ms";
+        el.addEventListener("transitionend", () => { el.style.transitionDelay = ""; }, { once: true });
+      });
+    });
+  }
+
+  if (!fine || reduce) return;
+
+  // Card micro-tilt + cursor glare variables
+  $$(".step, .prof, .bento figure, .api-card").forEach(el => {
+    el.setAttribute("data-tilt", "");
+    el.addEventListener("pointermove", e => {
+      const r = el.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      el.style.setProperty("--ry", (px * 4.5).toFixed(2) + "deg");
+      el.style.setProperty("--rx", (-py * 3.5).toFixed(2) + "deg");
+    });
+    el.addEventListener("pointerleave", () => {
+      el.style.setProperty("--rx", "0deg");
+      el.style.setProperty("--ry", "0deg");
+    });
+  });
+
+  // Hero screenshot tilt + targeting reticle
+  const wrap = $(".shot-wrap");
+  if (wrap && shot) {
+    const ret = document.createElement("div");
+    ret.className = "fx-reticle";
+    ret.setAttribute("aria-hidden", "true");
+    ret.innerHTML = "<b></b>";
+    wrap.appendChild(ret);
+
+    wrap.addEventListener("pointerenter", () => ret.classList.add("on"));
+    wrap.addEventListener("pointerleave", () => {
+      ret.classList.remove("on");
+      shot.style.setProperty("--rx", "0deg");
+      shot.style.setProperty("--ry", "0deg");
+    });
+    wrap.addEventListener("pointermove", e => {
+      const r = wrap.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      shot.style.setProperty("--ry", (px * 5).toFixed(2) + "deg");
+      shot.style.setProperty("--rx", (-py * 4).toFixed(2) + "deg");
+      ret.style.transform = `translate3d(${e.clientX - r.left - 23}px,${e.clientY - r.top - 23}px,0)`;
+    });
+  }
+
+  // HUD cursor reticle
+  const cursor = $(".fx-cursor");
+  if (cursor) {
+    let mx = -100, my = -100, cx = -100, cy = -100, started = false;
+    addEventListener("pointermove", e => {
+      mx = e.clientX; my = e.clientY;
+      if (!started) { cx = mx; cy = my; started = true; cursor.classList.add("on"); }
+    }, { passive: true });
+    addEventListener("pointerdown", () => cursor.classList.add("hot"), { passive: true });
+    addEventListener("pointerup", () => cursor.classList.remove("hot"), { passive: true });
+    document.addEventListener("pointerleave", () => cursor.classList.remove("on"));
+    document.addEventListener("pointerover", e => {
+      if (e.target.closest("a,button,[data-tilt]")) cursor.classList.add("hot");
+      else cursor.classList.remove("hot");
+    }, { passive: true });
+    const loop = () => {
+      cx += (mx - cx) * 0.18;
+      cy += (my - cy) * 0.18;
+      cursor.style.transform = `translate3d(${cx - 17}px,${cy - 17}px,0)`;
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+
+  // Pointer spotlight for the page background
+  addEventListener("pointermove", e => {
+    document.body.style.setProperty("--cx", e.clientX + "px");
+    document.body.style.setProperty("--cy", e.clientY + "px");
+  }, { passive: true });
+
+  // Button click ripple
+  $$(".btn").forEach(btn => {
+    btn.addEventListener("pointerdown", e => {
+      const r = btn.getBoundingClientRect();
+      const d = Math.max(r.width, r.height) * 2;
+      const ripple = document.createElement("span");
+      ripple.className = "fx-ripple";
+      ripple.style.width = ripple.style.height = d + "px";
+      ripple.style.left = (e.clientX - r.left - d / 2) + "px";
+      ripple.style.top = (e.clientY - r.top - d / 2) + "px";
+      btn.appendChild(ripple);
+      ripple.addEventListener("animationend", () => ripple.remove());
+    });
+  });
+})();
+
+</script>
+<script id="fx2-js">
+(() => {
+  "use strict";
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  if (reduce) return;
+
+  // Hero bead field: tiny 3D fuse beads drifting behind the copy/screenshot.
+  const canvas = $(".fx-beads");
+  const hero = $(".hero");
+  if (canvas && hero) {
+    const ctx = canvas.getContext("2d", { alpha: true });
+    const colors = ["249,158,26", "33,143,254", "61,220,132", "226,238,250", "43,179,163"];
+    let w = 0, h = 0, dpr = 1, beads = [], visible = true, raf = 0;
+    let px = 0, py = 0;
+
+    const build = () => {
+      w = Math.max(1, hero.clientWidth);
+      h = Math.max(1, hero.clientHeight);
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const count = w < 760 ? 12 : 26;
+      beads = Array.from({ length: count }, (_, i) => ({
+        x: Math.random(), y: Math.random(),
+        r: 2.2 + Math.random() * 4.8,
+        d: .25 + Math.random() * .75,
+        s: .18 + Math.random() * .45,
+        p: Math.random() * Math.PI * 2,
+        c: colors[i % colors.length],
+      }));
+    };
+
+    const draw = now => {
+      if (!visible) { raf = 0; return; }
+      const t = now / 1000;
+      ctx.clearRect(0, 0, w, h);
+      for (const b of beads) {
+        const x = b.x * w + Math.sin(t * b.s + b.p) * 18 * b.d + px * 34 * b.d;
+        const y = b.y * h + Math.cos(t * b.s * .82 + b.p) * 14 * b.d + py * 26 * b.d;
+        const r = b.r * (.7 + b.d * .55);
+        ctx.save();
+        ctx.globalAlpha = .25 + .5 * b.d;
+        const g = ctx.createRadialGradient(x - r * .35, y - r * .4, r * .08, x, y, r);
+        g.addColorStop(0, "rgba(255,255,255,.95)");
+        g.addColorStop(.3, `rgba(${b.c},.95)`);
+        g.addColorStop(.76, `rgba(${b.c},.52)`);
+        g.addColorStop(1, "rgba(8,12,20,0)");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = .5 + .25 * b.d;
+        ctx.fillStyle = "rgba(5,9,15,.9)";
+        ctx.beginPath();
+        ctx.arc(x, y, r * .31, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = .36;
+        ctx.strokeStyle = "rgba(255,255,255,.6)";
+        ctx.lineWidth = Math.max(.6, r * .075);
+        ctx.beginPath();
+        ctx.arc(x, y, r * .73, Math.PI * 1.05, Math.PI * 1.55);
+        ctx.stroke();
+        ctx.restore();
+      }
+      raf = requestAnimationFrame(draw);
+    };
+
+    const start = () => { if (!raf && visible) raf = requestAnimationFrame(draw); };
+    build();
+    draw(performance.now());
+    if ("ResizeObserver" in window) new ResizeObserver(() => { build(); start(); }).observe(hero);
+    else addEventListener("resize", () => { build(); start(); }, { passive: true });
+    hero.addEventListener("pointermove", e => {
+      const r = hero.getBoundingClientRect();
+      px = (e.clientX - r.left) / r.width - .5;
+      py = (e.clientY - r.top) / r.height - .5;
+    }, { passive: true });
+    hero.addEventListener("pointerleave", () => { px = 0; py = 0; });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(entries => {
+        visible = entries[0].isIntersecting;
+        if (visible) start();
+        else if (raf) { cancelAnimationFrame(raf); raf = 0; }
+      }, { threshold: 0 }).observe(hero);
+    }
+  }
+
+  // The brand word is a separate canvas so it is visible in static/frozen previews too.
+  const wordCanvas = $(".fx-word");
+  const wordHero = $(".hero");
+  if (wordCanvas && wordHero) {
+    const wg = wordCanvas.getContext("2d", { alpha: true });
+    const wcolors = ["249,158,26", "33,143,254", "61,220,132", "226,238,250", "43,179,163"];
+    const paintWord = () => {
+      const w = wordHero.clientWidth, h = wordHero.clientHeight;
+      if (w < 1080) return;
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      wordCanvas.width = Math.round(w * dpr);
+      wordCanvas.height = Math.round(h * dpr);
+      wg.setTransform(dpr, 0, 0, dpr, 0, 0);
+      wg.clearRect(0, 0, w, h);
+      const fs = Math.min(w * .145, 220);
+      wg.font = `900 ${fs}px Bahnschrift, "Arial Narrow", sans-serif`;
+      wg.textAlign = "right";
+      wg.textBaseline = "middle";
+      wg.fillStyle = "#fff";
+      wg.fillText("BEADWATCH", w * .98, h * .2);
+      const mask = wg.getImageData(0, 0, wordCanvas.width, wordCanvas.height).data;
+      wg.clearRect(0, 0, w, h);
+      const step = Math.max(8, Math.round(fs * .052));
+      for (let y = 0; y < h; y += step) {
+        for (let x = 0; x < w; x += step) {
+          const alpha = mask[(Math.round(y * dpr) * wordCanvas.width + Math.round(x * dpr)) * 4 + 3];
+          if (alpha < 110) continue;
+          const r = 1.6 + Math.random() * 2.8;
+          const c = wcolors[(x + y) % wcolors.length];
+          const grd = wg.createRadialGradient(x - r * .3, y - r * .35, r * .08, x, y, r);
+          grd.addColorStop(0, "rgba(255,255,255,.95)");
+          grd.addColorStop(.42, `rgba(${c},.85)`);
+          grd.addColorStop(1, `rgba(${c},.08)`);
+          wg.globalAlpha = .7 + Math.random() * .28;
+          wg.fillStyle = grd;
+          wg.beginPath();
+          wg.arc(x, y, r, 0, Math.PI * 2);
+          wg.fill();
+          wg.globalAlpha = .4;
+          wg.fillStyle = "rgba(5,9,15,.7)";
+          wg.beginPath();
+          wg.arc(x, y, r * .24, 0, Math.PI * 2);
+          wg.fill();
+        }
+      }
+      wg.globalAlpha = 1;
+    };
+    paintWord();
+    if ("ResizeObserver" in window) new ResizeObserver(paintWord).observe(wordHero);
+    else addEventListener("resize", paintWord, { passive: true });
+  }
+
+  // Subtle scroll lag on the hero copy (Apple-style depth).
+  const copy = $(".hero-copy");
+  if (copy) {
+    const update = () => {
+      if (innerWidth <= 760) { copy.style.setProperty("--hy", "0px"); return; }
+      copy.style.setProperty("--hy", Math.min(30, Math.max(0, scrollY * 0.045)).toFixed(2) + "px");
+    };
+    addEventListener("scroll", update, { passive: true });
+    update();
+  }
+
+  if (!fine) return;
+
+  // Pointer glare on tilt cards.
+  $$(".step, .prof, .bento figure, .api-card").forEach(el => {
+    if (!el.querySelector(".fx-glare")) {
+      const glare = document.createElement("div");
+      glare.className = "fx-glare";
+      glare.setAttribute("aria-hidden", "true");
+      el.appendChild(glare);
+    }
+    el.addEventListener("pointermove", e => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty("--mx", ((e.clientX - r.left) / r.width * 100).toFixed(1) + "%");
+      el.style.setProperty("--my", ((e.clientY - r.top) / r.height * 100).toFixed(1) + "%");
+    }, { passive: true });
+  });
+
+  // Magnetic hero buttons.
+  $$(".hero-btns .btn").forEach(btn => {
+    btn.style.willChange = "transform";
+    btn.addEventListener("pointermove", e => {
+      const r = btn.getBoundingClientRect();
+      const nx = (e.clientX - r.left) / r.width - .5;
+      const ny = (e.clientY - r.top) / r.height - .5;
+      btn.style.transform = `translate(${(nx * 6).toFixed(2)}px,${(ny * 4).toFixed(2)}px)`;
+    }, { passive: true });
+    btn.addEventListener("pointerleave", () => { btn.style.transform = ""; });
+  });
+})();
+
+</script>
+</body>
+</html>

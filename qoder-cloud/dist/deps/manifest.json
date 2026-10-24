@@ -1,0 +1,268 @@
+{
+  "schema": 1,
+  "version": "1.0",
+  "site": "https://shiinakuro.github.io/beadwatch",
+  "python": {
+    "name": "Python 3.11.9 便携运行时",
+    "version": "3.11.9",
+    "size": 11249023,
+    "sha256": "009d6bf7e3b2ddca3d784fa09f90fe54336d5b60f0e0f305c37f400bf83cfd3b",
+    "urls": [
+      "https://mirrors.tuna.tsinghua.edu.cn/python/3.11.9/python-3.11.9-embed-amd64.zip",
+      "https://www.python.org/ftp/python/3.11.9/python-3.11.9-embed-amd64.zip"
+    ]
+  },
+  "getPip": {
+    "name": "pip 引导脚本",
+    "size": 2234489,
+    "urls": [
+      "https://bootstrap.pypa.io/get-pip.py",
+      "https://mirrors.aliyun.com/pypi/get-pip.py"
+    ]
+  },
+  "indexes": [
+    "https://pypi.tuna.tsinghua.edu.cn/simple",
+    "https://pypi.org/simple"
+  ],
+  "torch": {
+    "name": "PyTorch CUDA 12.1",
+    "version": "2.4.1+cu121",
+    "torchvisionVersion": "0.19.1+cu121",
+    "torch": {
+      "name": "PyTorch 2.4.1 CUDA 12.1",
+      "size": 2444893595,
+      "urls": [
+        "https://mirror.sjtu.edu.cn/pytorch-wheels/cu121/torch-2.4.1%2Bcu121-cp311-cp311-win_amd64.whl",
+        "https://download.pytorch.org/whl/cu121/torch-2.4.1%2Bcu121-cp311-cp311-win_amd64.whl",
+        "https://mirrors.aliyun.com/pytorch-wheels/cu121/torch-2.4.1%2Bcu121-cp311-cp311-win_amd64.whl"
+      ],
+      "sha256": "bc1e21d7412a2f06f552a9afb92c56c8b23d174884e9383259c3cf5db4687c98"
+    },
+    "torchvision": {
+      "name": "TorchVision 0.19.1 CUDA 12.1",
+      "size": 5783873,
+      "urls": [
+        "https://mirror.sjtu.edu.cn/pytorch-wheels/cu121/torchvision-0.19.1%2Bcu121-cp311-cp311-win_amd64.whl",
+        "https://download.pytorch.org/whl/cu121/torchvision-0.19.1%2Bcu121-cp311-cp311-win_amd64.whl",
+        "https://mirrors.aliyun.com/pytorch-wheels/cu121/torchvision-0.19.1%2Bcu121-cp311-cp311-win_amd64.whl"
+      ],
+      "sha256": "952dedd29ddd6010b7bda16a5e58e55eb051a46db941cc676bb880918c694ed8"
+    },
+    "variants": [
+      {
+        "name": "PyTorch CUDA 12.8",
+        "version": "2.7.1+cu128",
+        "torchvisionVersion": "0.22.1+cu128",
+        "torch": {
+          "name": "PyTorch 2.7.1 CUDA 12.8",
+          "size": 3273066072,
+          "urls": [
+            "https://mirror.sjtu.edu.cn/pytorch-wheels/cu128/torch-2.7.1%2Bcu128-cp311-cp311-win_amd64.whl",
+            "https://download.pytorch.org/whl/cu128/torch-2.7.1%2Bcu128-cp311-cp311-win_amd64.whl",
+            "https://mirrors.aliyun.com/pytorch-wheels/cu128/torch-2.7.1%2Bcu128-cp311-cp311-win_amd64.whl"
+          ],
+          "sha256": "138c66dcd0ed2f07aafba3ed8b7958e2bed893694990e0b4b55b6b2b4a336aa6"
+        },
+        "torchvision": {
+          "name": "TorchVision 0.22.1 CUDA 12.8",
+          "size": 7638405,
+          "urls": [
+            "https://mirror.sjtu.edu.cn/pytorch-wheels/cu128/torchvision-0.22.1%2Bcu128-cp311-cp311-win_amd64.whl",
+            "https://download.pytorch.org/whl/cu128/torchvision-0.22.1%2Bcu128-cp311-cp311-win_amd64.whl",
+            "https://mirrors.aliyun.com/pytorch-wheels/cu128/torchvision-0.22.1%2Bcu128-cp311-cp311-win_amd64.whl"
+          ],
+          "sha256": "85ecd729c947151eccea502853be6efc2c0029dc26e6e5148e04684aed008390"
+        },
+        "minCompute": 12.0
+      }
+    ]
+  },
+  "torchDeps": [
+    "filelock",
+    "typing_extensions",
+    "sympy",
+    "networkx",
+    "jinja2",
+    "fsspec",
+    "mpmath",
+    "packaging"
+  ],
+  "fullPackages": [
+    "numpy==2.4.6",
+    "Pillow==12.3.0",
+    "scipy==1.17.1",
+    "scikit-image==0.26.0",
+    "tqdm==4.70.1",
+    "requests==2.34.2",
+    "psutil==7.2.2",
+    "onnxruntime==1.31.0",
+    "rembg[cpu]==2.0.85",
+    "diffusers==0.31.0",
+    "transformers==4.46.3",
+    "safetensors==0.8.0",
+    "huggingface_hub==0.36.2",
+    "accelerate==1.15.0",
+    "einops==0.8.2",
+    "omegaconf==2.4.0",
+    "PyYAML==6.0.3",
+    "opencv-python==5.0.0.93",
+    "pymeshlab==2025.7.post1",
+    "trimesh==5.1.1",
+    "xatlas==0.0.11",
+    "pygltflib==1.16.5",
+    "Jinja2==3.1.6"
+  ],
+  "cutoutPackages": [
+    "numpy==2.4.6",
+    "Pillow==12.3.0",
+    "scipy==1.17.1",
+    "scikit-image==0.26.0",
+    "tqdm==4.70.1",
+    "requests==2.34.2",
+    "psutil==7.2.2",
+    "onnxruntime==1.31.0",
+    "rembg[cpu]==2.0.85"
+  ],
+  "constraints": [
+    "Deprecated==1.3.1",
+    "ImageIO==2.38.1",
+    "Jinja2==3.1.6",
+    "MarkupSafe==3.0.3",
+    "PyMatting==1.1.16",
+    "PyYAML==6.0.3",
+    "Pygments==2.21.0",
+    "accelerate==1.15.0",
+    "annotated-doc==0.0.5",
+    "annotated-types==0.8.0",
+    "anyio==4.15.1",
+    "attrs==26.1.0",
+    "brotli==1.2.0",
+    "certifi==2026.10.18",
+    "charset-normalizer==3.5.2",
+    "click==8.5.0",
+    "colorama==0.4.6",
+    "dataclasses-json==0.6.7",
+    "diffusers==0.31.0",
+    "einops==0.8.2",
+    "fastapi==0.149.0",
+    "filelock==3.32.3",
+    "flatbuffers==25.12.19",
+    "fsspec==2026.7.0",
+    "gradio==6.30.0",
+    "gradio_client==2.7.2",
+    "groovy==0.1.2",
+    "h11==0.16.0",
+    "hf-gradio==0.4.1",
+    "hf-xet==1.7.0",
+    "httpcore2==2.14.0",
+    "httpcore==1.0.9",
+    "httpx2==2.14.0",
+    "httpx==0.28.1",
+    "huggingface_hub==0.36.2",
+    "idna==3.20",
+    "importlib_metadata==9.0.1",
+    "jsonschema-specifications==2025.9.1",
+    "jsonschema==4.26.0",
+    "lazy-loader==0.6",
+    "llvmlite==0.50.0",
+    "markdown-it-py==4.2.0",
+    "marshmallow==3.26.2",
+    "mdurl==0.1.2",
+    "mpmath==1.3.0",
+    "msvc_runtime==14.44.35112",
+    "mypy_extensions==1.1.0",
+    "networkx==3.6.1",
+    "ninja==1.13.2",
+    "numba==0.68.0",
+    "numpy==2.4.6",
+    "omegaconf==2.4.0",
+    "onnxruntime==1.31.0",
+    "opencv-python==5.0.0.93",
+    "opentelemetry-api==1.45.1",
+    "orjson==3.13.0",
+    "packaging==26.3",
+    "pandas==3.0.6",
+    "pillow==12.3.0",
+    "pip==26.2.1",
+    "platformdirs==4.13.5",
+    "pooch==1.9.0",
+    "protobuf==7.36.2",
+    "psutil==7.2.2",
+    "pybind11==3.1.0",
+    "pydantic==2.14.1",
+    "pydantic_core==2.50.1",
+    "pydub==0.25.1",
+    "pygltflib==1.16.5",
+    "pymeshlab==2025.7.post1",
+    "python-dateutil==2.9.0.post0",
+    "python-multipart==0.0.32",
+    "pytz==2026.5",
+    "referencing==0.37.0",
+    "regex==2026.9.29",
+    "rembg==2.0.85",
+    "requests==2.34.2",
+    "rich==15.0.0",
+    "rpds-py==2026.9.1",
+    "safehttpx==0.1.7",
+    "safetensors==0.8.0",
+    "scikit-image==0.26.0",
+    "scipy==1.17.1",
+    "semantic-version==2.10.0",
+    "setuptools==84.0.0",
+    "shellingham==1.5.4",
+    "six==1.17.0",
+    "starlette==1.9.0",
+    "sympy==1.14.0",
+    "tifffile==2026.3.3",
+    "tokenizers==0.20.3",
+    "tomlkit==0.14.0",
+    "tqdm==4.70.1",
+    "transformers==4.46.3",
+    "trimesh==5.1.1",
+    "truststore==0.10.5",
+    "typer==0.27.3",
+    "typing-inspect==0.9.0",
+    "typing-inspection==0.4.4",
+    "typing_extensions==4.16.0",
+    "tzdata==2026.5",
+    "urllib3==2.8.0",
+    "uvicorn==0.54.0",
+    "wheel==0.48.0",
+    "wrapt==2.5.1",
+    "xatlas==0.0.11",
+    "zipp==4.1.1"
+  ],
+  "models": [
+    {
+      "name": "混元3D-2mv 形状模型",
+      "size": 4930777530,
+      "path": "tencent/Hunyuan3D-2mv/hunyuan3d-dit-v2-mv-turbo/model.fp16.safetensors",
+      "configPath": "tencent/Hunyuan3D-2mv/hunyuan3d-dit-v2-mv-turbo/config.yaml",
+      "config": "model:\n  target: hy3dgen.shapegen.models.Hunyuan3DDiT\n  params:\n    in_channels: 64\n    context_in_dim: 1536\n    hidden_size: 1024\n    mlp_ratio: 4.0\n    num_heads: 16\n    depth: 16\n    depth_single_blocks: 32\n    axes_dim: [ 64 ]\n    theta: 10000\n    qkv_bias: true\n    guidance_embed: true\n\nvae:\n  target: hy3dgen.shapegen.models.ShapeVAE\n  params:\n    num_latents: 3072\n    embed_dim: 64\n    num_freqs: 8\n    include_pi: false\n    heads: 16\n    width: 1024\n    num_decoder_layers: 16\n    qkv_bias: false\n    qk_norm: true\n    scale_factor: 0.9990943042622529\n\nconditioner:\n  target: hy3dgen.shapegen.models.SingleImageEncoder\n  params:\n    main_image_encoder:\n      type: DinoImageEncoderMV # dino giant\n      kwargs:\n        config:\n          attention_probs_dropout_prob: 0.0\n          drop_path_rate: 0.0\n          hidden_act: gelu\n          hidden_dropout_prob: 0.0\n          hidden_size: 1536\n          image_size: 518\n          initializer_range: 0.02\n          layer_norm_eps: 1.e-6\n          layerscale_value: 1.0\n          mlp_ratio: 4\n          model_type: dinov2\n          num_attention_heads: 24\n          num_channels: 3\n          num_hidden_layers: 40\n          patch_size: 14\n          qkv_bias: true\n          torch_dtype: float32\n          use_swiglu_ffn: true\n        image_size: 518\n\nscheduler:\n  target: hy3dgen.shapegen.schedulers.ConsistencyFlowMatchEulerDiscreteScheduler\n  params:\n    num_train_timesteps: 1000\n    pcm_timesteps: 100\n\nimage_processor:\n  target: hy3dgen.shapegen.preprocessors.MVImageProcessorV2\n  params:\n    size: 512\n    border_ratio: 0.15\n\npipeline:\n  target: hy3dgen.shapegen.pipelines.Hunyuan3DDiTFlowMatchingPipeline\n",
+      "urls": [
+        "https://modelscope.cn/api/v1/models/Tencent-Hunyuan/Hunyuan3D-2mv/repo?Revision=master&FilePath=hunyuan3d-dit-v2-mv-turbo%2Fmodel.fp16.safetensors",
+        "https://huggingface.co/tencent/Hunyuan3D-2mv/resolve/main/hunyuan3d-dit-v2-mv-turbo/model.fp16.safetensors?download=true"
+      ]
+    },
+    {
+      "name": "混元3D VAE 解码器",
+      "size": 407410402,
+      "path": "tencent/Hunyuan3D-2/hunyuan3d-vae-v2-0-turbo/model.fp16.safetensors",
+      "configPath": "tencent/Hunyuan3D-2/hunyuan3d-vae-v2-0-turbo/config.yaml",
+      "config": "target: hy3dgen.shapegen.models.ShapeVAE\nparams:\n  num_latents: 3072\n  embed_dim: 64\n  num_freqs: 8\n  include_pi: false\n  heads: 16\n  width: 1024\n  num_decoder_layers: 16\n  qkv_bias: false\n  qk_norm: true\n  scale_factor: 0.9990943042622529\n  geo_decoder_mlp_expand_ratio: 1\n  geo_decoder_downsample_ratio: 2\n  geo_decoder_ln_post: false",
+      "urls": [
+        "https://modelscope.cn/api/v1/models/Tencent-Hunyuan/Hunyuan3D-2/repo?Revision=master&FilePath=hunyuan3d-vae-v2-0-turbo%2Fmodel.fp16.safetensors",
+        "https://huggingface.co/tencent/Hunyuan3D-2/resolve/main/hunyuan3d-vae-v2-0-turbo/model.fp16.safetensors?download=true"
+      ]
+    }
+  ],
+  "cutout": {
+    "name": "ISNet 抠图模型",
+    "size": 178648008,
+    "path": "u2net/isnet-general-use.onnx",
+    "sha256": "60920e99c45464f2ba57bee2ad08c919a52bbf852739e96947fbb4358c0d964a",
+    "urls": [
+      "https://github.com/danielgatis/rembg/releases/download/v0.0.0/isnet-general-use.onnx"
+    ]
+  }
+}
