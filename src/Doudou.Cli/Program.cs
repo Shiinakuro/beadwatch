@@ -315,6 +315,45 @@ switch (args[0])
         foreach (var f in outp.Files) Console.WriteLine("  " + f);
         return 0;
     }
+    case "keysync":
+    {
+        // keysync <email> <password> <imageKey> <hunyuanKey>：验证加密 Key 的上传/解密/网页保留。
+        if (args.Length < 5) throw new ArgumentException("用法：keysync <email> <password> <imageKey> <hunyuanKey>");
+        var client = new AccountClient();
+        var auth = await client.LoginAsync(args[1], args[2]);
+        var current = await client.GetSettingsAsync(auth.Token);
+        var envelope = current.Settings?.Secrets;
+        byte[] key, salt;
+        if (envelope != null) { salt = Convert.FromBase64String(envelope.Salt); key = KeySyncCrypto.KeyFromPassword(args[2], envelope); }
+        else { salt = KeySyncCrypto.NewSalt(); key = KeySyncCrypto.DeriveKey(args[2], salt); }
+        var bundle = new SecretBundle
+        {
+            ImageApiKey = args[3], Hunyuan3dApiKey = args[4],
+            ImageApiBase = "https://image.example.test", Hunyuan3dApiBase = "https://api.example.test",
+        };
+        var synced = new AccountClient.SyncedSettings
+        {
+            DefaultBrand = "mard221", Author = "KeySyncTest", BeadPitchMm = 2.6, ImageModel = "test-model",
+            Secrets = KeySyncCrypto.Encrypt(bundle, key, salt),
+        };
+        var saved = await client.PutSettingsAsync(auth.Token, synced);
+        var savedEnvelope = saved.Settings?.Secrets ?? throw new InvalidOperationException("密钥信封没有保存");
+        var back = KeySyncCrypto.Decrypt(savedEnvelope, KeySyncCrypto.KeyFromPassword(args[2], savedEnvelope));
+        var roundtrip = back.ImageApiKey == bundle.ImageApiKey
+            && back.Hunyuan3dApiKey == bundle.Hunyuan3dApiKey
+            && back.ImageApiBase == bundle.ImageApiBase
+            && back.Hunyuan3dApiBase == bundle.Hunyuan3dApiBase;
+        // 模拟网页保存其他设置：不带 Secrets，服务端应保留密文。
+        await client.PutSettingsAsync(auth.Token, new AccountClient.SyncedSettings
+        {
+            DefaultBrand = "mard221", Author = "WebEdit", BeadPitchMm = 2.6, ImageModel = "test-model",
+        });
+        var afterWeb = await client.GetSettingsAsync(auth.Token);
+        var preserved = afterWeb.Settings?.Secrets?.Data == savedEnvelope.Data;
+        Console.WriteLine($"roundtrip={roundtrip} preserved={preserved} version={afterWeb.Version}");
+        await client.LogoutAsync(auth.Token);
+        return roundtrip && preserved ? 0 : 1;
+    }
     case "crypt":
     {
         // crypt <password>：自测 AES-GCM/PBKDF2 加密信封往返（不涉及真实 Key）。
@@ -356,10 +395,19 @@ switch (args[0])
         int height = int.Parse(args[3]);
         int colors = 24;
         string brand = "mard221";
+        bool preferViews = false;
+        var views = new List<ViewImage>();
         foreach (var a in args.Skip(4))
         {
             if (a.StartsWith("--colors=")) colors = int.Parse(a[9..]);
             else if (a.StartsWith("--brand=")) brand = a[8..];
+            else if (a == "--prefer-views") preferViews = true;
+            else if (a.StartsWith("--front=")) views.Add(ViewImage.Load(ViewKind.Front, a[8..]));
+            else if (a.StartsWith("--back=")) views.Add(ViewImage.Load(ViewKind.Back, a[7..]));
+            else if (a.StartsWith("--left=")) views.Add(ViewImage.Load(ViewKind.Left, a[7..]));
+            else if (a.StartsWith("--right=")) views.Add(ViewImage.Load(ViewKind.Right, a[8..]));
+            else if (a.StartsWith("--top=")) views.Add(ViewImage.Load(ViewKind.Top, a[6..]));
+            else if (a.StartsWith("--bottom=")) views.Add(ViewImage.Load(ViewKind.Bottom, a[9..]));
         }
         var outDir = args[2];
         Directory.CreateDirectory(outDir);
@@ -368,6 +416,7 @@ switch (args[0])
         {
             TargetHeight = height, BrandId = brand, MaxColors = colors,
             Name = Path.GetFileNameWithoutExtension(args[1]),
+            Views = views, PreferViews = preferViews,
         }, s => Console.WriteLine("  " + s));
         var m = res.Model;
         Console.WriteLine($"完成 {sw.Elapsed.TotalSeconds:F1}s：{m.SX}×{m.SY}×{m.SZ} {m.CountSolid()} 颗 {m.Palette.Count - 1} 色 纹理={res.UsedTexture}");

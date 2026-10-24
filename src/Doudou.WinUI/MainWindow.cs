@@ -841,6 +841,7 @@ public sealed class MainWindow : Window, IHost
                         BrandId = S.Settings.DefaultBrand,
                         MaxColors = 32,
                         Name = Path.GetFileNameWithoutExtension(path),
+                        FlattenTextureColors = true,
                     }, m => prog.Report(m), ct);
                 }, ct);
                 var m = res.Model;

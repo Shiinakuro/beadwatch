@@ -71,7 +71,7 @@ public sealed class ImportPage : IStepPage
     private Button? _revoxelBtn;
     private ReconSource? _source;
     private int _height = 100, _method, _brand, _maxColors = 32;
-    private bool _cartoon = true, _complete = true, _flat, _sym, _flatten = true, _onlyKeys, _force, _askBox = true;
+    private bool _cartoon = true, _complete = true, _flat, _sym, _flatten = true, _onlyKeys, _force, _askBox = true, _flattenTexture = true;
     private readonly List<string> _brandIds;
 
     public ImportPage(IHost h)
@@ -101,8 +101,9 @@ public sealed class ImportPage : IStepPage
 
         root.Children.Add(Card("三维模型", "已有 OBJ / GLB / STL / VOX 可以直接导入，不用照片。GLB/OBJ 带纹理会自动按纹理上色；STL 不带颜色，用上面添加的图片做参考上色；VOX 按 MagicaVoxel 标准转正。",
             Flow(Btn("导入 OBJ / GLB / STL / VOX", async () => await ImportMeshAsync(), G.Download, accent: true,
-                tip: "先选成品高度，再选模型文件；GLB/OBJ 自带纹理会保留五官细节")),
-            Caption("导入前会先让你选择豆高；之后拖动「成品高度」即可随时重新体素化，不必再选文件。导入前还会检查朝向：有参考图时用轮廓吻合度选最正方向，没有参考图时按最长轴自动转正。")));
+                tip: "先选成品高度，再选模型文件")),
+            Check("去除模型光照（AI 纹理推荐）", _flattenTexture, v => _flattenTexture = v),
+            Caption("AI 生成的纹理常带烘焙光照。勾选后压平高光/阴影，保留轮廓和主色。")));
 
         root.Children.Add(Card("平面拼豆", "只做一张平面图纸：上传 1 张图，AI 卡通化后像素化成豆格图，导出带色号的 PNG / PDF 和材料清单。",
             Flow(Btn("打开平面拼豆", () => _h.OpenFlatPattern(), G.Print))));
@@ -553,6 +554,7 @@ public sealed class ImportPage : IStepPage
                     MaxColors = _maxColors,
                     Name = title,
                     Views = viewImages,
+                    FlattenTextureColors = _flattenTexture,
                 }, m => p.Report(m), ct), ct);
 
                 var savedViews = views.ToDictionary(kv => kv.Key, kv => kv.Value.Path);
@@ -677,6 +679,7 @@ public sealed class ImportPage : IStepPage
                         MaxColors = _maxColors,
                         Name = title,
                         Views = viewImages,
+                        FlattenTextureColors = _flattenTexture,
                     }, m => p.Report(m), ct), ct);
                     s.Replace(import.Model, new ProjectMeta
                     {
