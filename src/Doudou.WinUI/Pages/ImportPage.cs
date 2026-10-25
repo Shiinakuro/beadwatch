@@ -105,7 +105,7 @@ public sealed class ImportPage : IStepPage
             Check("去除模型光照（AI 纹理推荐）", _flattenTexture, v => _flattenTexture = v),
             Caption("AI 生成的纹理常带烘焙光照。勾选后压平高光/阴影，保留轮廓和主色。")));
 
-        root.Children.Add(Card("平面拼豆", "只做一张平面图纸：上传 1 张图，AI 卡通化后像素化成豆格图，导出带色号的 PNG / PDF 和材料清单。",
+        root.Children.Add(Card("平面拼豆", "上传 1 张图，直接像素化或先用 AI 卡通平涂，导出带色号的 PNG / PDF 和材料清单。",
             Flow(Btn("打开平面拼豆", () => _h.OpenFlatPattern(), G.Print))));
 
         root.Children.Add(Card("作品", null, Row("名称", _name), _hint));
@@ -170,7 +170,7 @@ public sealed class ImportPage : IStepPage
             ? $"已连接 · {_h.S.Settings.ImageModel}。生图 API 只整理照片、补全视角和平涂取色，不直接画豆图。同图同设置会复用缓存，只有新组合才消耗额度（约 ¥0.15/张）。"
             : ai.HasEndpoint
                 ? "已填写生图服务，但还没有选择模型：到「设置 → AI 图像服务」点「获取模型」或手动填写模型名。"
-                : "生图 API 是可选的：把实拍整理成标准视图、补全缺失角度、生成平涂取色参考，最后仍由本地重建和色卡量化出图。到「设置 → AI 图像服务」填入地址和 Key 后会自动获取模型列表。";
+                : "生图 API 可选：整理视图、补全角度和平涂取色。未配置时仍可用本地重建或轮廓雕刻。";
         _aiState.Text += Hy3dClient.CutoutInstalled
             ? "\n本地抠图模型就绪：框选后会自动去掉墙面、桌面、水印等背景。"
             : "\n本地抠图模型未安装：框选后按背景色去背景。可在「设置 → 本地 AI 模型」一键安装。";
@@ -500,7 +500,7 @@ public sealed class ImportPage : IStepPage
     private async Task ImportVoxAsync(string path)
     {
         var s = _h.S;
-        if (s.Dirty && s.Model.CountSolid() > 0 && !await _h.ConfirmAsync("替换当前模型？", "导入的 VOX 会替换当前未保存的模型。", "继续")) return;
+        if (s.Dirty && !await _h.ConfirmAsync("替换当前模型？", "导入的 VOX 会替换当前未保存的修改。", "继续")) return;
         _log.Text = "";
         _running = true;
         try
@@ -525,8 +525,8 @@ public sealed class ImportPage : IStepPage
     {
         if (_running) return;
         var s = _h.S;
-        if (s.History.CanUndo && s.Model.CountSolid() > 0 &&
-            !await _h.ConfirmAsync("替换当前模型？", "重新体素化会用新结果替换当前模型，手工修改会丢失。", "继续")) return;
+        if (s.Dirty &&
+            !await _h.ConfirmAsync("替换当前模型？", "重新体素化会用新结果替换当前未保存的修改。", "继续")) return;
         _log.Text = "";
         _running = true;
         UpdateSourceState();
@@ -637,7 +637,7 @@ public sealed class ImportPage : IStepPage
             return;
         }
         var useApi = _method == 2 || (_method == 0 && !localReady && api.Configured);
-        if (s.Dirty && s.Model.CountSolid() > 0 && !await _h.ConfirmAsync("替换当前模型？", "生成的新模型会替换当前未保存的模型。", "继续")) return;
+        if (s.Dirty && !await _h.ConfirmAsync("替换当前模型？", "生成的新模型会替换当前未保存的修改。", "继续")) return;
         _log.Text = "";
         _aiThumbs.Children.Clear();
         _running = true;

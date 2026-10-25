@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>拼豆先锋 BEADWATCH · 立体拼豆设计</title>
-<meta name="description" content="从照片生成立体拼豆模型，或上传 1 张图生成平面拼豆图纸。逐颗修形、拆件、检查装配，导出整套可施工图纸。Windows 10/11。">
+<title>拼豆先锋 BEADWATCH · 立体与平面拼豆设计</title>
+<meta name="description" content="从多视图照片或 OBJ / GLB / STL / VOX 制作立体拼豆，也可将单图直接像素化为平面图纸。编辑、拆件、装配检查与材料清单一站完成。">
 <meta name="theme-color" content="#0a111b">
 <meta property="og:title" content="拼豆先锋 BEADWATCH">
-<meta property="og:description" content="把照片变成能真正拼起来的立体模型。">
+<meta property="og:description" content="从照片或三维模型制作立体拼豆，也能把单张图片变成平面图纸。编辑、拆件、装配检查与材料清单一站完成。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://shiinakuro.github.io/beadwatch/">
 <meta property="og:image" content="https://shiinakuro.github.io/beadwatch/assets/shots/editor.png">
@@ -58,6 +58,11 @@ button{font:inherit;color:inherit}
 .nav a::after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1px;background:var(--orange);transition:right .25s}
 .nav a:hover::after{right:0}
 .top-act{display:flex;align-items:center;gap:14px;margin-left:26px}
+.account-top{font-size:12px;color:#b7c4d6;padding:8px 0;white-space:nowrap}
+.account-top:hover{color:var(--orange)}
+.log .entry:nth-of-type(n+5){display:none}
+.log-more{margin-top:22px;font-size:12px}
+.log-more a{color:var(--orange)}
 .ver{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--muted);border:1px solid var(--line);padding:4px 8px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid transparent;cursor:pointer;font-weight:700;letter-spacing:.04em;transition:transform .15s,background .2s,border-color .2s,color .2s;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));white-space:nowrap}
 .btn:active{transform:translateY(1px)}
@@ -618,16 +623,14 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
     <nav class="nav" aria-label="页面导航">
       <a href="#workflow">工作流</a>
       <a href="#flat">平面拼豆</a>
-      <a href="https://beadwatch-cloud-7c28q17g8xc.qoder.zone/account.html" target="_blank" rel="noopener">账号</a>
-      <a href="#interface">界面</a>
       <a href="#local-ai">本地 AI</a>
       <a href="#image-api">生图 API</a>
-      <a href="#keys">快捷键</a>
       <a href="#log">发布</a>
       <a href="https://github.com/shiinakuro/beadwatch" target="_blank" rel="noopener">GitHub</a>
     </nav>
     <div class="top-act">
       <span class="ver">v1.3.1</span>
+      <a class="account-top" href="https://beadwatch-cloud-7c28q17g8xc.qoder.zone/account.html" target="_blank" rel="noopener">账号</a>
       <a class="btn btn-primary btn-sm" href="#download">下载</a>
     </div>
   </div>
@@ -637,9 +640,9 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
 <section class="hero">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <p class="kicker">WINDOWS 10 / 11 · 立体拼豆设计</p>
-      <h1>把照片变成<br><em>能真正拼起来</em><br>的立体模型。</h1>
-      <p class="lead">从 3~6 张照片重建三维结构，逐颗修形、拆件、验装配，最后导出整套可施工的图纸。全程在三维视口里完成。<br>也可以只上传 1 张图，生成带色号的平面拼豆图纸。</p>
+      <p class="kicker">WINDOWS 10 / 11 · 立体 + 平面拼豆设计</p>
+      <h1>把灵感变成<br><em>能真正拼起来</em><br>的拼豆作品。</h1>
+      <p class="lead">导入多视图照片或 OBJ / GLB / STL / VOX，逐颗编辑、拆件、检查装配并导出整套图纸。<br>单张图片可直接像素化，也可以先用 AI 卡通平涂。</p>
       <div class="hero-btns">
         <a class="btn btn-primary" href="#download">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 21h14"/></svg>
@@ -648,10 +651,10 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
         <a class="btn btn-ghost" href="#workflow">查看工作流</a>
       </div>
       <div class="meta">
-        <div><b>3~6 张</b><span>多视图重建</span></div>
-        <div><b>14,045 颗</b><span>体素可编辑</span></div>
-        <div><b>A3 整卷</b><span>图纸直出</span></div>
-        <div><b>1 张</b><span>平面拼豆</span></div>
+        <div><b>多视图</b><span>三维重建</span></div>
+        <div><b>4 种格式</b><span>模型直接导入</span></div>
+        <div><b>AI 可选</b><span>平面像素化</span></div>
+        <div><b>PNG / PDF</b><span>图纸与清单</span></div>
       </div>
     </div>
     <div class="shot-wrap">
@@ -680,7 +683,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
       <div class="sec-no">01</div>
       <div>
         <p class="eyebrow">WORKFLOW</p>
-        <h2>五步，从一张照片到整套图纸</h2>
+        <h2>五步，从素材到整套图纸</h2>
       </div>
       <p class="sec-note">左侧导航固定为 <b>导入 → 编辑 → 拆分 → 检查 → 导出</b>。每一步只显示当前需要的工具，做完就能继续。</p>
     </div>
@@ -691,8 +694,8 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
           <span class="step-num">01 / 05</span>
         </div>
         <h3>导入与重建<span class="en">IMPORT</span></h3>
-        <p>上传同一物体的正、背、左、右视图。自动抠去背景，AI 可补全缺失视角，再由混元3D 在本地重建。</p>
-        <div class="tags"><i>自动抠图</i><i>AI 补全</i><i>CPU 回退</i></div>
+        <p>上传多视图照片，或直接导入 OBJ / GLB / STL / VOX。先选豆高，之后可用同一来源重新体素化。</p>
+        <div class="tags"><i>照片重建</i><i>模型导入</i><i>豆高可调</i></div>
       </article>
       <article class="step reveal">
         <div class="step-top">
@@ -742,15 +745,15 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
         <p class="eyebrow">FLAT PATTERN</p>
         <h2>一张图，也能做平面拼豆</h2>
       </div>
-      <p class="sec-note">平行入口：单图上传 → <b>AI 卡通平涂</b> → 豆格像素化 → 带色号的 PNG / PDF / 材料清单。适合冰箱贴、挂件和平面摆件。</p>
+      <p class="sec-note">单图上传 → <b>直接像素化或 AI 卡通平涂</b> → 带色号的 PNG / PDF / 材料清单。AI 不是必需步骤。</p>
     </div>
     <div class="flat-grid reveal">
       <figure class="flat-shot">
-        <img src="assets/shots/flat.png" width="1360" height="940" loading="lazy" alt="平面拼豆窗口：上传图片、AI 生图、像素化预览与图纸导出">
+        <img src="assets/shots/flat.png" width="1360" height="940" loading="lazy" alt="平面拼豆窗口：上传图片、选择图案风格、像素化预览与图纸导出">
       </figure>
       <div class="flat-copy">
         <h3>从照片到可施工的平面图纸</h3>
-        <p>不需要三维重建。上传一张主体清楚的照片，先让 AI 把它重画成大色块、强轮廓的正面图案，再按品牌色卡逐格量化，直接读出每颗豆的颜色。</p>
+        <p>不需要三维重建。已有插画或像素图可直接按品牌色卡量化；照片可先由 AI 整理成大色块、强轮廓的平涂图，再生成豆格。</p>
         <ul class="flat-list">
           <li><b>01 / 单图</b><span>自动识别主体、去掉背景；也支持直接像素化已经平涂的图片。</span></li>
           <li><b>02 / AI</b><span>卡通平涂提示词专为拼豆设计：大色块、少颜色、放大五官；同一张图同设置复用缓存。</span></li>
@@ -803,8 +806,8 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
       <div class="ai-copy">
         <p class="eyebrow">ONE-CLICK SETUP</p>
         <h3>不用装 Python，<br>也不用找模型文件。</h3>
-        <p>「一键安装全部」会自动准备 Python 3.11、PyTorch CUDA、混元3D 权重与 ISNet 抠图模型。下载前自动测速选择最快镜像，大文件多线程分段，并做 SHA-256 校验；中途取消，下次从进度继续。</p>
-        <div class="path"><b>设置</b><i>›</i><b>本地 AI 模型</b><i>›</i><b>一键安装全部</b></div>
+        <p>「一键安装 / 修复」会准备 Python、PyTorch CUDA、混元3D 与 ISNet。自动测速选源，支持多线程下载、断点续传和 SHA-256 校验。</p>
+        <div class="path"><b>设置</b><i>›</i><b>本地 AI 模型</b><i>›</i><b>一键安装 / 修复</b></div>
         <div class="note">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>
           <span>没有独立显卡也能用：三维重建自动回退到纯 CPU 轮廓雕刻，编辑、拆分、检查与出图功能不受影响。</span>
@@ -1038,6 +1041,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
         </ul>
       </article>
     </div>
+    <p class="log-more"><a href="https://github.com/shiinakuro/beadwatch/releases" target="_blank" rel="noopener">在 GitHub 查看全部发布记录 →</a></p>
   </div>
 </section>
 
@@ -1080,7 +1084,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
           <a class="dl-alt" href="https://github.com/shiinakuro/beadwatch/releases/latest" target="_blank" rel="noopener">GitHub Releases 直链</a>
           <details class="sha">
             <summary>SHA-256 校验</summary>
-            <code id="shaText">9e4ccc7d2b6e8d3a36a77ca1669eddb0b6bfb2dc6e64b20979b9e774f6c8d238</code>
+            <code id="shaText">bee037128e6afc569e950b0d477c16c176427ae777356c3c2cf2ab0766c23bb6</code>
             <button class="copy" id="shaCopy" type="button">复制校验值</button>
           </details>
         </div>
@@ -1132,7 +1136,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
   const cancel = document.getElementById("dlCancel");
   const shaCopy = document.getElementById("shaCopy");
   const shaText = document.getElementById("shaText");
-  const meta = { name: "拼豆先锋_v1.3.1_安装程序.exe", size: 122794121 };
+  const meta = { name: "拼豆先锋_v1.3.1_安装程序.exe", size: 122841077 };
   let busy = false;
   let ac = null;
 
@@ -1149,6 +1153,13 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
 
   function fail(text) {
     status.classList.add("err");
+    msg.textContent = text;
+    pct.textContent = "";
+    cancel.style.display = "none";
+  }
+
+  function note(text) {
+    status.classList.remove("err");
     msg.textContent = text;
     pct.textContent = "";
     cancel.style.display = "none";
@@ -1198,7 +1209,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
             types: [{ description: "Windows 安装程序", accept: { "application/octet-stream": [".exe"] } }],
           });
         } catch (e) {
-          if (e && e.name === "AbortError") { fail("已取消，未下载任何文件。"); return; }
+          if (e && e.name === "AbortError") { note("已取消，未下载任何文件。"); return; }
           handle = null;
         }
       }
@@ -1244,7 +1255,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
     } catch (e) {
       if (writable) { try { await writable.abort(); } catch (_) {} }
       if (e && e.name === "AbortError") {
-        fail("已取消下载。已写入的部分不会保留。");
+        note("已取消下载。");
       } else {
         console.error(e);
         fail("下载服务暂时不可用，请稍后重试。");

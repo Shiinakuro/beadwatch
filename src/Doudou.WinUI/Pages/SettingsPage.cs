@@ -45,6 +45,7 @@ public sealed class SettingsPage : IStepPage
     {
         _h = h;
         h.Accounts.Changed += () => h.View.DispatcherQueue.TryEnqueue(UpdateAccountState);
+        h.Accounts.SettingsApplied += () => h.View.DispatcherQueue.TryEnqueue(OnEnter);
         var s = h.S.Settings;
         _brandIds = h.S.Lib.Brands.Keys.OrderBy(k => k).ToList();
         _brand.ItemsSource = _brandIds.Select(id => h.S.Lib.Brands[id].Title).ToList();
@@ -108,7 +109,7 @@ public sealed class SettingsPage : IStepPage
                      FileName = AccountClient.AccountPage, UseShellExecute = true,
                  }), G.Open))));
         root.Children.Add(Card("AI 图像服务",
-            "可选。只处理照片：整理成正交视图、补全缺失角度、生成平涂取色参考；最终仍由三维重建和色卡量化出图，生图 API 不直接画豆图。",
+            "可选。整理照片、补全视角和生成平涂取色参考；三维重建与色卡量化仍由本程序完成。",
             Row("接口地址", _api), Row("API Key", _key), Row("模型", modelRow),
             _apiStatus,
             Caption("可用模型：gpt-image、Gemini Nano Banana、Seedream、Qwen-Image 等；只要服务商支持 OpenAI 兼容的 /v1/images/edits 就能用。"),
@@ -191,7 +192,7 @@ public sealed class SettingsPage : IStepPage
         else if (!_depBusy && cut)
             _depDetail.Text = "ISNet 抠图已就绪；补装全部依赖后可用混元3D 本地生成形体。";
         else if (!_depBusy && py)
-            _depDetail.Text = "Python 运行时已安装，但依赖不完整。点击「一键安装全部」会只补齐缺少的部分。";
+            _depDetail.Text = "Python 运行时已安装，但依赖不完整。点击「一键安装 / 修复」会只补齐缺少的部分。";
     }
 
     private async Task StartInstallAsync(bool cutoutOnly)

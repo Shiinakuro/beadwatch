@@ -158,7 +158,7 @@ public sealed class PartsPage : IStepPage
         {
             _rep = PartAnalyzer.Analyze(S.Model);
             bool none = _rep.Parts.Count == 0;
-            _empty.Content = none ? Empty(G.Cut, S.Model.CountSolid() == 0 ? "模型还是空的。先导入图片或在「建造」里搭一个模型。" : "还没有零件。先点上面的「智能推荐」生成初稿，再用零件刷微调。",
+            _empty.Content = none ? Empty(G.Cut, S.Model.CountSolid() == 0 ? "模型还是空的。先导入图片或模型，也可以在空白画布中搭建。" : "还没有零件。先点上面的「智能推荐」生成初稿，再用零件刷微调。",
                 S.Model.CountSolid() == 0 ? null : "智能推荐", S.Model.CountSolid() == 0 ? null : Auto) : null;
             _list.Visibility = none ? Visibility.Collapsed : Visibility.Visible;
             int errors = _rep.Parts.Count(p => p.Issues.Any(i => i.Level == IssueLevel.Error));
@@ -230,18 +230,33 @@ public sealed class PartsPage : IStepPage
         S.History.Commit();
     }
 
-    private void ToggleVisible() { foreach (var p in SelectedParts()) p.Visible = !p.Visible; S.RaiseChanged(); Refresh(); }
+    private void ToggleVisible()
+    {
+        var sel = SelectedParts();
+        if (sel.Count == 0) return;
+        S.History.Begin("隐藏/显示零件");
+        foreach (var p in sel) p.Visible = !p.Visible;
+        S.History.Commit();
+        Refresh();
+    }
 
     private void Solo()
     {
         var ids = SelectedIds().ToHashSet();
         if (ids.Count == 0) return;
+        S.History.Begin("只看所选零件");
         foreach (var p in S.Model.PartList) p.Visible = ids.Contains(p.Id);
-        S.RaiseChanged();
+        S.History.Commit();
         Refresh();
     }
 
-    private void ShowAll() { foreach (var p in S.Model.PartList) p.Visible = true; S.RaiseChanged(); Refresh(); }
+    private void ShowAll()
+    {
+        S.History.Begin("显示全部零件");
+        foreach (var p in S.Model.PartList) p.Visible = true;
+        S.History.Commit();
+        Refresh();
+    }
 
     private void JointSelected()
     {

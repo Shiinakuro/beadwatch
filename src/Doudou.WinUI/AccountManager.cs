@@ -42,6 +42,7 @@ public sealed class AccountManager
     public IReadOnlyList<HistoryEntry> History { get { lock (_gate) return _history.ToList(); } }
 
     public event Action? Changed;
+    public event Action? SettingsApplied;
 
     public async Task RestoreAsync(CancellationToken ct = default)
     {
@@ -170,6 +171,7 @@ public sealed class AccountManager
                 _s.Settings.Save();
             }
             finally { _applyingSettings = false; }
+            SettingsApplied?.Invoke();
         }
         Changed?.Invoke();
         return result;
@@ -274,6 +276,7 @@ public sealed class AccountManager
             }
             finally { _applyingSettings = false; }
             _keysLocked = false;
+            SettingsApplied?.Invoke();
         }
         catch (Exception) { _keysLocked = true; }
         await Task.CompletedTask;

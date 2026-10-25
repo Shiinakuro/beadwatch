@@ -783,7 +783,7 @@ public sealed class Onboarding : Grid
         _bubbleBody.Text = stop.Body;
         _bubbleHint.Text = stop.Hint;
         _bubbleHint.Visibility = string.IsNullOrWhiteSpace(stop.Hint) ? Visibility.Collapsed : Visibility.Visible;
-        _bubblePrev.IsEnabled = index > 1;
+        _bubblePrev.IsEnabled = index > 0;
         _bubbleNext.Content = Label(index == _stops.Length - 1 ? "完成" : "下一步", index == _stops.Length - 1 ? G.Check : G.Play);
         _bubbleDots.Children.Clear();
         for (int i = 0; i < _stops.Length; i++)
@@ -872,7 +872,7 @@ public sealed class Onboarding : Grid
         switch (e.Key)
         {
             case VirtualKey.Right: case VirtualKey.Down: _ = ShowTourStopAsync(_tourIndex + 1); break;
-            case VirtualKey.Left: case VirtualKey.Up: if (_tourIndex > 1) _ = ShowTourStopAsync(_tourIndex - 1); break;
+            case VirtualKey.Left: case VirtualKey.Up: if (_tourIndex > 0) _ = ShowTourStopAsync(_tourIndex - 1); break;
             case VirtualKey.Escape: DismissAll(); break;
             default: e.Handled = true; return;
         }

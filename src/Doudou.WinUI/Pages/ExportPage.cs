@@ -12,7 +12,7 @@ namespace Doudou.WinUI.Pages;
 public sealed class ExportPage : IStepPage
 {
     public string Header => "图纸导出";
-    public string Description => "生成与真人画手同版式的整套立体拼豆图纸";
+    public string Description => "生成总图、零件图、装配图和材料清单";
     public UIElement View { get; }
 
     private readonly IHost _h;
@@ -51,6 +51,11 @@ public sealed class ExportPage : IStepPage
         g.Children.Add(pick);
         root.Children.Add(Card("输出位置", null, g, WideBtn("生成图纸", async () => await Export(), G.Print), _out));
         View = root;
+        S.ModelReplaced += () => h.View.DispatcherQueue.TryEnqueue(() =>
+        {
+            _folder.Text = "";
+            _out.Children.Clear();
+        });
     }
 
     public void OnEnter()
@@ -87,11 +92,12 @@ public sealed class ExportPage : IStepPage
             folder = _folder.Text.Trim();
             if (folder.Length == 0) return;
         }
+        if (S.Model.PartList.Count == 0 && !await _h.ConfirmAsync("还没有拆分零件", "图纸会把整个模型当成一个零件，建议先到「零件拆分」。仍然继续？", "继续导出")) return;
         var m = S.Meta;
         m.Title = _title.Text.Trim(); m.Author = _author.Text.Trim(); m.Modeler = _modeler.Text.Trim();
         m.Serial = _serial.Text.Trim(); m.Notes = _notes.Text.Trim(); m.Watermark = _wm.Text.Trim();
         S.Dirty = true;
-        if (S.Model.PartList.Count == 0 && !await _h.ConfirmAsync("还没有拆分零件", "图纸会把整个模型当成一个零件，建议先到「零件拆分」。仍然继续？", "继续导出")) return;
+        _out.Children.Clear();
         var opt = new DrawingOptions
         {
             Cell = _cell, StepColumns = _cols, ExplodeSpread = _spread, CellLetters = _letters, Pdf = _pdf, Tint = _tint,

@@ -51,6 +51,7 @@ public sealed class FlatPatternWindow : Window
     private readonly Button _pickBtn;
     private readonly Button _openBtn;
     private ComboBox _styleCombo = null!;
+    private CheckBox _forceCheck = null!;
 
     private readonly DispatcherQueueTimer _previewTimer;
     private string _sourcePath = "";
@@ -59,7 +60,8 @@ public sealed class FlatPatternWindow : Window
     private string _exportFolder = "";
     private VoxelModel? _model;
     private CancellationTokenSource? _cts;
-    private bool _running, _refreshing, _closed;
+    private bool _running, _closed;
+    private int _workVersion;
     private int _style, _longSide = 64, _brand, _maxColors = 16;
     private bool _removeBg = true, _letters = true, _force;
 
@@ -105,8 +107,12 @@ public sealed class FlatPatternWindow : Window
         _previewTimer.Interval = TimeSpan.FromMilliseconds(350);
         _previewTimer.IsRepeating = false;
         _previewTimer.Tick += (_, _) => { if (!_running && !_closed) _ = RefreshPreviewAsync(); };
-        Closed += (_, _) => { _closed = true; _cts?.Cancel(); };
+        Closed += (_, _) => { _closed = true; CancelWork(); };
         _title.TextChanged += (_, _) => SchedulePreview();
+        _hint.TextChanged += (_, _) =>
+        {
+            if (_style == 0 && _model != null) InvalidateResult("描述已更改，点「生成平面图纸」更新 AI 图。");
+        };
         UpdateAiState();
     }
 
@@ -185,7 +191,7 @@ public sealed class FlatPatternWindow : Window
         bs.Children.Add(_ring);
         bs.Children.Add(new TextBlock
         {
-            Text = "AI 生图 × 像素化", FontFamily = Theme.Display, FontWeight = Microsoft.UI.Text.FontWeights.Bold,
+            Text = "正在生成平面图纸", FontFamily = Theme.Display, FontWeight = Microsoft.UI.Text.FontWeights.Bold,
             FontSize = 18, HorizontalAlignment = HorizontalAlignment.Center,
         });
         bs.Children.Add(_busyText);
@@ -220,11 +226,18 @@ public sealed class FlatPatternWindow : Window
 
         var aiCard = new StackPanel { Spacing = 6 };
         aiCard.Children.Add(_aiState);
-        _styleCombo = Combo(new[] { "AI 卡通平涂（推荐）", "直接像素化（不调用 AI）" }, _style, i => { _style = i; UpdateAiState(); SchedulePreview(); });
+        _styleCombo = Combo(new[] { "AI 卡通平涂（推荐）", "直接像素化（不调用 AI）" }, _style, i =>
+        {
+            if (_style == i) return;
+            _style = i;
+            UpdateAiState();
+            InvalidateResult(i == 0 ? "已切换到 AI 平涂，点「生成平面图纸」生成参考图。" : "已切换到直接像素化，点「生成平面图纸」更新预览。");
+        });
         aiCard.Children.Add(Row("风格", _styleCombo));
         aiCard.Children.Add(Row("描述", _hint));
-        aiCard.Children.Add(Check("重新生成 AI 图（忽略缓存）", _force, v => _force = v));
-        _leftPanel.Children.Add(Card("② AI 生图", "配置了图像 API 时，先把照片重画成大色块、强轮廓的正面图案；同一张图同设置会复用缓存。", aiCard));
+        _forceCheck = Check("重新生成 AI 图（忽略缓存）", _force, v => _force = v);
+        aiCard.Children.Add(_forceCheck);
+        _leftPanel.Children.Add(Card("② 图案风格", "可直接像素化，或先用图像 API 生成大色块、强轮廓的平涂参考图。", aiCard));
 
         var pxCard = new StackPanel { Spacing = 4 };
         pxCard.Children.Add(SliderRow("最长边", 24, 120, _longSide, v => { _longSide = (int)v; UpdateSizeInfo(); SchedulePreview(); }, 1, "0", " 颗").Row);
@@ -257,6 +270,8 @@ public sealed class FlatPatternWindow : Window
     private void UpdateAiState()
     {
         var ai = new ImageAi(_s.Settings);
+        _hint.IsEnabled = _style == 0;
+        _forceCheck.IsEnabled = _style == 0;
         _aiState.Text = _style == 1
             ? "当前不调用 AI：直接把原图变成豆格图。适合已经是平涂/像素风的图片。"
             : ai.Configured
@@ -282,10 +297,13 @@ public sealed class FlatPatternWindow : Window
 
     private async Task SetSourceAsync(string path)
     {
+        CancelWork();
         _sourcePath = path;
         _preppedPath = "";
         _aiPath = "";
+        _exportFolder = "";
         _model = null;
+        SetBusy(false);
         _exportBtn.IsEnabled = false;
         _openBtn.IsEnabled = false;
         _resultScroll.Visibility = Visibility.Collapsed;
@@ -304,6 +322,25 @@ public sealed class FlatPatternWindow : Window
         UpdateSizeInfo();
     }
 
+    private void CancelWork()
+    {
+        _workVersion++;
+        _previewTimer.Stop();
+        _cts?.Cancel();
+        _cts = null;
+    }
+
+    private void InvalidateResult(string status)
+    {
+        CancelWork();
+        _model = null;
+        SetBusy(false);
+        _exportBtn.IsEnabled = false;
+        _resultScroll.Visibility = Visibility.Collapsed;
+        _placeholder.Visibility = Visibility.Visible;
+        _status.Text = status;
+    }
+
     private async Task GenerateAsync()
     {
         if (_running) return;
@@ -315,16 +352,25 @@ public sealed class FlatPatternWindow : Window
             return;
         }
 
-        _cts?.Cancel();
-        _cts = new CancellationTokenSource();
-        var ct = _cts.Token;
+        CancelWork();
+        var version = _workVersion;
+        var cts = new CancellationTokenSource();
+        _cts = cts;
+        var ct = cts.Token;
         SetBusy(true);
-        IProgress<string> progress = new Progress<string>(m => Ui(() => { _status.Text = m; _busyText.Text = m; }));
+        IProgress<string> progress = new Progress<string>(m => Ui(() =>
+        {
+            if (version != _workVersion) return;
+            _status.Text = m;
+            _busyText.Text = m;
+        }));
         try
         {
             var work = AppPaths.NewWorkDir("flat");
             progress.Report("准备图片、识别主体…");
-            _preppedPath = await SubjectPrep.PrepareAsync(_sourcePath, null, _s.Hy3d, progress, ct);
+            var prepped = await SubjectPrep.PrepareAsync(_sourcePath, null, _s.Hy3d, progress, ct);
+            if (version != _workVersion) return;
+            _preppedPath = prepped;
 
             string pixelSource;
             if (_style == 0)
@@ -332,33 +378,45 @@ public sealed class FlatPatternWindow : Window
                 progress.Report("AI 正在重画卡通平涂图…");
                 var aiClient = new ImageAi(_s.Settings) { ForceRegenerate = _force };
                 var prompt = ImageAi.FlatPatternPrompt(_hint.Text.Trim());
-                _aiPath = await aiClient.EditAsync(new[] { _preppedPath }, prompt,
+                var aiPath = await aiClient.EditAsync(new[] { prepped }, prompt,
                     System.IO.Path.Combine(work, "flat_ai.png"), ct);
-                pixelSource = _aiPath;
+                if (version != _workVersion) return;
+                _aiPath = aiPath;
+                pixelSource = aiPath;
                 progress.Report(aiClient.LastFromCache ? "AI 图命中缓存，直接像素化…" : "AI 图已生成，开始像素化…");
             }
             else
             {
                 _aiPath = "";
-                pixelSource = _removeBg ? _preppedPath : _sourcePath;
+                pixelSource = _removeBg ? prepped : _sourcePath;
             }
 
             var res = await BuildAsync(pixelSource, progress, ct);
+            if (version != _workVersion) return;
             _model = res.Model;
-            await ShowPreviewAsync(res.Model, ct);
+            await ShowPreviewAsync(res.Model, ct, version);
+            if (version != _workVersion) return;
             var size = $"{res.Model.SX}×{res.Model.SY} 颗 · 约 {res.Model.SX * _s.Settings.BeadPitchMm / 10:F1}×{res.Model.SY * _s.Settings.BeadPitchMm / 10:F1} cm";
             _sizeInfo.Text = size;
             _status.Text = $"{size} · {res.Model.CountSolid():N0} 颗 · {res.Model.Palette.Count - 1} 色";
             _exportBtn.IsEnabled = true;
             ShowInfo("平面图纸已生成，可以导出 PNG / PDF 和材料清单。", InfoBarSeverity.Success);
         }
-        catch (OperationCanceledException) { ShowInfo("已取消。", InfoBarSeverity.Warning); }
+        catch (OperationCanceledException)
+        {
+            if (version == _workVersion) ShowInfo("已取消。", InfoBarSeverity.Warning);
+        }
         catch (Exception e)
         {
+            if (version != _workVersion) return;
             LogError(e);
             ShowInfo("生成失败：" + (string.IsNullOrWhiteSpace(e.Message) ? e.GetType().Name : e.Message), InfoBarSeverity.Error);
         }
-        finally { SetBusy(false); }
+        finally
+        {
+            cts.Dispose();
+            if (version == _workVersion) { _cts = null; SetBusy(false); }
+        }
     }
 
     private async Task<FlatPatternResult> BuildAsync(string source, IProgress<string> progress, CancellationToken ct)
@@ -375,7 +433,7 @@ public sealed class FlatPatternWindow : Window
         return await Task.Run(() => FlatPattern.Build(img, _s.Lib, opt, m => progress.Report(m), ct), ct);
     }
 
-    private async Task ShowPreviewAsync(VoxelModel model, CancellationToken ct)
+    private async Task ShowPreviewAsync(VoxelModel model, CancellationToken ct, int version)
     {
         var renderOptions = RenderOptions(1500, _letters);
         var preview = await Task.Run(() =>
@@ -391,6 +449,7 @@ public sealed class FlatPatternWindow : Window
         using (var fs = File.OpenRead(preview)) await bmpImg.SetSourceAsync(fs.AsRandomAccessStream());
         Ui(() =>
         {
+            if (version != _workVersion) return;
             _resultPreview.Width = 840;
             _resultPreview.Height = bmpImg.PixelWidth > 0 ? 840.0 * bmpImg.PixelHeight / bmpImg.PixelWidth : double.NaN;
             _resultPreview.Source = bmpImg;
@@ -402,28 +461,44 @@ public sealed class FlatPatternWindow : Window
 
     private async Task RefreshPreviewAsync()
     {
-        if (_refreshing || _running || _model == null || _closed) return;
+        if (_running || _model == null || _closed) return;
         var source = CurrentSource();
-        if (source.Length == 0) return;
-        _refreshing = true;
+        if (source.Length == 0)
+        {
+            InvalidateResult("请先点「生成平面图纸」生成当前风格的参考图。");
+            return;
+        }
+        CancelWork();
+        var version = _workVersion;
+        var cts = new CancellationTokenSource(TimeSpan.FromMinutes(2));
+        _cts = cts;
         try
         {
             _status.Text = "更新像素化预览…";
-            var cts = new CancellationTokenSource(TimeSpan.FromMinutes(2));
             var res = await BuildAsync(source, new Progress<string>(), cts.Token);
+            if (version != _workVersion) return;
             _model = res.Model;
-            await ShowPreviewAsync(res.Model, cts.Token);
+            await ShowPreviewAsync(res.Model, cts.Token, version);
+            if (version != _workVersion) return;
             _sizeInfo.Text = $"{res.Model.SX}×{res.Model.SY} 颗 · 约 {res.Model.SX * _s.Settings.BeadPitchMm / 10:F1}×{res.Model.SY * _s.Settings.BeadPitchMm / 10:F1} cm";
             _status.Text = $"{res.Model.SX}×{res.Model.SY} 颗 · {res.Model.CountSolid():N0} 颗 · {res.Model.Palette.Count - 1} 色";
             _exportBtn.IsEnabled = true;
         }
-        catch (Exception e) { _status.Text = "预览更新失败：" + e.Message; }
-        finally { _refreshing = false; }
+        catch (OperationCanceledException) { }
+        catch (Exception e)
+        {
+            if (version == _workVersion) _status.Text = "预览更新失败：" + e.Message;
+        }
+        finally
+        {
+            cts.Dispose();
+            if (version == _workVersion) _cts = null;
+        }
     }
 
     private string CurrentSource()
     {
-        if (_style == 0 && _aiPath.Length > 0 && File.Exists(_aiPath)) return _aiPath;
+        if (_style == 0) return _aiPath.Length > 0 && File.Exists(_aiPath) ? _aiPath : "";
         if (_removeBg && _preppedPath.Length > 0 && File.Exists(_preppedPath)) return _preppedPath;
         return _sourcePath;
     }
@@ -455,6 +530,7 @@ public sealed class FlatPatternWindow : Window
         pick.FileTypeFilter.Add("*");
         var folder = await pick.PickSingleFolderAsync();
         if (folder == null) return;
+        CancelWork();
         var title = System.IO.Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(_title.Text) ? "平面拼豆" : _title.Text.Trim());
         var safe = string.Concat(title.Select(ch => System.IO.Path.GetInvalidFileNameChars().Contains(ch) ? '_' : ch));
         var outDir = System.IO.Path.Combine(folder.Path, "平面拼豆_" + safe + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss"));

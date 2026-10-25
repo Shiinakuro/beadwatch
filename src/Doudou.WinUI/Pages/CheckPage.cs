@@ -30,6 +30,7 @@ public sealed class CheckPage : IStepPage
     private LeakReport? _rep;
     private AssemblyPlan? _plan;
     private ModelPartsReport? _parts;
+    private Dictionary<int, bool>? _visibilityBefore;
 
     public CheckPage(IHost h)
     {
@@ -54,7 +55,23 @@ public sealed class CheckPage : IStepPage
         View = root;
     }
 
-    public void OnEnter() { }
+    public void OnEnter() => _visibilityBefore = S.Model.PartList.ToDictionary(p => p.Id, p => p.Visible);
+
+    public void OnLeave()
+    {
+        RestoreVisibility();
+        _visibilityBefore = null;
+        S.Highlight.Clear();
+        S.RaiseChanged();
+    }
+
+    private void RestoreVisibility()
+    {
+        if (_visibilityBefore == null) return;
+        foreach (var p in S.Model.PartList)
+            if (_visibilityBefore.TryGetValue(p.Id, out var visible)) p.Visible = visible;
+        S.RaiseChanged();
+    }
 
     private static Border Badge(string text, bool bad) => new()
     {
@@ -66,6 +83,16 @@ public sealed class CheckPage : IStepPage
 
     private async Task Run()
     {
+        if (S.Model.CountSolid() == 0)
+        {
+            _rep = null;
+            _badges.Children.Clear();
+            _items.Items.Clear();
+            _items.Visibility = Visibility.Collapsed;
+            _summary.Text = "";
+            _banner.Content = Theme.Banner(false, "模型还是空的，请先导入或搭建模型。");
+            return;
+        }
         var m = S.Model;
         var refs = _withRef ? S.RefViews() : new();
         await _h.RunAsync("漏色检查", async (p, ct) =>
@@ -125,7 +152,18 @@ public sealed class CheckPage : IStepPage
 
     private async Task Assembly()
     {
-        if (S.Model.CountSolid() == 0) { _asm.Text = "模型还是空的。"; return; }
+        RestoreVisibility();
+        _steps.SelectedIndex = -1;
+        if (S.Model.CountSolid() == 0)
+        {
+            _plan = null;
+            _parts = null;
+            _steps.Items.Clear();
+            _steps.Visibility = Visibility.Collapsed;
+            _asmBanner.Content = null;
+            _asm.Text = "模型还是空的，请先导入或搭建模型。";
+            return;
+        }
         var model = S.Model.Clone();
         await _h.RunAsync("验证装配顺序", async (p, ct) =>
         {

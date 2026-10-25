@@ -60,6 +60,7 @@ public sealed class MainWindow : Window, IHost
     private readonly TextBlock _stats = new() { FontSize = 12, VerticalAlignment = VerticalAlignment.Center };
     private readonly TextBlock _hover = new() { FontSize = 12, VerticalAlignment = VerticalAlignment.Center, Foreground = Brush("TextFillColorSecondaryBrush"), Margin = new Thickness(16, 0, 0, 0) };
     private readonly Button _undo, _redo;
+    private readonly StackPanel _titleActions = new() { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
     private readonly Grid _busy = new() { Visibility = Visibility.Collapsed };
     private readonly TextBlock _busyTitle = new() { Style = Style("BodyStrongTextBlockStyle"), FontSize = 16 };
     private readonly TextBlock _busyText = new() { TextWrapping = TextWrapping.Wrap, Foreground = Brush("TextFillColorSecondaryBrush"), MaxWidth = 420 };
@@ -126,8 +127,8 @@ public sealed class MainWindow : Window, IHost
         BuildLayout();
         _onboarding = new Onboarding(this, new[]
         {
-            new TourStop("从照片开始", "上传 3~6 张同一物体的照片，自动生成三维拼豆模型。也可以打开已有工程，或从空白画布搭起。",
-                () => _welcomeImportTile, "第一次使用，从这里进入导入页。", false),
+            new TourStop("选择开始方式", "导入照片或 OBJ / GLB / STL / VOX，也可以从空白画布搭建。只做平面图纸时，使用左侧「平面 · 拼豆」。",
+                () => _welcomeImportTile, "先进入导入页，或打开已有作品。", false),
             new TourStop("五步制作流程", "导入 → 编辑 → 拆分 → 检查 → 导出，左侧按顺序走完就是一件可施工的作品。随时可以点回上一步。",
                 () => _nav.MenuItems.FirstOrDefault() as FrameworkElement, "五步各有独立页面。"),
             new TourStop("动作与笔刷", "数字键 1~5 切换贴豆、擦除、上色、零件、选择；字母键切换笔刷。按住拖动可以连续绘制。",
@@ -206,20 +207,19 @@ public sealed class MainWindow : Window, IHost
         drag.Children.Add(brand);
         Grid.SetColumnSpan(drag, 2);
         bar.Children.Add(drag);
-        var actions = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
-        actions.Children.Add(IconBtn("", "新建空白模型 (Ctrl+N)", async () => await NewBlankAsync()));
-        actions.Children.Add(IconBtn("", "打开工程 / 模型 (Ctrl+O)", async () => await OpenDialogAsync()));
-        actions.Children.Add(IconBtn("", "保存工程 (Ctrl+S)", async () => await SaveAsync(false)));
-        actions.Children.Add(new AppBarSeparator());
-        actions.Children.Add(_undo);
-        actions.Children.Add(_redo);
-        actions.Children.Add(new AppBarSeparator());
-        actions.Children.Add(IconBtn(G.Account, "账号与云端同步", () => OpenAccount()));
+        _titleActions.Children.Add(IconBtn("", "新建空白模型 (Ctrl+N)", async () => await NewBlankAsync()));
+        _titleActions.Children.Add(IconBtn("", "打开工程 / 模型 (Ctrl+O)", async () => await OpenDialogAsync()));
+        _titleActions.Children.Add(IconBtn("", "保存工程 (Ctrl+S)", async () => await SaveAsync(false)));
+        _titleActions.Children.Add(new AppBarSeparator());
+        _titleActions.Children.Add(_undo);
+        _titleActions.Children.Add(_redo);
+        _titleActions.Children.Add(new AppBarSeparator());
+        _titleActions.Children.Add(IconBtn(G.Account, "账号与云端同步", () => OpenAccount()));
         var help = IconBtn("", "使用帮助与快捷键", async () => await ShowHelpAsync());
         _helpButton = help;
-        actions.Children.Add(help);
-        Grid.SetColumn(actions, 2);
-        bar.Children.Add(actions);
+        _titleActions.Children.Add(help);
+        Grid.SetColumn(_titleActions, 2);
+        bar.Children.Add(_titleActions);
         _root.Children.Add(bar);
         _dragRegion = drag;
 
@@ -250,7 +250,7 @@ public sealed class MainWindow : Window, IHost
             Content = "平面 · 拼豆", Tag = 7, SelectsOnInvoked = false,
             Icon = new FontIcon { Glyph = G.Grid },
         };
-        ToolTipService.SetToolTip(flatItem, "单图 → AI 生图 → 像素化 → 平面图纸");
+        ToolTipService.SetToolTip(flatItem, "单图 → 可选 AI 平涂 → 像素化 → 平面图纸");
         _nav.MenuItems.Add(flatItem);
         _nav.ItemInvoked += (_, e) =>
         {
@@ -293,7 +293,11 @@ public sealed class MainWindow : Window, IHost
         _root.KeyDown += OnKeyDown;
         _root.KeyUp += (_, e) => { if (e.Key == VirtualKey.Space) View.SetSpace(false); };
         _root.AllowDrop = true;
-        _root.DragOver += (_, e) => { e.AcceptedOperation = DataPackageOperation.Copy; e.DragUIOverride.Caption = "导入到" + Theme.AppName; };
+        _root.DragOver += (_, e) =>
+        {
+            e.AcceptedOperation = !_busyNow && e.DataView.Contains(StandardDataFormats.StorageItems) ? DataPackageOperation.Copy : DataPackageOperation.None;
+            e.DragUIOverride.Caption = "导入图片、工程或模型";
+        };
         _root.Drop += OnDrop;
     }
 
@@ -420,7 +424,7 @@ public sealed class MainWindow : Window, IHost
         sp.Children.Add(new TextBlock { Text = Theme.Slogan + "！", HorizontalAlignment = HorizontalAlignment.Center, FontSize = 15, Foreground = Theme.B(Theme.Orange), FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
         sp.Children.Add(new TextBlock
         {
-            Text = "上传 3~6 张同一物体的照片重建模型，手工修形、拆成零件，再生成整套图纸。",
+            Text = "从照片或三维模型生成拼豆作品，也可以直接制作平面图纸。",
             TextWrapping = TextWrapping.Wrap, TextAlignment = TextAlignment.Center, Foreground = Brush("TextFillColorSecondaryBrush"),
         });
         var choose = Theme.Heading("选择开始方式", "START A PROJECT", 22);
@@ -461,7 +465,7 @@ public sealed class MainWindow : Window, IHost
             Grid.SetColumn(b, col);
             grid.Children.Add(b);
         }
-        Tile(0, "导入 · IMPORT", Theme.Orange, G.Photo, "从图片开始", "照片 → AI 视图 → 三维重建", () => { _welcomeDismissed = true; UpdateWelcome(); GoStep(1); });
+        Tile(0, "导入 · IMPORT", Theme.Orange, G.Photo, "导入素材", "照片 / OBJ / GLB / STL / VOX", () => { _welcomeDismissed = true; UpdateWelcome(); GoStep(1); });
         Tile(1, "打开 · OPEN", Theme.Blue, G.Open, "打开作品", ".doudou / .vox / 三维网格", async () => await OpenDialogAsync());
         Tile(2, "新建 · NEW", Theme.Green, G.Cube, "空白画布", "从零搭建体素模型", async () => await NewBlankAsync());
         sp.Children.Add(grid);
@@ -474,7 +478,7 @@ public sealed class MainWindow : Window, IHost
         });
         flatText.Children.Add(new TextBlock
         {
-            Text = "上传 1 张图 → AI 卡通平涂 → 像素化 → 导出带色号的平面图纸",
+            Text = "上传 1 张图，直接像素化或先用 AI 平涂，导出带色号的图纸",
             FontSize = 12, TextWrapping = TextWrapping.Wrap, Foreground = Brush("TextFillColorSecondaryBrush"),
         });
         var flatContent = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 14 };
@@ -547,7 +551,7 @@ public sealed class MainWindow : Window, IHost
         top.Children.Add(_previewPick);
         top.Children.Add(Btn("适合宽度", FitPreview, ""));
         top.Children.Add(Btn("打开文件夹", () => { if (Directory.Exists(_previewFolder)) System.Diagnostics.Process.Start("explorer.exe", _previewFolder); }, ""));
-        top.Children.Add(Btn("返回三维视图", () => _preview.Visibility = Visibility.Collapsed, "", accent: true));
+        top.Children.Add(Btn("关闭预览", () => _preview.Visibility = Visibility.Collapsed, "", accent: true));
         _preview.Children.Add(top);
         _previewScroll.Content = _previewImage;
         Grid.SetRow(_previewScroll, 1);
@@ -658,7 +662,10 @@ public sealed class MainWindow : Window, IHost
         _busyCancel.Visibility = cancellable ? Visibility.Visible : Visibility.Collapsed;
         _busy.Visibility = Visibility.Visible;
         _panelHost.IsEnabled = false;
-        _nav.IsEnabled = false;   // 任务进行中不允许换页/新建，否则结果会盖掉用户刚打开的东西
+        _nav.IsEnabled = false;
+        foreach (var control in _titleActions.Children.OfType<Control>()) control.IsEnabled = false;
+        _root.AllowDrop = false;
+        UpdateChrome();
         var progress = new Progress<string>(s => _busyText.Text = s);
         try
         {
@@ -676,8 +683,11 @@ public sealed class MainWindow : Window, IHost
             _busy.Visibility = Visibility.Collapsed;
             _panelHost.IsEnabled = true;
             _nav.IsEnabled = true;
+            foreach (var control in _titleActions.Children.OfType<Control>()) control.IsEnabled = true;
+            _root.AllowDrop = true;
             _busyCts.Dispose();
             _busyCts = null;
+            UpdateChrome();
         }
     }
 
@@ -755,15 +765,15 @@ public sealed class MainWindow : Window, IHost
         var name = S.ProjectPath != null ? Path.GetFileName(S.ProjectPath) : S.Meta.Title;
         _projectName.Text = name + (S.Dirty ? "  ●" : "");
         Title = $"{Theme.AppName} · {name}";
-        _undo.IsEnabled = S.History.CanUndo;
-        _redo.IsEnabled = S.History.CanRedo;
+        _undo.IsEnabled = !_busyNow && S.History.CanUndo;
+        _redo.IsEnabled = !_busyNow && S.History.CanRedo;
         ToolTipService.SetToolTip(_undo, S.History.CanUndo ? $"撤销：{S.History.UndoName} (Ctrl+Z)" : "撤销 (Ctrl+Z)");
         ToolTipService.SetToolTip(_redo, S.History.CanRedo ? $"重做：{S.History.RedoName} (Ctrl+Y)" : "重做 (Ctrl+Y)");
     }
 
     private async Task<bool> ConfirmDiscardAsync()
     {
-        if (!S.Dirty || S.Model.CountSolid() == 0) return true;
+        if (!S.Dirty) return true;
         var dlg = new ContentDialog
         {
             Title = "保存修改？", Content = "当前作品有未保存的修改。", PrimaryButtonText = "保存", SecondaryButtonText = "不保存", CloseButtonText = "取消",
@@ -807,7 +817,14 @@ public sealed class MainWindow : Window, IHost
 
     private async Task OpenAnyAsync(string path)
     {
+        if (_busyNow) { Notify("请等待当前任务完成", InfoBarSeverity.Warning); return; }
         var ext = Path.GetExtension(path).ToLowerInvariant();
+        if (ext is not (".doudou" or ".vox" or ".obj" or ".glb" or ".stl"))
+        {
+            Notify("不支持此文件。可打开 .doudou / .vox / .obj / .glb / .stl，或拖入 PNG / JPG / WebP / BMP 图片。", InfoBarSeverity.Warning);
+            return;
+        }
+        if (!File.Exists(path)) { Notify("文件不存在或已被移动：" + path, InfoBarSeverity.Error); return; }
         if (ext == ".doudou") { await OpenProjectAsync(path); return; }
         if (!await ConfirmDiscardAsync()) return;
         if (ext == ".vox")
@@ -950,7 +967,7 @@ public sealed class MainWindow : Window, IHost
             "【选择】Shift 加选，Ctrl 减选；Delete 删除所选；Esc 取消\n" +
             "【文件】Ctrl+N 新建　Ctrl+O 打开　Ctrl+S 保存　Ctrl+Z/Y 撤销/重做\n\n" +
             "流程：① 导入图片重建 → ② 编辑修形上色 → ③ 拆成可熨烫的平板零件 → ④ 检查漏色与装配 → ⑤ 导出图纸。\n\n" +
-            "平面拼豆：左侧「平面 · 拼豆」→ 上传 1 张图 → AI 卡通平涂 → 像素化 → 导出 PNG / PDF / 材料清单。";
+            "平面拼豆：左侧「平面 · 拼豆」→ 上传 1 张图 → 直接像素化或 AI 平涂 → 导出 PNG / PDF / 材料清单。";
         var dlg = new ContentDialog
         {
             Title = "使用帮助", Content = new TextBlock { Text = text, TextWrapping = TextWrapping.Wrap },
@@ -961,16 +978,17 @@ public sealed class MainWindow : Window, IHost
 
     private async void OnDrop(object sender, DragEventArgs e)
     {
-        if (!e.DataView.Contains(StandardDataFormats.StorageItems)) return;
+        if (_busyNow || !e.DataView.Contains(StandardDataFormats.StorageItems)) return;
         var items = await e.DataView.GetStorageItemsAsync();
         var paths = items.Select(i => i.Path).Where(p => !string.IsNullOrEmpty(p)).ToList();
         if (paths.Count == 0) return;
-        var ext = Path.GetExtension(paths[0]).ToLowerInvariant();
-        if (ext is ".png" or ".jpg" or ".jpeg" or ".webp" or ".bmp")
+        var images = paths.Where(p => Path.GetExtension(p).ToLowerInvariant() is ".png" or ".jpg" or ".jpeg" or ".webp" or ".bmp").ToList();
+        if (images.Count > 0)
         {
+            if (images.Count != paths.Count) Notify("已忽略不支持的文件，只导入图片。", InfoBarSeverity.Warning);
             _welcomeDismissed = true;
             GoStep(1);
-            ((ImportPage)_pages[0]).AddImages(paths);
+            ((ImportPage)_pages[0]).AddImages(images);
         }
         else await OpenAnyAsync(paths[0]);
     }
@@ -981,6 +999,7 @@ public sealed class MainWindow : Window, IHost
 
     private async void OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
+        if (_busyNow) { e.Handled = true; return; }
         if (e.OriginalSource is TextBox or NumberBox or PasswordBox or AutoSuggestBox) return;
         bool ctrl = KeyDown(VirtualKey.Control), shift = KeyDown(VirtualKey.Shift);
         if (ctrl)
@@ -1052,11 +1071,25 @@ public sealed class MainWindow : Window, IHost
         Notify($"剖切：显示 {"XYZ"[S.ClipAxis]} = {S.ClipMin} … {S.ClipMax}（Home 关闭）");
     }
 
+    private bool _closing;
+
     private async void OnClosing(AppWindow sender, AppWindowClosingEventArgs args)
     {
-        if (!S.Dirty || S.Model.CountSolid() == 0) return;
+        if (_busyNow)
+        {
+            args.Cancel = true;
+            Notify("请先等待当前任务完成，或取消任务后再关闭。", InfoBarSeverity.Warning);
+            return;
+        }
+        if (!S.Dirty) return;
         args.Cancel = true;
-        if (await ConfirmDiscardAsync()) { S.Dirty = false; Close(); }
+        if (_closing) return;
+        _closing = true;
+        try
+        {
+            if (await ConfirmDiscardAsync()) { S.Dirty = false; Close(); }
+        }
+        finally { _closing = false; }
     }
 
     private void OnClosed(object sender, WindowEventArgs args)
