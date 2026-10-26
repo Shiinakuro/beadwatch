@@ -1176,6 +1176,8 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
   }
 
   async function getManifest(signal) {
+    // Qoder 站不托管安装包分片，直接走 GitHub Releases，避免一次无意义的 404 探测。
+    if (location.hostname.endsWith(".qoder.zone")) throw new Error("manifest not hosted on Qoder");
     const res = await fetch("download/installer.json", { cache: "no-store", signal });
     if (!res.ok) throw new Error("manifest HTTP " + res.status);
     const data = await res.json();
