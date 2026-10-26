@@ -1390,6 +1390,11 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(79,195,247,.16);pad
 
   btn.addEventListener("click", async () => {
     if (busy) return;
+    if (location.hostname.endsWith(".qoder.zone")) {
+      note("此页不托管安装包，正在前往 GitHub Releases…");
+      window.location.href = "https://github.com/Shiinakuro/beadwatch/releases/latest";
+      return;
+    }
     busy = true; btn.disabled = true;
     cancel.style.display = "block"; bar.style.display = "block"; fill.style.width = "0%"; pct.textContent = "0%";
     msg.textContent = "连接部署服务器…"; status.classList.remove("err");
