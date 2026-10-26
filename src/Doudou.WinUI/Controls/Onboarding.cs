@@ -13,7 +13,7 @@ using Rectangle = Microsoft.UI.Xaml.Shapes.Rectangle;
 namespace Doudou.WinUI.Controls;
 
 /// <summary>主界面导览的一站：说明文字 + 要打亮的真实控件。</summary>
-public sealed record TourStop(string Title, string Body, Func<FrameworkElement?> Target, string Hint = "", bool NeedsWorkspace = true);
+public sealed record TourStop(string Title, string Body, Func<FrameworkElement?> Target, string Hint = "", bool NeedsWorkspace = true, Action? Before = null);
 
 /// <summary>
 /// 首次启动引导：第一步选择本地 AI 依赖，第二步填写生图 API，最后在主界面上用聚光灯逐项介绍真实按钮。
@@ -756,6 +756,9 @@ public sealed class Onboarding : Grid
                     await Task.Delay(80);
                     UpdateLayout();
                 }
+                stop.Before?.Invoke();
+                await Task.Delay(80);
+                UpdateLayout();
                 var target = stop.Target();
                 if (target == null || !IsReallyVisible(target)) continue;
 

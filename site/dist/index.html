@@ -629,7 +629,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
       <a href="https://github.com/shiinakuro/beadwatch" target="_blank" rel="noopener">GitHub</a>
     </nav>
     <div class="top-act">
-      <span class="ver">v1.3.1</span>
+      <span class="ver">v1.4.0</span>
       <a class="account-top" href="https://beadwatch-cloud-7c28q17g8xc.qoder.zone/account.html" target="_blank" rel="noopener">账号</a>
       <a class="btn btn-primary btn-sm" href="#download">下载</a>
     </div>
@@ -956,10 +956,20 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
         <p class="eyebrow">RELEASE</p>
         <h2>全新发布</h2>
       </div>
-      <p class="sec-note"><b>v1.3.1 加密 API Key 同步</b>。Windows 10 / 11 自包含安装程序，不需要另行安装 .NET 或 Windows App SDK。</p>
+      <p class="sec-note"><b>v1.4.0 建模细节与操作体验</b>。Windows 10 / 11 自包含安装程序，不需要另行安装 .NET 或 Windows App SDK。</p>
     </div>
     <div class="log">
       <article class="entry now reveal">
+        <div class="vline"><span class="badge">RELEASE</span><h3>v1.4.0</h3><time>2026-10-27</time></div>
+        <ul>
+          <li><b>纹理取色重做：</b>按三角面重心坐标精确采样 UV，100 颗高也能保留眼睛、嘴线、描边和配饰细节；不再用“最近顶点”取色。</li>
+          <li><b>去光照更通用：</b>移除只适配单一角色配色的 7 色压平，改为同色相明暗压缩，其他角色和模型也能保持原本配色。</li>
+          <li><b>在线混元 3.1 多视图：</b>有背/左/右/顶/底参考视图时会一起提交，形体更准确；接口不支持时自动回退单图。</li>
+          <li><b>操作体验重排：</b>每页固定底部主操作；显示选项收进右上角「显示」；导入/检查/导出只读预览，设置页禁止误改模型。</li>
+          <li><b>少走弯路：</b>默认豆高改为 64；零件页会预估零件数，超过 30 个自动切回按颜色显示并提示降低豆高 / 合并碎件。</li>
+        </ul>
+      </article>
+      <article class="entry reveal">
         <div class="vline"><span class="badge">RELEASE</span><h3>v1.3.1</h3><time>2026-10-24</time></div>
         <ul>
           <li><b>API Key 加密同步：</b>生图与混元 Key、接口地址先在桌面端加密，再随账号同步；云端只保存密文。</li>
@@ -1066,8 +1076,8 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
       </div>
       <div class="dl-side">
         <div class="dl-box">
-          <div class="dl-name" id="dlName">拼豆先锋_v1.3.1_安装程序.exe</div>
-          <div class="dl-sub"><span>v1.3.1 · SELF-CONTAINED</span><span>117.2 MB</span></div>
+          <div class="dl-name" id="dlName">拼豆先锋_v1.4.0_安装程序.exe</div>
+          <div class="dl-sub"><span>v1.4.0 · SELF-CONTAINED</span><span>117.2 MB</span></div>
           <div class="dl-actions">
             <button class="btn btn-primary dl-btn" id="dlBtn" type="button">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M5 21h14"/></svg>
@@ -1084,7 +1094,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
           <a class="dl-alt" href="https://github.com/shiinakuro/beadwatch/releases/latest" target="_blank" rel="noopener">GitHub Releases 直链</a>
           <details class="sha">
             <summary>SHA-256 校验</summary>
-            <code id="shaText">bee037128e6afc569e950b0d477c16c176427ae777356c3c2cf2ab0766c23bb6</code>
+            <code id="shaText">4ba4237c69a3531bab04c832d99c705163628fd0aa826a184bf4d0687ed41e06</code>
             <button class="copy" id="shaCopy" type="button">复制校验值</button>
           </details>
         </div>
@@ -1136,7 +1146,7 @@ h1 em::after{height:9px;left:0;right:0;bottom:0;z-index:-1;background:radial-gra
   const cancel = document.getElementById("dlCancel");
   const shaCopy = document.getElementById("shaCopy");
   const shaText = document.getElementById("shaText");
-  const meta = { name: "拼豆先锋_v1.3.1_安装程序.exe", size: 122841077 };
+  const meta = { name: "拼豆先锋_v1.4.0_安装程序.exe", size: 122852468 };
   let busy = false;
   let ac = null;
 

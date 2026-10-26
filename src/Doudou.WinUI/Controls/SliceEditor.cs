@@ -36,6 +36,28 @@ public sealed class SliceEditor : Grid
     private readonly ToggleButton _clip3d = TextToggle("三维只显示到本层", "三维视图只显示到当前层，像一层层搭起来", 118);
 
     public Tool Current { get; private set; } = Tool.Pen;
+
+    private bool _editEnabled = true;
+    private ScrollViewer _toolsScroll = null!;
+    private readonly TextBlock _readOnlyLabel = new()
+    {
+        Text = "只读预览 · 回编辑页修改", FontSize = Theme.F2, Foreground = Theme.B(Theme.Text3),
+        VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(Theme.S3, 0, Theme.S3, 0),
+        Visibility = Visibility.Collapsed,
+    };
+
+    /// <summary>只读时仍可平移/缩放/换层，但不会修改模型。</summary>
+    public bool EditEnabled
+    {
+        get => _editEnabled;
+        set
+        {
+            _editEnabled = value;
+            if (_toolsScroll == null) return;
+            _toolsScroll.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+            _readOnlyLabel.Visibility = value ? Visibility.Collapsed : Visibility.Visible;
+        }
+    }
     /// <summary>切片轴：0=X（侧视）、1=Y（俯视，水平层，默认）、2=Z（正视）。</summary>
     public int Axis { get; private set; } = 1;
     public int Layer { get; private set; }
@@ -127,7 +149,9 @@ public sealed class SliceEditor : Grid
         var foot = new Grid { Background = Theme.B(Theme.Surface2) };
         foot.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         foot.ColumnDefinitions.Add(new ColumnDefinition());
-        foot.Children.Add(new ScrollViewer { Content = tools, HorizontalScrollBarVisibility = ScrollBarVisibility.Auto, VerticalScrollBarVisibility = ScrollBarVisibility.Disabled, HorizontalScrollMode = ScrollMode.Enabled, VerticalScrollMode = ScrollMode.Disabled });
+        _toolsScroll = new ScrollViewer { Content = tools, HorizontalScrollBarVisibility = ScrollBarVisibility.Auto, VerticalScrollBarVisibility = ScrollBarVisibility.Disabled, HorizontalScrollMode = ScrollMode.Enabled, VerticalScrollMode = ScrollMode.Disabled };
+        foot.Children.Add(_toolsScroll);
+        foot.Children.Add(_readOnlyLabel);
         _hover.Margin = new Thickness(Theme.S3, 0, Theme.S3, 0);
         _hover.HorizontalAlignment = HorizontalAlignment.Right;
         Grid.SetColumn(_hover, 1);
@@ -350,6 +374,7 @@ public sealed class SliceEditor : Grid
         _surface.CapturePointer(e.Pointer);
         if (pt.Properties.IsRightButtonPressed || pt.Properties.IsMiddleButtonPressed) { _panning = true; _panLast = pt.Position; return; }
         if (!pt.Properties.IsLeftButtonPressed) return;
+        if (!EditEnabled) return;
         if (_s.Explode > 1.01f) { Message?.Invoke("爆炸预览中不能编辑，请先把爆炸系数调回 1"); return; }
         var hit = HitCell(pt.Position);
         if (hit == null) return;
@@ -381,6 +406,7 @@ public sealed class SliceEditor : Grid
             var part = M.Parts[i] != 0 ? M.FindPart(M.Parts[i]) : null;
             _hover.Text = $"列 {h.C + 1} 行 {h.R + 1}  ·  {(M.Colors[i] == 0 ? "空" : M.Palette[M.Colors[i]].ToString())}{(part != null ? "  ·  " + part.Name : "")}";
         }
+        if (!EditEnabled) return;
         if (!_drawing || hit == null) return;
         if (Current == Tool.Rect) { _rectEnd = hit.Value; QueueRedraw(); return; }
         StrokeTo(hit.Value);

@@ -95,7 +95,8 @@ public sealed class FlatPatternWindow : Window
         }
 
         _runBtn = WideBtn("生成平面图纸", async () => await GenerateAsync(), G.Magic);
-        _exportBtn = WideBtn("导出 PNG / PDF / 清单", async () => await ExportAsync(), G.Print, accent: false);
+        _runBtn.IsEnabled = false;
+        _exportBtn = Btn("导出 PNG / PDF / 清单", async () => await ExportAsync(), G.Print);
         _exportBtn.IsEnabled = false;
         _pickBtn = Btn("选择一张图片", async () => await PickSourceAsync(), G.Photo, accent: true);
         _openBtn = Btn("打开输出文件夹", () => OpenFolder(), G.Folder);
@@ -260,8 +261,7 @@ public sealed class FlatPatternWindow : Window
         var foot = new StackPanel { Spacing = 6, Margin = new Thickness(0, 10, 0, 0) };
         foot.Children.Add(_runBtn);
         foot.Children.Add(_status);
-        foot.Children.Add(_exportBtn);
-        foot.Children.Add(Flow(_openBtn));
+        foot.Children.Add(Flow(_exportBtn, _openBtn));
         Grid.SetRow(foot, 1);
         outer.Children.Add(foot);
         return outer;
@@ -577,7 +577,7 @@ public sealed class FlatPatternWindow : Window
         _running = busy;
         _leftPanel.IsHitTestVisible = !busy;
         _leftPanel.Opacity = busy ? 0.55 : 1;
-        _runBtn.IsEnabled = !busy;
+        _runBtn.IsEnabled = !busy && _sourcePath.Length > 0;
         _pickBtn.IsEnabled = !busy;
         _exportBtn.IsEnabled = !busy && _model != null;
         _openBtn.IsEnabled = !busy && _exportFolder.Length > 0;

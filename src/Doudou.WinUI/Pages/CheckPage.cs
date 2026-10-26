@@ -16,16 +16,19 @@ public sealed class CheckPage : IStepPage
     public string Header => "检查";
     public string Description => "检查漏色、漏拆和装配可行性；点击问题可在视图中定位";
     public UIElement View { get; }
+    public UIElement? Footer { get; }
 
     private readonly IHost _h;
     private Session S => _h.S;
-    private readonly StackPanel _badges = new() { Orientation = Orientation.Horizontal, Spacing = 6 };
+    private readonly ItemsWrap _badges = new() { HSpacing = 6, VSpacing = 6 };
     private readonly TextBlock _summary = new() { TextWrapping = TextWrapping.Wrap };
     private readonly ContentControl _banner = new() { HorizontalContentAlignment = HorizontalAlignment.Stretch };
     private readonly ContentControl _asmBanner = new() { HorizontalContentAlignment = HorizontalAlignment.Stretch };
     private readonly ListView _items = new() { MaxHeight = 300, SelectionMode = ListViewSelectionMode.Single, Visibility = Visibility.Collapsed };
     private readonly ListView _steps = new() { MaxHeight = 280, SelectionMode = ListViewSelectionMode.Single, Visibility = Visibility.Collapsed };
     private readonly TextBlock _asm = new() { TextWrapping = TextWrapping.Wrap };
+    private Button _highlightAll = null!, _clearHighlight = null!;
+    private Button _prevStep = null!, _nextStep = null!;
     private bool _withRef = true;
     private LeakReport? _rep;
     private AssemblyPlan? _plan;
@@ -37,25 +40,63 @@ public sealed class CheckPage : IStepPage
         _h = h;
         var root = new StackPanel();
         _items.SelectionChanged += (_, _) => Locate();
+        _highlightAll = Btn("高亮全部问题", HighlightAll, G.Lightning);
+        _highlightAll.IsEnabled = false;
+        _clearHighlight = Btn("清除高亮", () => { S.Highlight.Clear(); S.RaiseChanged(); });
         root.Children.Add(Card("漏色检查",
             "① 任意色内芯是否露在外面 ② 外壳破洞（能看到内部）③ 没分到零件 / 不能熨烫的零件 ④ 悬空豆 ⑤ 与参考图的颜色差异",
             Check("与参考视图逐格比色", _withRef, v => _withRef = v),
-            WideBtn("开始检查", async () => await Run(), G.Check),
             _banner, _badges, _summary, _items,
-            Flow(Btn("高亮全部问题", HighlightAll, G.Lightning), Btn("清除高亮", () => { S.Highlight.Clear(); S.RaiseChanged(); }))));
+            Flow(_highlightAll, _clearHighlight)));
 
         _steps.SelectionChanged += (_, _) => ShowStep();
+        _prevStep = Btn("上一步", async () => await Move(-1), G.Back);
+        _nextStep = Btn("下一步", async () => await Move(1), G.Play);
+        _prevStep.IsEnabled = _nextStep.IsEnabled = false;
         root.Children.Add(Card("装配验证",
             "逐件模拟：每一步新零件都要贴住已装好的零件，并能沿某个方向直线装进去而不撞到其他零件。",
             Btn("验证装配顺序", async () => await Assembly(), G.Play),
             _asmBanner, _asm, _steps,
-            Flow(Btn("上一步", async () => await Move(-1), G.Back), Btn("下一步", async () => await Move(1), G.Play), Btn("显示全部", () => { foreach (var p in S.Model.PartList) p.Visible = true; S.Highlight.Clear(); S.RaiseChanged(); }, G.Eye)),
+            Flow(_prevStep, _nextStep, Btn("显示全部", () => { foreach (var p in S.Model.PartList) p.Visible = true; S.Highlight.Clear(); S.RaiseChanged(); }, G.Eye)),
             Caption("装配动图：按上面的装配顺序把零件逐个「装」回成品，导出可循环 GIF 与逐帧 PNG，可直接发给客户或贴进教程。"),
             Flow(Btn("导出装配动图", async () => await ExportGif(), G.Camera))));
         View = root;
+        var footer = new StackPanel { Spacing = 2 };
+        var run = WideBtn("开始检查", () => _ = Run(), G.Check);
+        run.Margin = new Thickness(0);
+        footer.Children.Add(run);
+        footer.Children.Add(NextLink("下一步：导出 →", () => _h.GoStep(5)));
+        Footer = footer;
+        S.ContentChanged += () =>
+        {
+            if (_rep != null || _plan != null) _h.View.DispatcherQueue.TryEnqueue(Invalidate);
+        };
     }
 
     public void OnEnter() => _visibilityBefore = S.Model.PartList.ToDictionary(p => p.Id, p => p.Visible);
+
+    /// <summary>模型或零件被修改后，旧的检查/装配结果立即失效，避免用户照着过期结果施工。</summary>
+    private void Invalidate()
+    {
+        if (_rep == null && _plan == null) return;
+        _rep = null;
+        _plan = null;
+        _parts = null;
+        _badges.Children.Clear();
+        _items.Items.Clear();
+        _items.Visibility = Visibility.Collapsed;
+        _banner.Content = null;
+        _summary.Text = "模型已修改，请重新检查。";
+        _highlightAll.IsEnabled = false;
+        _asmBanner.Content = null;
+        _asm.Text = "";
+        _steps.Items.Clear();
+        _steps.Visibility = Visibility.Collapsed;
+        _prevStep.IsEnabled = _nextStep.IsEnabled = false;
+        RestoreVisibility();
+        S.Highlight.Clear();
+        S.RaiseChanged();
+    }
 
     public void OnLeave()
     {
@@ -91,6 +132,7 @@ public sealed class CheckPage : IStepPage
             _items.Visibility = Visibility.Collapsed;
             _summary.Text = "";
             _banner.Content = Theme.Banner(false, "模型还是空的，请先导入或搭建模型。");
+            _highlightAll.IsEnabled = false;
             return;
         }
         var m = S.Model;
@@ -111,6 +153,7 @@ public sealed class CheckPage : IStepPage
                 foreach (var it in g.OrderByDescending(i => i.Severity).Take(200))
                     _items.Items.Add(new ListViewItem { Content = new TextBlock { Text = it.Message, TextWrapping = TextWrapping.Wrap, FontSize = 12.5, Opacity = it.Kind == LeakKind.ColorMismatch ? 0.7 : 1 }, Tag = it });
             _items.Visibility = _items.Items.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+            _highlightAll.IsEnabled = _rep.Items.Count > 0;
             if (refs.Count == 0 && _withRef) _h.Notify("这个工程没有参考视图，已跳过外观比色");
             HighlightAll();
             bool clean = _rep.Items.All(i => i.Kind == LeakKind.ColorMismatch);
@@ -118,6 +161,7 @@ public sealed class CheckPage : IStepPage
             _banner.Content = Theme.Banner(clean, clean ? "没有漏色、破洞或漏拆的豆子。" : $"发现 {bad} 处问题，已在视图中标红；点条目可定位。");
             _h.Notify(clean ? "没有发现漏色问题" : "发现问题，已在视图中用红色高亮", clean ? InfoBarSeverity.Success : InfoBarSeverity.Warning);
         });
+        _highlightAll.IsEnabled = _rep?.Items.Count > 0;
     }
 
     private void HighlightAll()
@@ -162,6 +206,7 @@ public sealed class CheckPage : IStepPage
             _steps.Visibility = Visibility.Collapsed;
             _asmBanner.Content = null;
             _asm.Text = "模型还是空的，请先导入或搭建模型。";
+            _prevStep.IsEnabled = _nextStep.IsEnabled = false;
             return;
         }
         var model = S.Model.Clone();
@@ -184,12 +229,14 @@ public sealed class CheckPage : IStepPage
                 _steps.Visibility = Visibility.Collapsed;
                 _asm.Text = "还没有拆分零件，请先到「零件拆分」。";
                 _asmBanner.Content = null;
+                _prevStep.IsEnabled = _nextStep.IsEnabled = false;
                 return;
             }
             _asm.Text = plan.Summary + $"（用时 {plan.Seconds:F2} 秒）";
             _asmBanner.Content = Theme.Banner(plan.ComplexCount == 0,
                 plan.ComplexCount == 0 ? $"{plan.Steps.Count} 个零件全部能直线装入。" : $"{plan.ComplexCount} 个零件没有直线装入路径，需要试装或点胶。");
             _steps.Visibility = Visibility.Visible;
+            _prevStep.IsEnabled = _nextStep.IsEnabled = true;
             foreach (var st in plan.Steps)
                 _steps.Items.Add(new ListViewItem
                 {
@@ -201,6 +248,7 @@ public sealed class CheckPage : IStepPage
                     },
                 });
         });
+        _prevStep.IsEnabled = _nextStep.IsEnabled = _steps.Items.Count > 0;
     }
 
     private async Task Move(int d)

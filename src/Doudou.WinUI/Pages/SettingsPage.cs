@@ -11,6 +11,7 @@ public sealed class SettingsPage : IStepPage
     public string Header => "设置";
     public string Description => "AI 服务、本地模型与默认值";
     public UIElement View { get; }
+    public UIElement? Footer { get; }
 
     private readonly IHost _h;
     private readonly TextBox _api = new(), _author = new(), _wm = new();
@@ -116,10 +117,10 @@ public sealed class SettingsPage : IStepPage
             Caption("Key 保存在本机；登录后加密同步。照片会发送到所填服务商。"),
             Flow(providerHint, affiliate, providerTail)));
         root.Children.Add(Card("混元 3D 在线 API",
-            "可选。用腾讯混元 3.1 在线生成网格，适合显存不足或想要更高形体质量；会消耗腾讯云积分，照片会上传到腾讯云。",
+            "可选。用腾讯混元 3.1 在线生成网格，适合显存不足或想要更高形体质量；3.1 支持正面 + 背/左/右/顶/底多视图。会消耗腾讯云积分，照片会上传到腾讯云。",
             Row("接口地址", _hyBase), Row("API Key", _hyKey), _hyStatus,
             Flow(Btn("测试 Key", async () => await TestHunyuan3dApiAsync(), G.Refresh),
-                 Caption("单图约 20 积分/次；Key 加密同步。建议用正面图。")),
+                 Caption("单图约 20 积分/次；有标准视图时会一起提交，多视图更准。Key 加密同步。")),
             Caption("默认 endpoint：https://api.ai3d.cloud.tencent.com/v1/ai3d/submit；模型 3.1。")));
         root.Children.Add(Card("默认", null, Row("色卡", _brand), Row("作者/拆图", _author), Row("图纸水印", _wm), Row("豆径 mm", _pitch)));
         root.Children.Add(Card("本地 AI 模型",
@@ -131,12 +132,15 @@ public sealed class SettingsPage : IStepPage
             Caption("· 只装抠图（约 300 MB）就够用：可配合生图 API 或纯 CPU 轮廓雕刻。"),
             Caption("· 下载会自动测速选择最快镜像；大文件多线程分段，支持断点续传。"),
             _depNote, depActions, _depBar, _depPct, _depDetail));
-        root.Children.Add(WideBtn("保存设置", Save, G.Save));
         root.Children.Add(Card("关于", null,
             Theme.Heading(Theme.AppName, Theme.AppNameEn + " · v" + typeof(SettingsPage).Assembly.GetName().Version?.ToString(3), 22),
             Caption(Theme.Slogan + "。\n三维重建 · 编辑 · 拆件 · 检查 · 图纸导出"),
             Caption("数据保存在本机 userdata；登录后设置同步到云端。")));
         View = root;
+        var save = WideBtn("保存设置", Save, G.Save);
+        save.Margin = new Thickness(0);
+        ToolTipService.SetToolTip(save, "保存设置 (Ctrl+S)");
+        Footer = save;
     }
 
     public void OnEnter()
@@ -276,6 +280,9 @@ public sealed class SettingsPage : IStepPage
         _h.S.Settings.ImageModel = t;
         _h.S.Settings.Save();
     }
+
+    /// <summary>Ctrl+S 在设置页保存设置，而不是保存工程。</summary>
+    public void SaveFromShortcut() => Save();
 
     private void Save()
     {

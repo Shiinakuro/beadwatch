@@ -5,6 +5,7 @@ using Doudou.Core.Ops;
 using Doudou.Core.Recon;
 using Doudou.Editor;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
 using static Doudou.WinUI.UiKit;
 
@@ -16,6 +17,7 @@ public sealed class EditPage : IStepPage
     public string Header => "模型编辑";
     public string Description => "像 MagicaVoxel 一样直接在三维模型上贴豆、擦除、上色";
     public UIElement View { get; }
+    public UIElement? Footer { get; }
 
     private readonly IHost _h;
     private Session S => _h.S;
@@ -94,6 +96,9 @@ public sealed class EditPage : IStepPage
                  Btn("导出 .vox", async () => await ((MainWindow)_h).ExportVoxAsync(), G.Download))));
 
         View = root;
+        var next = WideBtn("下一步 · 拆分零件", () => _h.GoStep(3), G.Play);
+        next.Margin = new Thickness(0);
+        Footer = next;
         S.PropertyChanged += (_, _) => SyncCurrent();
         S.ModelReplaced += () => _h.View.DispatcherQueue.TryEnqueue(() => { RefreshPalette(); BuildBrandPalette(); UpdateClipRange(); });
         S.ModelChanged += () => _h.View.DispatcherQueue.TryEnqueue(() => { if (S.Model.Palette.Count != _paletteCount) RefreshPalette(); UpdateSel(); });
@@ -145,6 +150,7 @@ public sealed class EditPage : IStepPage
             ushort idx = (ushort)i;
             var b = new Button { Padding = new Thickness(0), Content = Swatch(bc.IsAny ? new Rgb(64, 74, 70) : bc.Rgb, 30, bc.IsAny ? "任" : null), Background = null, BorderThickness = new Thickness(0) };
             ToolTipService.SetToolTip(b, $"{bc}  {bc.Rgb.Hex}  ×{counts[i]:N0}");
+            AutomationProperties.SetName(b, $"{bc} {bc.Rgb.Hex}，用量 {counts[i]:N0}");
             b.Click += (_, _) => { S.CurrentColor = idx; SyncCurrent(); };
             var fly = new MenuFlyout();
             var use = new MenuFlyoutItem { Text = "选用" }; use.Click += (_, _) => { S.CurrentColor = idx; SyncCurrent(); };
@@ -168,6 +174,7 @@ public sealed class EditPage : IStepPage
             var cc = c;
             var b = new Button { Padding = new Thickness(0), Content = Swatch(c.Rgb, 26), Background = null, BorderThickness = new Thickness(0) };
             ToolTipService.SetToolTip(b, $"{brand.Title} {c.Code}  {c.Rgb.Hex}");
+            AutomationProperties.SetName(b, $"{brand.Title} {c.Code} {c.Rgb.Hex}");
             b.Click += (_, _) => { S.UseBrandColor(cc); RefreshPalette(); };
             _brandPalette.Children.Add(b);
         }

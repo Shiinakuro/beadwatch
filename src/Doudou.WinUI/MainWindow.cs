@@ -9,6 +9,7 @@ using Microsoft.UI;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
@@ -56,10 +57,12 @@ public sealed class MainWindow : Window, IHost
     private readonly TextBlock _panelLine = new() { FontSize = 12.5, TextWrapping = TextWrapping.Wrap, Foreground = Theme.B(Theme.Orange), Margin = new Thickness(0, 2, 0, 0) };
     private readonly TextBlock _panelDesc = Caption("");
     private readonly InfoBar _info = new() { IsOpen = false, IsClosable = true, Margin = new Thickness(0, 0, 0, 8) };
+    private DateTime _infoShownAt;
     private readonly TextBlock _projectName = new() { VerticalAlignment = VerticalAlignment.Center, Foreground = Brush("TextFillColorSecondaryBrush"), Margin = new Thickness(14, 0, 0, 0) };
     private readonly TextBlock _stats = new() { FontSize = 12, VerticalAlignment = VerticalAlignment.Center };
     private readonly TextBlock _hover = new() { FontSize = 12, VerticalAlignment = VerticalAlignment.Center, Foreground = Brush("TextFillColorSecondaryBrush"), Margin = new Thickness(16, 0, 0, 0) };
     private readonly Button _undo, _redo;
+    private Button? _saveButton;
     private readonly StackPanel _titleActions = new() { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
     private readonly Grid _busy = new() { Visibility = Visibility.Collapsed };
     private readonly TextBlock _busyTitle = new() { Style = Style("BodyStrongTextBlockStyle"), FontSize = 16 };
@@ -80,8 +83,16 @@ public sealed class MainWindow : Window, IHost
     private readonly Dictionary<int, ToggleButton> _modeButtons = new();
     private Button? _welcomeImportTile;
     private FrameworkElement? _toolbarHost;
+    private FrameworkElement? _viewBarHost;
     private Border? _viewportFrame;
+    private Border? _readOnlyVeil;
+    private Border? _statusHost;
+    private TextBlock? _hintHost;
     private Grid? _sidePanel;
+    private ScrollViewer? _panelScroll;
+    private Border? _pageFooterHost;
+    private readonly ContentControl _pageFooter = new() { HorizontalContentAlignment = HorizontalAlignment.Stretch };
+    private bool _footerPresent;
     private Button? _helpButton;
     /// <summary>视图模式：0 = 三维，1 = 分层，2 = 并排。</summary>
     private int _viewMode;
@@ -132,7 +143,7 @@ public sealed class MainWindow : Window, IHost
             new TourStop("五步制作流程", "导入 → 编辑 → 拆分 → 检查 → 导出，左侧按顺序走完就是一件可施工的作品。随时可以点回上一步。",
                 () => _nav.MenuItems.FirstOrDefault() as FrameworkElement, "五步各有独立页面。"),
             new TourStop("动作与笔刷", "数字键 1~5 切换贴豆、擦除、上色、零件、选择；字母键切换笔刷。按住拖动可以连续绘制。",
-                () => _toolbarHost, "工具栏跟随当前动作，镜像和当前色也在这里。"),
+                () => _toolbarHost, "工具栏跟随当前动作，镜像和当前色也在这里。", false, () => GoStep(2)),
             new TourStop("三维视口", "右键拖动旋转，中键或空格+左键平移，滚轮缩放；F 居中，Alt+左键吸色。右上角的「正 / 侧 / 背 / 顶 / 斜」可以快速回到标准视角。",
                 () => _viewportFrame, "所有修形都在这里直接完成。"),
             new TourStop("三维 / 分层 / 并排", "三维看整体，分层逐格修形，并排视图两边同步。做平面零件时切到分层最方便。",
@@ -209,7 +220,8 @@ public sealed class MainWindow : Window, IHost
         bar.Children.Add(drag);
         _titleActions.Children.Add(IconBtn("", "新建空白模型 (Ctrl+N)", async () => await NewBlankAsync()));
         _titleActions.Children.Add(IconBtn("", "打开工程 / 模型 (Ctrl+O)", async () => await OpenDialogAsync()));
-        _titleActions.Children.Add(IconBtn("", "保存工程 (Ctrl+S)", async () => await SaveAsync(false)));
+        _saveButton = IconBtn("", "保存工程 (Ctrl+S)", () => _ = SaveCurrentAsync());
+        _titleActions.Children.Add(_saveButton);
         _titleActions.Children.Add(new AppBarSeparator());
         _titleActions.Children.Add(_undo);
         _titleActions.Children.Add(_redo);
@@ -274,6 +286,7 @@ public sealed class MainWindow : Window, IHost
         side.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         side.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         side.RowDefinitions.Add(new RowDefinition());
+        side.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
         var head = new StackPanel { Padding = new Thickness(4, 6, 4, 6) };
         head.Children.Add(_panelTitle);
         head.Children.Add(_panelDesc);
@@ -282,8 +295,20 @@ public sealed class MainWindow : Window, IHost
         Grid.SetRow(_info, 1);
         side.Children.Add(_info);
         var scroll = new ScrollViewer { Content = _panelHost, Padding = new Thickness(0, 0, 10, 0) };
+        _panelScroll = scroll;
         Grid.SetRow(scroll, 2);
         side.Children.Add(scroll);
+        var footerHost = new Border
+        {
+            Child = _pageFooter,
+            Padding = new Thickness(0, 8, 10, 4),
+            BorderThickness = new Thickness(0, 1, 0, 0),
+            BorderBrush = Theme.B(Theme.Text3, 0x30),
+            Visibility = Visibility.Collapsed,
+        };
+        Grid.SetRow(footerHost, 3);
+        side.Children.Add(footerHost);
+        _pageFooterHost = footerHost;
         Grid.SetColumn(side, 1);
         content.Children.Add(side);
         _sidePanel = side;
@@ -352,6 +377,7 @@ public sealed class MainWindow : Window, IHost
         views.VerticalAlignment = VerticalAlignment.Top;
         views.Margin = new Thickness(0, 12, 12, 0);
         area.Children.Add(views);
+        _viewBarHost = views;
 
         // 状态（下）
         var status = new Border
@@ -361,12 +387,40 @@ public sealed class MainWindow : Window, IHost
             Child = HStack(_stats, _hover),
         };
         area.Children.Add(status);
+        _statusHost = status;
         var hint = new TextBlock
         {
             Text = "右键拖动 旋转 · 中键/空格+左键 平移 · 滚轮 缩放 · Alt+左键 吸色 · F 居中",
             FontSize = 11.5, Opacity = 0.55, HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Bottom, Margin = new Thickness(0, 0, 16, 46),
         };
         area.Children.Add(hint);
+        _hintHost = hint;
+
+        var veilBody = new StackPanel { Spacing = Theme.S2, HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, MaxWidth = 360 };
+        var veilIcon = Icon(G.Settings, 34);
+        veilIcon.Foreground = Theme.B(Theme.Orange);
+        veilIcon.HorizontalAlignment = HorizontalAlignment.Center;
+        veilBody.Children.Add(veilIcon);
+        var veilTitle = Theme.Heading("设置模式", "SETTINGS", 24);
+        veilTitle.HorizontalAlignment = HorizontalAlignment.Center;
+        veilBody.Children.Add(veilTitle);
+        veilBody.Children.Add(new TextBlock
+        {
+            Text = "模型在此页只读，避免误改。保存设置后回到制作流程继续编辑。",
+            FontSize = Theme.F2, Foreground = Theme.B(Theme.Text2), TextWrapping = TextWrapping.Wrap, TextAlignment = TextAlignment.Center,
+        });
+        var backToWork = Btn("返回制作流程", () => GoStep(2), G.Edit, accent: true);
+        backToWork.HorizontalAlignment = HorizontalAlignment.Center;
+        backToWork.Margin = new Thickness(0);
+        veilBody.Children.Add(backToWork);
+        var veil = new Border
+        {
+            Child = veilBody,
+            Background = Theme.B(Theme.Navy, 0xE8),
+            Visibility = Visibility.Collapsed,
+        };
+        area.Children.Add(veil);
+        _readOnlyVeil = veil;
 
 
         // 视图模式切换（顶部居中）
@@ -410,8 +464,8 @@ public sealed class MainWindow : Window, IHost
             StartPoint = new Windows.Foundation.Point(0, 0), EndPoint = new Windows.Foundation.Point(0, 1),
             GradientStops =
             {
-                new GradientStop { Color = Windows.UI.Color.FromArgb(0xEE, 0x1A, 0x24, 0x36), Offset = 0 },
-                new GradientStop { Color = Windows.UI.Color.FromArgb(0xF6, 0x0E, 0x14, 0x1F), Offset = 1 },
+                new GradientStop { Color = Windows.UI.Color.FromArgb(0xFF, 0x1A, 0x24, 0x36), Offset = 0 },
+                new GradientStop { Color = Windows.UI.Color.FromArgb(0xFF, 0x0E, 0x14, 0x1F), Offset = 1 },
             },
         };
         var sp = new StackPanel { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Spacing = 12, MaxWidth = 720, Padding = new Thickness(20) };
@@ -461,6 +515,7 @@ public sealed class MainWindow : Window, IHost
             c.Children.Add(st);
             b.Content = c;
             b.Click += (_, _) => act();
+            AutomationProperties.SetName(b, title + "。" + sub);
             if (col == 0) _welcomeImportTile = b;
             Grid.SetColumn(b, col);
             grid.Children.Add(b);
@@ -495,6 +550,7 @@ public sealed class MainWindow : Window, IHost
             Background = Theme.B(Theme.Navy, 0xCC), BorderBrush = Theme.B(Theme.Blue, 0x70), BorderThickness = new Thickness(1.2),
         };
         flatTile.Click += (_, _) => OpenFlatPattern();
+        AutomationProperties.SetName(flatTile, "平面拼豆。上传一张图，直接像素化或先用 AI 平涂，导出带色号的图纸");
         sp.Children.Add(flatTile);
 
         var recent = RecentFiles.Load();
@@ -538,7 +594,31 @@ public sealed class MainWindow : Window, IHost
         bool empty = S.Model.CountSolid() == 0 && S.ProjectPath == null;
         bool show = empty && !_welcomeDismissed && _step == 1;
         _welcome.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
-        if (_modeBar != null) _modeBar.Visibility = show ? Visibility.Collapsed : Visibility.Visible;
+        UpdateFooterVisibility();
+        UpdateViewportChrome();
+    }
+
+    private void UpdateFooterVisibility()
+    {
+        if (_pageFooterHost == null) return;
+        _pageFooterHost.Visibility = _footerPresent && _welcome.Visibility != Visibility.Visible
+            ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    /// <summary>只在编辑/拆分页启用编辑；其余页面保留旋转缩放，避免误改模型。</summary>
+    private void UpdateViewportChrome()
+    {
+        bool settings = _step == 6;
+        bool canEdit = _step is 2 or 3;
+        bool welcome = _welcome.Visibility == Visibility.Visible;
+        if (_toolbarHost != null) _toolbarHost.Visibility = canEdit ? Visibility.Visible : Visibility.Collapsed;
+        if (_viewBarHost != null) _viewBarHost.Visibility = welcome || settings ? Visibility.Collapsed : Visibility.Visible;
+        if (_modeBar != null) _modeBar.Visibility = welcome || settings ? Visibility.Collapsed : Visibility.Visible;
+        if (_readOnlyVeil != null) _readOnlyVeil.Visibility = settings ? Visibility.Visible : Visibility.Collapsed;
+        if (_statusHost != null) _statusHost.Visibility = settings ? Visibility.Collapsed : Visibility.Visible;
+        if (_hintHost != null) _hintHost.Visibility = settings ? Visibility.Collapsed : Visibility.Visible;
+        View.EditEnabled = canEdit;
+        _slice.EditEnabled = canEdit;
     }
 
     private void BuildPreview()
@@ -611,6 +691,8 @@ public sealed class MainWindow : Window, IHost
 
     private void ShowPage(int step)
     {
+        // 跨页面的旧提示不要一直占着面板；但刚完成任务就自动跳页时保留成功提示。
+        if (_info.IsOpen && (DateTime.UtcNow - _infoShownAt).TotalSeconds > 0.75) _info.IsOpen = false;
         if (_step != step && _step >= 1 && _step <= _pages.Length) _pages[_step - 1].OnLeave();
         _step = step;
         var page = _pages[step - 1];
@@ -618,19 +700,27 @@ public sealed class MainWindow : Window, IHost
         _panelDesc.Text = page.Description;
         _panelLine.Text = step <= 5 ? "“" + Theme.StepLine(step) + "”" : "";
         _panelHost.Content = page.View;
+        _panelScroll?.ChangeView(null, 0, null, true);
         _preview.Visibility = Visibility.Collapsed;
         if (step != 3 && S.Explode > 1.01f) S.Explode = 1;
-        if (step is 1 or 2 or 5) S.Display = DisplayMode.Color;
+        if (step != 3) S.Display = DisplayMode.Color;
         if (step == 2 && S.Action == EditAction.PartPaint) S.Action = EditAction.Attach;
+        if (step == 6 && _viewMode != 0) SetViewMode(0);
+        if (!ReferenceEquals(_pageFooter.Content, page.Footer)) _pageFooter.Content = page.Footer;
+        _footerPresent = page.Footer != null;
+        _pageFooter.IsEnabled = !_busyNow;
         _tools.Sync();
+        View.RefreshPreview();
         page.OnEnter();
         UpdateWelcome();
+        UpdateChrome();
     }
 
     // ═════════════════ IHost ═════════════════
 
     public void Notify(string msg, InfoBarSeverity sev = InfoBarSeverity.Informational)
     {
+        _infoShownAt = DateTime.UtcNow;
         _info.Severity = sev;
         _info.Title = sev switch
         {
@@ -663,6 +753,7 @@ public sealed class MainWindow : Window, IHost
         _busy.Visibility = Visibility.Visible;
         _panelHost.IsEnabled = false;
         _nav.IsEnabled = false;
+        _pageFooter.IsEnabled = false;
         foreach (var control in _titleActions.Children.OfType<Control>()) control.IsEnabled = false;
         _root.AllowDrop = false;
         UpdateChrome();
@@ -683,6 +774,7 @@ public sealed class MainWindow : Window, IHost
             _busy.Visibility = Visibility.Collapsed;
             _panelHost.IsEnabled = true;
             _nav.IsEnabled = true;
+            _pageFooter.IsEnabled = true;
             foreach (var control in _titleActions.Children.OfType<Control>()) control.IsEnabled = true;
             _root.AllowDrop = true;
             _busyCts.Dispose();
@@ -765,8 +857,9 @@ public sealed class MainWindow : Window, IHost
         var name = S.ProjectPath != null ? Path.GetFileName(S.ProjectPath) : S.Meta.Title;
         _projectName.Text = name + (S.Dirty ? "  ●" : "");
         Title = $"{Theme.AppName} · {name}";
-        _undo.IsEnabled = !_busyNow && S.History.CanUndo;
-        _redo.IsEnabled = !_busyNow && S.History.CanRedo;
+        _undo.IsEnabled = !_busyNow && _step != 6 && S.History.CanUndo;
+        _redo.IsEnabled = !_busyNow && _step != 6 && S.History.CanRedo;
+        if (_saveButton != null) ToolTipService.SetToolTip(_saveButton, _step == 6 ? "保存设置 (Ctrl+S)" : "保存工程 (Ctrl+S)");
         ToolTipService.SetToolTip(_undo, S.History.CanUndo ? $"撤销：{S.History.UndoName} (Ctrl+Z)" : "撤销 (Ctrl+Z)");
         ToolTipService.SetToolTip(_redo, S.History.CanRedo ? $"重做：{S.History.RedoName} (Ctrl+Y)" : "重做 (Ctrl+Y)");
     }
@@ -916,6 +1009,16 @@ public sealed class MainWindow : Window, IHost
         catch (Exception e) { Notify("打开失败：" + e.Message, InfoBarSeverity.Error); }
     }
 
+    private async Task SaveCurrentAsync(bool saveAs = false)
+    {
+        if (_step == 6)
+        {
+            ((SettingsPage)_pages[5]).SaveFromShortcut();
+            return;
+        }
+        await SaveAsync(saveAs);
+    }
+
     public async Task<bool> SaveAsync(bool saveAs)
     {
         var path = S.ProjectPath;
@@ -959,8 +1062,9 @@ public sealed class MainWindow : Window, IHost
     private async Task ShowHelpAsync()
     {
         var text =
-            "【视口】右键拖动＝旋转；中键拖动或 空格+左键＝平移；滚轮＝缩放；Alt+左键＝吸色；F＝居中\n\n" +
-            "【动作】1 贴豆　2 擦除　3 上色　4 零件刷　5 选择\n" +
+            "【视口】右键拖动＝旋转；中键拖动或 空格+左键＝平移；滚轮＝缩放；Alt+左键＝吸色；F＝居中\n" +
+            "【显示】右上角「显示」→ 豆孔 / 描边 / 零件色 / 成品检查(C) / 隐藏选中(H)\n\n" +
+            "【动作】1 贴豆　2 擦除　3 上色　4 零件刷　5 选择（编辑 / 拆分页）\n" +
             "【笔刷】V 单格　G 整面　B 矩形　L 直线　R 填充　P 平面\n" +
             "【镜像】Shift+X / Shift+Y / Shift+Z\n" +
             "【剖切】PageUp / PageDown 逐层；Home 关闭剖切\n" +
@@ -1000,16 +1104,27 @@ public sealed class MainWindow : Window, IHost
     private async void OnKeyDown(object sender, KeyRoutedEventArgs e)
     {
         if (_busyNow) { e.Handled = true; return; }
-        if (e.OriginalSource is TextBox or NumberBox or PasswordBox or AutoSuggestBox) return;
         bool ctrl = KeyDown(VirtualKey.Control), shift = KeyDown(VirtualKey.Shift);
+        if (ctrl && e.Key == VirtualKey.S)
+        {
+            e.Handled = true;
+            await SaveCurrentAsync(shift);
+            return;
+        }
+        if (e.OriginalSource is TextBox or NumberBox or PasswordBox or AutoSuggestBox) return;
         if (ctrl)
         {
             switch (e.Key)
             {
-                case VirtualKey.Z when shift: S.History.Redo(); e.Handled = true; return;
-                case VirtualKey.Z: S.History.Undo(); e.Handled = true; return;
-                case VirtualKey.Y: S.History.Redo(); e.Handled = true; return;
-                case VirtualKey.S: e.Handled = true; await SaveAsync(shift); return;
+                case VirtualKey.Z when shift:
+                    if (_step != 6) S.History.Redo();
+                    e.Handled = true; return;
+                case VirtualKey.Z:
+                    if (_step != 6) S.History.Undo();
+                    e.Handled = true; return;
+                case VirtualKey.Y:
+                    if (_step != 6) S.History.Redo();
+                    e.Handled = true; return;
                 case VirtualKey.O: e.Handled = true; await OpenDialogAsync(); return;
                 case VirtualKey.N: e.Handled = true; await NewBlankAsync(); return;
             }
@@ -1017,6 +1132,7 @@ public sealed class MainWindow : Window, IHost
         }
         if (shift)
         {
+            if (_step is not (2 or 3)) return;
             switch (e.Key)
             {
                 case VirtualKey.X: S.MirrorX = !S.MirrorX; break;
@@ -1026,25 +1142,26 @@ public sealed class MainWindow : Window, IHost
             }
             _tools.Sync(); e.Handled = true; return;
         }
+        bool canEdit = _step is 2 or 3;
         switch (e.Key)
         {
             case VirtualKey.Space: View.SetSpace(true); break;
             case VirtualKey.F: View.FrameModel(); break;
             case VirtualKey.C: S.CheckMode = !S.CheckMode; break;
             case VirtualKey.H: S.HideSelection = !S.HideSelection; break;
-            case VirtualKey.Number1: S.Action = EditAction.Attach; break;
-            case VirtualKey.Number2: S.Action = EditAction.Erase; break;
-            case VirtualKey.Number3: S.Action = EditAction.Paint; break;
-            case VirtualKey.Number4: S.Action = EditAction.PartPaint; break;
-            case VirtualKey.Number5: S.Action = EditAction.Select; break;
-            case VirtualKey.V: S.Brush = BrushMode.Voxel; break;
-            case VirtualKey.G: S.Brush = BrushMode.Face; break;
-            case VirtualKey.B: S.Brush = BrushMode.Box; break;
-            case VirtualKey.L: S.Brush = BrushMode.Line; break;
-            case VirtualKey.R: S.Brush = BrushMode.Fill; break;
-            case VirtualKey.P: S.Brush = BrushMode.Plane; break;
+            case VirtualKey.Number1 when canEdit: S.Action = EditAction.Attach; break;
+            case VirtualKey.Number2 when canEdit: S.Action = EditAction.Erase; break;
+            case VirtualKey.Number3 when canEdit: S.Action = EditAction.Paint; break;
+            case VirtualKey.Number4 when canEdit: S.Action = EditAction.PartPaint; break;
+            case VirtualKey.Number5 when canEdit: S.Action = EditAction.Select; break;
+            case VirtualKey.V when canEdit: S.Brush = BrushMode.Voxel; break;
+            case VirtualKey.G when canEdit: S.Brush = BrushMode.Face; break;
+            case VirtualKey.B when canEdit: S.Brush = BrushMode.Box; break;
+            case VirtualKey.L when canEdit: S.Brush = BrushMode.Line; break;
+            case VirtualKey.R when canEdit: S.Brush = BrushMode.Fill; break;
+            case VirtualKey.P when canEdit: S.Brush = BrushMode.Plane; break;
             case VirtualKey.Escape: View.Tools?.Cancel(); S.Selection.Clear(); S.RaiseChanged(); break;
-            case VirtualKey.Delete: ((EditPage)_pages[1]).DeleteSelection(); break;
+            case VirtualKey.Delete when canEdit: ((EditPage)_pages[1]).DeleteSelection(); break;
             case VirtualKey.PageUp when _viewMode != 0: _slice.SetLayer(_slice.Layer + 1); break;
             case VirtualKey.PageDown when _viewMode != 0: _slice.SetLayer(_slice.Layer - 1); break;
             case (VirtualKey)221 when _viewMode != 0: _slice.SetLayer(_slice.Layer + 1); break;   // ]

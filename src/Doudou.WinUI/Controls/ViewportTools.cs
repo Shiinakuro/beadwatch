@@ -2,6 +2,7 @@ using Doudou.Core.Color;
 using Doudou.Core.Edit;
 using Doudou.Editor;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using static Doudou.WinUI.UiKit;
@@ -16,10 +17,14 @@ public sealed class ViewportTools
     private readonly Dictionary<EditAction, ToggleButton> _act = new();
     private readonly Dictionary<BrushMode, ToggleButton> _brush = new();
     private readonly ToggleButton _mx = TextToggle("X", "左右镜像（Shift+X）", 24), _my = TextToggle("Y", "上下镜像（Shift+Y）", 24), _mz = TextToggle("Z", "前后镜像（Shift+Z）", 24);
-    private readonly ToggleButton _bead = TextToggle("豆孔", "显示豆子中间的孔", 46), _grid = TextToggle("描边", "显示豆格描边", 46), _tint = TextToggle("零件色", "按零件着色", 58);
-    private readonly ToggleButton _check = TextToggle("成品", "成品检查：圆柱豆+柔光+亮背景，相机不动（C）", 46), _hideSel = TextToggle("隐选", "临时隐藏选中的豆，检查空心内腔（H）", 46);
-    private readonly Slider _bright = new() { Minimum = 0.5, Maximum = 1.6, Value = 1, Width = 96, VerticalAlignment = VerticalAlignment.Center };
+    private readonly CheckBox _bead = new() { Content = "豆孔", MinWidth = 0, VerticalAlignment = VerticalAlignment.Center };
+    private readonly CheckBox _grid = new() { Content = "描边", MinWidth = 0, VerticalAlignment = VerticalAlignment.Center };
+    private readonly CheckBox _tint = new() { Content = "按零件着色", MinWidth = 0, VerticalAlignment = VerticalAlignment.Center };
+    private readonly CheckBox _check = new() { Content = "成品检查", MinWidth = 0, VerticalAlignment = VerticalAlignment.Center };
+    private readonly CheckBox _hideSel = new() { Content = "隐藏选中", MinWidth = 0, VerticalAlignment = VerticalAlignment.Center };
+    private readonly Slider _bright = new() { Minimum = 0.5, Maximum = 1.6, Value = 1, VerticalAlignment = VerticalAlignment.Center };
     private readonly Border _swatch = new() { Width = 40, Height = 40, CornerRadius = new CornerRadius(8), BorderThickness = new Thickness(2) };
+    private Border? _displayDot;
     private bool _sync;
 
     public ViewportTools(IHost h)
@@ -105,7 +110,7 @@ public sealed class ViewportTools
 
     public FrameworkElement BuildViewBar()
     {
-        var sp = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2 };
+        var sp = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 2, VerticalAlignment = VerticalAlignment.Center };
         Button V(string label, string tip, Action a)
         {
             var b = new Button { Content = label, Padding = new Thickness(10, 4, 10, 4), FontSize = 12, Background = null, BorderThickness = new Thickness(0) };
@@ -120,15 +125,72 @@ public sealed class ViewportTools
         sp.Children.Add(V("斜", "斜视", () => _h.View.SetView(35, 28)));
         sp.Children.Add(V("居中", "居中显示整个模型（F）", () => _h.View.FrameModel()));
         sp.Children.Add(new AppBarSeparator());
-        foreach (var t in new[] { _bead, _grid, _tint, _check, _hideSel }) { t.Margin = new Thickness(2, 0, 2, 0); t.Height = 28; sp.Children.Add(t); }
-        _bead.Click += (_, _) => { if (!_sync) S.BeadLook = _bead.IsChecked == true; };
-        _grid.Click += (_, _) => { if (!_sync) S.ShowGrid = _grid.IsChecked == true; };
-        _tint.Click += (_, _) => { if (!_sync) S.Display = _tint.IsChecked == true ? DisplayMode.PartTint : DisplayMode.Color; };
-        _check.Click += (_, _) => { if (!_sync) S.CheckMode = _check.IsChecked == true; };
-        _hideSel.Click += (_, _) => { if (!_sync) S.HideSelection = _hideSel.IsChecked == true; };
+
+        ToolTipService.SetToolTip(_bead, "显示豆子中间的孔；成品检查时自动隐藏");
+        ToolTipService.SetToolTip(_grid, "显示豆格描边");
+        ToolTipService.SetToolTip(_tint, "按零件着色（拆件页常用）");
+        ToolTipService.SetToolTip(_check, "成品检查：圆柱豆 + 柔光 + 亮背景（C）");
+        ToolTipService.SetToolTip(_hideSel, "临时隐藏选中的豆，检查空心内腔（H）");
+        _bead.Checked += (_, _) => { if (!_sync) S.BeadLook = true; };
+        _bead.Unchecked += (_, _) => { if (!_sync) S.BeadLook = false; };
+        _grid.Checked += (_, _) => { if (!_sync) S.ShowGrid = true; };
+        _grid.Unchecked += (_, _) => { if (!_sync) S.ShowGrid = false; };
+        _tint.Checked += (_, _) => { if (!_sync) S.Display = DisplayMode.PartTint; };
+        _tint.Unchecked += (_, _) => { if (!_sync) S.Display = DisplayMode.Color; };
+        _check.Checked += (_, _) => { if (!_sync) S.CheckMode = true; };
+        _check.Unchecked += (_, _) => { if (!_sync) S.CheckMode = false; };
+        _hideSel.Checked += (_, _) => { if (!_sync) S.HideSelection = true; };
+        _hideSel.Unchecked += (_, _) => { if (!_sync) S.HideSelection = false; };
         ToolTipService.SetToolTip(_bright, "成品检查亮度（仅成品模式生效）");
         _bright.ValueChanged += (_, _) => { if (!_sync) S.Brightness = (float)_bright.Value; };
-        sp.Children.Add(_bright);
+
+        var flyoutBody = new StackPanel { Spacing = Theme.S2, MinWidth = 232 };
+        flyoutBody.Children.Add(new TextBlock
+        {
+            Text = "显示选项", FontFamily = Theme.Display, FontWeight = Microsoft.UI.Text.FontWeights.Bold,
+            FontSize = Theme.F4, Foreground = Theme.B(Theme.Text1),
+        });
+        flyoutBody.Children.Add(_bead);
+        flyoutBody.Children.Add(_grid);
+        flyoutBody.Children.Add(_tint);
+        flyoutBody.Children.Add(new Border { Height = 1, Background = Theme.B(Theme.Text3, 0x30), Margin = new Thickness(0, 2, 0, 2) });
+        flyoutBody.Children.Add(_check);
+        flyoutBody.Children.Add(_hideSel);
+        flyoutBody.Children.Add(new TextBlock { Text = "成品亮度", FontSize = Theme.F2, Foreground = Theme.B(Theme.Text2), Margin = new Thickness(0, 6, 0, 0) });
+        _bright.Width = double.NaN;
+        flyoutBody.Children.Add(_bright);
+        var reset = Btn("重置显示", () =>
+        {
+            S.BeadLook = true;
+            S.ShowGrid = true;
+            S.CheckMode = false;
+            S.HideSelection = false;
+            S.Brightness = 1f;
+        }, G.Refresh);
+        reset.Margin = new Thickness(0, Theme.S1, 0, 0);
+        reset.HorizontalAlignment = HorizontalAlignment.Stretch;
+        flyoutBody.Children.Add(reset);
+
+        var displayContent = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4, VerticalAlignment = VerticalAlignment.Center };
+        var eye = Icon(G.Eye, 14);
+        eye.Opacity = 0.8;
+        displayContent.Children.Add(eye);
+        displayContent.Children.Add(new TextBlock { Text = "显示", FontSize = 12, VerticalAlignment = VerticalAlignment.Center });
+        _displayDot = new Border
+        {
+            Width = 6, Height = 6, CornerRadius = new CornerRadius(3), Background = Theme.B(Theme.Orange),
+            VerticalAlignment = VerticalAlignment.Center, Visibility = Visibility.Collapsed,
+        };
+        displayContent.Children.Add(_displayDot);
+        var display = new Button
+        {
+            Content = displayContent, Padding = new Thickness(10, 4, 10, 4), FontSize = 12,
+            Background = null, BorderThickness = new Thickness(0),
+        };
+        ToolTipService.SetToolTip(display, "显示选项：豆孔、描边、零件色、成品检查");
+        AutomationProperties.SetName(display, "显示选项");
+        display.Flyout = new Flyout { Content = flyoutBody, Placement = FlyoutPlacementMode.BottomEdgeAlignedRight };
+        sp.Children.Add(display);
         return Floating(sp);
     }
 
@@ -141,6 +203,8 @@ public sealed class ViewportTools
         _bead.IsChecked = S.BeadLook; _grid.IsChecked = S.ShowGrid; _tint.IsChecked = S.Display == DisplayMode.PartTint;
         _check.IsChecked = S.CheckMode; _hideSel.IsChecked = S.HideSelection; _bright.Value = S.Brightness;
         _bright.IsEnabled = S.CheckMode;   // 亮度只在成品检查模式下起作用，平时灰掉免得以为坏了
+        if (_displayDot != null)
+            _displayDot.Visibility = S.CheckMode || S.HideSelection || S.Display == DisplayMode.PartTint ? Visibility.Visible : Visibility.Collapsed;
         var bc = S.CurrentBead;
         _swatch.Background = Solid(bc.IsAny ? new Rgb(64, 74, 70) : bc.Rgb);
         ToolTipService.SetToolTip(_swatch, $"当前色：{bc}  {bc.Rgb.Hex}");

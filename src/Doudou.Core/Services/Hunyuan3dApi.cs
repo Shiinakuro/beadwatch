@@ -6,6 +6,9 @@ using System.Text.Json;
 
 namespace Doudou.Core.Services;
 
+/// <summary>在线混元 3.1 的附加标准视图。</summary>
+public sealed record HunyuanView(string ViewType, string Path);
+
 /// <summary>腾讯混元 3D 在线 API（AI3D 的 OpenAI 兼容接口，Bearer API Key）。</summary>
 public sealed class Hunyuan3dApi
 {
@@ -21,30 +24,52 @@ public sealed class Hunyuan3dApi
 
     public bool Configured => _key.Length > 0;
 
-    /// <summary>用正面图生成 3.1 模型，返回下载到本地的 GLB/OBJ 路径。</summary>
-    public async Task<string> GenerateAsync(string imagePath, string outDir, IProgress<string>? progress, CancellationToken ct)
+    public Task<string> GenerateAsync(string imagePath, string outDir, IProgress<string>? progress, CancellationToken ct) =>
+        GenerateAsync(imagePath, outDir, Array.Empty<HunyuanView>(), progress, ct);
+
+    /// <summary>用正面图生成 3.1 模型；提供附加视图时优先走官方多视图接口，失败自动回退单图。</summary>
+    public async Task<string> GenerateAsync(string imagePath, string outDir, IReadOnlyList<HunyuanView> extraViews,
+        IProgress<string>? progress, CancellationToken ct)
     {
         if (!Configured)
             throw new InvalidOperationException("未填写混元 3D 在线 API Key。请到「设置 → 混元 3D 在线 API」填写。");
         Directory.CreateDirectory(outDir);
-        using var http = new HttpClient { Timeout = TimeSpan.FromMinutes(15) };
-        http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _key);
-        var submitBody = JsonSerializer.Serialize(new
+        using var http = new HttpClient
         {
-            Model = "3.1",
-            ImageBase64 = Convert.ToBase64String(await File.ReadAllBytesAsync(imagePath, ct)),
-        });
-        progress?.Report("提交混元 3.1 在线任务…");
-        using var submit = await http.PostAsync(_base + "/v1/ai3d/submit",
-            new StringContent(submitBody, Encoding.UTF8, "application/json"), ct);
-        var submitText = await submit.Content.ReadAsStringAsync(ct);
-        using var sdoc = JsonDocument.Parse(submitText);
-        if (!sdoc.RootElement.TryGetProperty("Response", out var sr))
-            throw new InvalidOperationException("混元 API 返回异常：" + Clip(submitText));
-        ThrowIfError(sr, submit.StatusCode);
-        var job = sr.TryGetProperty("JobId", out var j) ? j.GetString() : null;
+            Timeout = TimeSpan.FromMinutes(15),
+            BaseAddress = new Uri(_base.TrimEnd('/') + "/"),
+        };
+        http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _key);
+
+        var front = Convert.ToBase64String(await File.ReadAllBytesAsync(imagePath, ct));
+        var views = extraViews.Where(v => File.Exists(v.Path)).Take(5).ToList();
+        List<Dictionary<string, string>>? BuildViews(string field) => views.Count == 0
+            ? null
+            : views.Select(v => new Dictionary<string, string>
+            {
+                ["ViewType"] = v.ViewType,
+                [field] = Convert.ToBase64String(File.ReadAllBytes(v.Path)),
+            }).ToList();
+
+        object Body(List<Dictionary<string, string>>? multiViews) => multiViews == null
+            ? new { Model = "3.1", ImageBase64 = front }
+            : new { Model = "3.1", ImageBase64 = front, MultiViewImages = multiViews };
+
+        var multi = BuildViews("ViewImageBase64");
+        progress?.Report(multi != null ? $"提交混元 3.1 在线任务（{views.Count + 1} 个视图）…" : "提交混元 3.1 在线任务…");
+        var (job, submitText) = await SubmitAsync(http, Body(multi), ct);
+        if (job == null && multi != null && LooksLikeViewParameterError(submitText))
+        {
+            progress?.Report("尝试兼容的多视图字段…");
+            (job, submitText) = await SubmitAsync(http, Body(BuildViews("ImageBase64")), ct);
+        }
+        if (job == null && multi != null && LooksLikeViewParameterError(submitText))
+        {
+            progress?.Report("多视图参数未被接口接受，回退单图重试…");
+            (job, submitText) = await SubmitAsync(http, Body(null), ct);
+        }
         if (string.IsNullOrWhiteSpace(job))
-            throw new InvalidOperationException("混元 API 未返回 JobId：" + Clip(submitText));
+            throw new InvalidOperationException("混元 API 提交失败：" + Clip(submitText));
 
         progress?.Report("任务已提交，等待生成…");
         for (int i = 0; i < 200; i++)
@@ -72,6 +97,37 @@ public sealed class Hunyuan3dApi
         }
         throw new TimeoutException("混元 3.1 生成超时（10 分钟）。");
     }
+
+    private static async Task<(string? Job, string Text)> SubmitAsync(HttpClient http, object body, CancellationToken ct)
+    {
+        using var submit = await http.PostAsync(new Uri(http.BaseAddress!, "v1/ai3d/submit"),
+            new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json"), ct);
+        var text = await submit.Content.ReadAsStringAsync(ct);
+        try
+        {
+            using var doc = JsonDocument.Parse(text);
+            if (!doc.RootElement.TryGetProperty("Response", out var sr)) return (null, text);
+            if (sr.TryGetProperty("Error", out var err))
+            {
+                var code = err.TryGetProperty("Code", out var c) ? c.GetString() ?? "" : "";
+                var msg = err.TryGetProperty("Message", out var m) ? m.GetString() ?? "" : "";
+                if (code.Length > 0) return (null, $"{code} {msg}".Trim());
+            }
+            var job = sr.TryGetProperty("JobId", out var j) ? j.GetString() : null;
+            return (string.IsNullOrWhiteSpace(job) ? null : job, text);
+        }
+        catch (JsonException)
+        {
+            return (null, text);
+        }
+    }
+
+    private static bool LooksLikeViewParameterError(string text) =>
+        text.Contains("MultiView", StringComparison.OrdinalIgnoreCase)
+        || text.Contains("ViewImage", StringComparison.OrdinalIgnoreCase)
+        || text.Contains("ViewType", StringComparison.OrdinalIgnoreCase)
+        || text.Contains("InvalidParameter", StringComparison.OrdinalIgnoreCase)
+        || text.Contains("参数", StringComparison.Ordinal);
 
     /// <summary>用不存在的 JobId 查询，验证 Key 是否有效；不会创建任务或扣积分。</summary>
     public static async Task<(bool Ok, string Message)> TestAsync(string baseUrl, string key, CancellationToken ct = default)

@@ -2,6 +2,7 @@ using Doudou.Core.Color;
 using Microsoft.UI;
 using Microsoft.UI.Text;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
@@ -59,6 +60,7 @@ public static class UiKit
         var b = new Button { Content = Label(text, glyph), Margin = new Thickness(0, 0, Theme.S2, Theme.S2), CornerRadius = Theme.RSmall, Padding = new Thickness(Theme.S3, 5, Theme.S3, 6) };
         if (accent) b.Style = Style("AccentButtonStyle");
         if (tip != null) ToolTipService.SetToolTip(b, tip);
+        AutomationProperties.SetName(b, text);
         b.Click += (_, _) => click();
         return b;
     }
@@ -93,6 +95,7 @@ public static class UiKit
             Background = new SolidColorBrush(Colors.Transparent), BorderThickness = new Thickness(0),
         };
         ToolTipService.SetToolTip(b, tip);
+        AutomationProperties.SetName(b, tip);
         b.Click += (_, _) => click();
         return b;
     }
@@ -102,16 +105,34 @@ public static class UiKit
     {
         var sp = new StackPanel { Spacing = 2 };
         sp.Children.Add(new FontIcon { Glyph = glyph, FontSize = 18, FontFamily = new FontFamily("Segoe Fluent Icons,Segoe MDL2 Assets"), HorizontalAlignment = HorizontalAlignment.Center });
-        sp.Children.Add(new TextBlock { Text = label, FontSize = Theme.F1, HorizontalAlignment = HorizontalAlignment.Center });
-        var t = new ToggleButton { Content = sp, Width = 52, Height = 50, Padding = new Thickness(0), Margin = new Thickness(0, 0, 0, 4), CornerRadius = new CornerRadius(6) };
+        sp.Children.Add(new TextBlock
+        {
+            Text = label, FontSize = Theme.F1, HorizontalAlignment = HorizontalAlignment.Center,
+            TextWrapping = TextWrapping.NoWrap, TextAlignment = TextAlignment.Center,
+        });
+        var t = new ToggleButton { Content = sp, Width = 58, Height = 50, Padding = new Thickness(0), Margin = new Thickness(0, 0, 0, 4), CornerRadius = new CornerRadius(6) };
         ToolTipService.SetToolTip(t, tip);
+        AutomationProperties.SetName(t, label);
         return t;
+    }
+
+    /// <summary>页脚里的次级「下一步」链接。</summary>
+    public static HyperlinkButton NextLink(string text, Action click)
+    {
+        var b = new HyperlinkButton
+        {
+            Content = text, Padding = new Thickness(0), MinWidth = 0, FontSize = Theme.F2,
+            Foreground = Theme.B(Theme.Orange), HorizontalAlignment = HorizontalAlignment.Right,
+        };
+        b.Click += (_, _) => click();
+        return b;
     }
 
     public static ToggleButton TextToggle(string label, string tip, double width = 52)
     {
         var t = new ToggleButton { Content = label, Width = width, Height = 30, Padding = new Thickness(0), Margin = new Thickness(0, 0, Theme.S1, Theme.S1), FontSize = Theme.F2, CornerRadius = Theme.RSmall };
         ToolTipService.SetToolTip(t, tip);
+        AutomationProperties.SetName(t, label);
         return t;
     }
 
@@ -293,6 +314,8 @@ public interface IStepPage
     string Header { get; }
     string Description { get; }
     UIElement View { get; }
+    /// <summary>固定在右侧面板底部的主操作；为空则不占空间。</summary>
+    UIElement? Footer => null;
     void OnEnter();
     /// <summary>离开本页：停掉只在本页需要的实时刷新（否则换页后仍在后台重算）。</summary>
     void OnLeave() { }

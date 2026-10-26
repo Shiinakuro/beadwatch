@@ -6,6 +6,7 @@ using Doudou.Core.Recon;
 using Doudou.Core.Services;
 using Doudou.WinUI.Controls;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -21,6 +22,7 @@ public sealed class ImportPage : IStepPage
     public string Header => "图片 / 模型导入";
     public string Description => "上传多视图图片，或导入 OBJ/GLB/STL 模型，选好豆高后体素化";
     public UIElement View { get; }
+    public UIElement? Footer { get; }
 
     private sealed class Item
     {
@@ -66,11 +68,14 @@ public sealed class ImportPage : IStepPage
     private readonly TextBlock _sourceNote = Caption("导入模型或生成模型后，改高度可随时重新体素化。");
     private readonly ItemsWrap _keySwatches = new() { HSpacing = 4, VSpacing = 4 };
     private readonly List<Rgb> _keyColors = new();
+    private TextBlock _footerSummary = null!;
+    private Button? _runBtn;
+    private Expander _logExp = null!;
     private CheckBox _onlyKeysCheck = null!;
     private Slider? _heightSlider;
     private Button? _revoxelBtn;
     private ReconSource? _source;
-    private int _height = 100, _method, _brand, _maxColors = 32;
+    private int _height = 64, _method, _brand, _maxColors = 32;
     private bool _cartoon = true, _complete = true, _flat, _sym, _flatten = true, _onlyKeys, _force, _askBox = true, _flattenTexture = true;
     private readonly List<string> _brandIds;
 
@@ -95,22 +100,23 @@ public sealed class ImportPage : IStepPage
                 },
             },
         };
+        AutomationProperties.SetName(drop, "添加图片");
         drop.Click += async (_, _) => await Browse();
         root.Children.Add(Card("图片", "标准视图（正/背/左/右）效果最好；角度随意的实拍照片标为「参考照片」，由 AI 先整理成标准视图。",
             drop, Check("添加图片后自动弹出框选主体", _askBox, v => _askBox = v), _tiles));
 
-        root.Children.Add(Card("三维模型", "已有 OBJ / GLB / STL / VOX 可以直接导入，不用照片。GLB/OBJ 带纹理会自动按纹理上色；STL 不带颜色，用上面添加的图片做参考上色；VOX 按 MagicaVoxel 标准转正。",
+        root.Children.Add(Card("三维模型", "已有 OBJ / GLB / STL / VOX 可以直接导入。GLB/OBJ 带纹理时按网格 UV 精确上色，眼睛、描边和花纹更容易保留；STL 不带颜色，用上面添加的图片做参考上色；VOX 按 MagicaVoxel 标准转正。",
             Flow(Btn("导入 OBJ / GLB / STL / VOX", async () => await ImportMeshAsync(), G.Download, accent: true,
                 tip: "先选成品高度，再选模型文件")),
-            Check("去除模型光照（AI 纹理推荐）", _flattenTexture, v => _flattenTexture = v),
-            Caption("AI 生成的纹理常带烘焙光照。勾选后压平高光/阴影，保留轮廓和主色。")));
+            Check("压平纹理高光/阴影（推荐）", _flattenTexture, v => _flattenTexture = v),
+            Caption("只压平同色相的明暗，保留五官、描边和花纹等异色细节。")));
 
         root.Children.Add(Card("平面拼豆", "上传 1 张图，直接像素化或先用 AI 卡通平涂，导出带色号的 PNG / PDF 和材料清单。",
             Flow(Btn("打开平面拼豆", () => _h.OpenFlatPattern(), G.Print))));
 
         root.Children.Add(Card("作品", null, Row("名称", _name), _hint));
 
-        var height = SliderRow("成品高度", 16, 128, _height, v => { _height = (int)v; UpdateSize(); UpdateSourceState(); }, 1, "0", " 颗");
+        var height = SliderRow("成品高度", 16, 128, _height, v => { _height = (int)v; UpdateSize(); UpdateSourceState(); UpdateFooterSummary(); }, 1, "0", " 颗");
         _heightSlider = height.Slider;
         _revoxelBtn = Btn("按当前设置重新体素化", async () => await RevoxelizeAsync(), G.Magic,
             tip: "改高度、色卡或颜色数后，用同一个模型重新体素化，不用再选文件");
@@ -119,9 +125,9 @@ public sealed class ImportPage : IStepPage
             _gpuNote, _hyState,
             height.Row, _sizeHint,
             Flow(_revoxelBtn), _sourceNote,
-            Row("建模方式", Combo(new[] { "自动（本地混元3D / 在线 API / 轮廓）", "本地混元3D（需要 NVIDIA 显卡）", "在线混元3D 3.1（需要 API Key）", "轮廓雕刻（纯 CPU）" }, 0, i => _method = i)),
-            Row("色卡", Combo(_brandIds.Select(id => h.S.Lib.Brands[id].Title), _brand, i => { _brand = i; UpdateSourceState(); })),
-            SliderRow("最多颜色", 4, 48, _maxColors, v => { _maxColors = (int)v; UpdateSourceState(); }, 1, "0", " 色").Row));
+            Row("建模方式", Combo(new[] { "自动（优先本地，其次在线）", "本地混元3D（NVIDIA）", "在线混元3D 3.1（API）", "轮廓雕刻（CPU）" }, 0, i => { _method = i; UpdateFooterSummary(); })),
+            Row("色卡", Combo(_brandIds.Select(id => h.S.Lib.Brands[id].Title), _brand, i => { _brand = i; UpdateSourceState(); UpdateFooterSummary(); })),
+            SliderRow("最多颜色", 4, 48, _maxColors, v => { _maxColors = (int)v; UpdateSourceState(); UpdateFooterSummary(); }, 1, "0", " 色").Row));
 
         root.Children.Add(Card("取色", "实拍照片的明暗、反光会让颜色很脏。去光影会把同一种材质归并成一块纯色；再指定主色，模型就只会用这些颜色。",
             Check("去光影（实拍照片推荐）", _flatten, v => _flatten = v),
@@ -139,8 +145,6 @@ public sealed class ImportPage : IStepPage
             Check("近似回转对称（铃铛、瓶罐）：由正面推断侧面形状", _sym, v => _sym = v),
             Check("重新生成 AI 图（默认复用已生成的，不消耗额度）", _force, v => _force = v)));
 
-        root.Children.Add(WideBtn("开始生成立体模型", async () => await Run(), G.Magic));
-
         var logBody = new StackPanel { Spacing = 8 };
         logBody.Children.Add(new TextBlock { Text = "AI 图 / 工程视图（点击放大）", FontSize = 12, Opacity = 0.7 });
         logBody.Children.Add(new TextBlock
@@ -152,11 +156,21 @@ public sealed class ImportPage : IStepPage
         logBody.Children.Add(_log);
         var exp = new Expander
         {
-            Header = "过程日志", IsExpanded = true, HorizontalAlignment = HorizontalAlignment.Stretch, HorizontalContentAlignment = HorizontalAlignment.Stretch,
+            Header = "过程日志", IsExpanded = false, HorizontalAlignment = HorizontalAlignment.Stretch, HorizontalContentAlignment = HorizontalAlignment.Stretch,
             Margin = new Thickness(0, 12, 0, 0), Content = logBody,
         };
         root.Children.Add(exp);
+        _logExp = exp;
         View = root;
+        var run = WideBtn("开始生成立体模型", () => _ = Run(), G.Magic);
+        run.Margin = new Thickness(0);
+        _runBtn = run;
+        _footerSummary = Caption("");
+        var footer = new StackPanel { Spacing = 4 };
+        footer.Children.Add(_footerSummary);
+        footer.Children.Add(run);
+        Footer = footer;
+        UpdateFooterSummary();
         UpdateSize();
         Refresh();
         RefreshKeys();
@@ -179,8 +193,9 @@ public sealed class ImportPage : IStepPage
         _gpuNote.Text = GpuProbe.LocalChoiceText + (local ? " 本地 2mv 权重已就绪。" : " 本地 2mv 未安装：" + why + "。");
         var api = new Hunyuan3dApi(_h.S.Settings);
         _hyState.Text = api.Configured
-            ? "在线混元 3.1 已配置：显存不足或本地模型未安装时，「自动」会优先用它；单图约 20 积分/次，照片会上传到腾讯云。在线接口当前使用正面图（单图），多视图请用本地 2mv。"
+            ? "在线混元 3.1 已配置：显存不足或本地模型未安装时，「自动」会优先用它；单图约 20 积分/次，照片会上传到腾讯云。有背/左/右参考视图时会一起提交多视图，侧面和整体形体更准确；只有单图时自动回退。"
             : "在线混元 3.1 未配置：到「设置 → 混元 3D 在线 API」填 Key；不配置时自动退回轮廓雕刻。";
+        UpdateFooterSummary();
     }
 
     /// <summary>打开工程时：把工程里保存的视图图片（多为 AI 生成）放回列表，直接复用，不再调用 AI。</summary>
@@ -287,6 +302,20 @@ public sealed class ImportPage : IStepPage
         _sizeHint.Text = $"约 {cm:F1} cm 高。人物公仔常用 40~64 颗，细节多的挂件 80~100 颗（零件也会更多）。";
     }
 
+    private void UpdateFooterSummary()
+    {
+        if (_footerSummary == null) return;
+        var brand = _h.S.Lib.Brands[_brandIds[_brand]].Title;
+        var method = _method switch { 1 => "本地混元", 2 => "在线 3.1", 3 => "轮廓", _ => "自动建模" };
+        var pics = _items.Count > 0 ? $"已选 {_items.Count} 张图" : "先添加图片";
+        _footerSummary.Text = $"{pics} · {_height} 颗高 · {brand} · 最多 {_maxColors} 色 · {method}";
+        if (_runBtn != null)
+        {
+            _runBtn.IsEnabled = _items.Count > 0;
+            ToolTipService.SetToolTip(_runBtn, _items.Count > 0 ? "按当前设置生成三维模型" : "先在上面添加图片");
+        }
+    }
+
     private async Task Browse()
     {
         var p = new FileOpenPicker();
@@ -357,11 +386,13 @@ public sealed class ImportPage : IStepPage
             pic.Children.Add(img);
             pic.Children.Add(overlay);
             var del = new Button { Content = Icon(G.Delete, 12), Padding = new Thickness(6), HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Top, Margin = new Thickness(4) };
+            AutomationProperties.SetName(del, "移除这张图片");
             del.Click += (_, _) => { _items.Remove(it); Refresh(); };
             pic.Children.Add(del);
             if (it.IsAi) pic.Children.Add(new Border { Child = Theme.Tag(it.Restored ? "工程" : "AI", it.Restored ? Theme.Green : Theme.Blue, 10, Microsoft.UI.Colors.White), HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top, Margin = new Thickness(6) });
             var role = Combo(Roles, it.Role, r => it.Role = r);
             role.Width = 148;
+            AutomationProperties.SetName(role, "图片视角");
             var box = new Button { Content = Label(it.Box == null ? "框选主体" : "已框选 · 调整", G.Crop), HorizontalAlignment = HorizontalAlignment.Stretch, FontSize = 12, Padding = new Thickness(6, 3, 6, 3) };
             box.Click += async (_, _) => await EditBox(it);
             var tile = new StackPanel { Spacing = 4, Width = 148 };
@@ -391,6 +422,7 @@ public sealed class ImportPage : IStepPage
             }
             catch (Exception) { }
         }
+        UpdateFooterSummary();
     }
 
     private void RefreshKeys()
@@ -400,6 +432,7 @@ public sealed class ImportPage : IStepPage
         {
             var b = new Button { Padding = new Thickness(0), Background = null, BorderThickness = new Thickness(0), Content = Swatch(c, 26) };
             ToolTipService.SetToolTip(b, c.Hex + "（点击移除）");
+            AutomationProperties.SetName(b, c.Hex + "（点击移除）");
             b.Click += (_, _) => { _keyColors.Remove(c); RefreshKeys(); };
             _keySwatches.Children.Add(b);
         }
@@ -599,6 +632,13 @@ public sealed class ImportPage : IStepPage
         return views;
     }
 
+    private static void SaveApiView(string path, ViewKind kind, string outPath)
+    {
+        var img = ReconstructPipeline.CutoutSquare(ViewImage.Load(kind, path));
+        if (Math.Max(img.W, img.H) > 768) img = img.Resized(768, 768);
+        img.SavePng(outPath);
+    }
+
     private void RecordHistory(string kind, string title, VoxelModel m, string source, string? mode = null)
     {
         var name = string.IsNullOrWhiteSpace(title) ? "未命名" : title.Trim();
@@ -639,6 +679,7 @@ public sealed class ImportPage : IStepPage
         var useApi = _method == 2 || (_method == 0 && !localReady && api.Configured);
         if (s.Dirty && !await _h.ConfirmAsync("替换当前模型？", "生成的新模型会替换当前未保存的修改。", "继续")) return;
         _log.Text = "";
+        _logExp.IsExpanded = true;
         _aiThumbs.Children.Clear();
         _running = true;
         UpdateSourceState();
@@ -655,7 +696,24 @@ public sealed class ImportPage : IStepPage
                     if (front.It == null) front = prepped.FirstOrDefault();
                     if (front.It == null) throw new InvalidOperationException("缺少正面图。");
                     var apiDir = AppPaths.NewWorkDir("api3d");
-                    var meshPath = await api.GenerateAsync(front.Path, apiDir, p, ct);
+                    var extraViews = new List<HunyuanView>();
+                    foreach (var (it, path) in prepped.Where(x => x.It.Role is > 0 and < 6))
+                    {
+                        var kind = (ViewKind)it.Role;
+                        var type = kind switch
+                        {
+                            ViewKind.Back => "back", ViewKind.Left => "left", ViewKind.Right => "right",
+                            ViewKind.Top => "top", ViewKind.Bottom => "bottom", _ => null,
+                        };
+                        if (type == null) continue;
+                        var vp = System.IO.Path.Combine(apiDir, $"api_{type}.png");
+                        SaveApiView(path, kind, vp);
+                        extraViews.Add(new HunyuanView(type, vp));
+                    }
+                    var frontPath = System.IO.Path.Combine(apiDir, "api_front.png");
+                    SaveApiView(front.Path, ViewKind.Front, frontPath);
+                    if (extraViews.Count > 0) Log($"在线多视图：正面 + {extraViews.Count} 个附加视角");
+                    var meshPath = await api.GenerateAsync(frontPath, apiDir, extraViews, p, ct);
                     var mesh = MeshLoader.Load(meshPath);
                     var viewImages = new List<ViewImage>();
                     var viewPaths = new Dictionary<ViewKind, string>();

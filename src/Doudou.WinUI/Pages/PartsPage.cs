@@ -14,6 +14,7 @@ public sealed class PartsPage : IStepPage
     public string Header => "零件拆分";
     public string Description => "把模型拆成一块块可以单独熨烫的平板零件";
     public UIElement View { get; }
+    public UIElement? Footer { get; }
 
     private readonly IHost _h;
     private Session S => _h.S;
@@ -24,6 +25,8 @@ public sealed class PartsPage : IStepPage
     private ModelPartsReport? _rep;
     private bool _refreshing, _active;
     private int _tooth = 2;
+    private ToggleSwitch _tintToggle = null!;
+    private bool _syncTint;
 
     public PartsPage(IHost h)
     {
@@ -31,8 +34,7 @@ public sealed class PartsPage : IStepPage
         var root = new StackPanel();
 
         root.Children.Add(Card("一键初稿", null, _recommend,
-            Flow(Btn("智能推荐", Auto, G.Magic, accent: true, tip: "按形状自动选择：圆润造型 → 水平环片；方正造型 → 箱体面板 + 齿口"),
-                 Btn("水平分层", () => Do("水平分层", () => SplitTools.LayerSplit(S.Model, S.History, 1)), G.Layers, tip: "沿高度切成一圈圈环片（人物、动物、铃铛）"),
+            Flow(Btn("水平分层", () => Do("水平分层", () => SplitTools.LayerSplit(S.Model, S.History, 1)), G.Layers, tip: "沿高度切成一圈圈环片（人物、动物、铃铛）"),
                  Btn("面板拆分", () => Do("面板拆分", () => SplitTools.PanelSplit(S.Model, S.History)), G.Cube, tip: "按表面朝向拆成前/后/侧/顶板（建筑、方块造型）"),
                  Btn("竖切 X", () => Do("竖切X", () => SplitTools.LayerSplit(S.Model, S.History, 0))),
                  Btn("竖切 Z", () => Do("竖切Z", () => SplitTools.LayerSplit(S.Model, S.History, 2))),
@@ -62,26 +64,46 @@ public sealed class PartsPage : IStepPage
                  Btn("隐藏/显示", ToggleVisible, G.Eye), Btn("只看所选", Solo, G.Zoom), Btn("全部显示", ShowAll),
                  Btn("两件齿口", JointSelected, G.Link, tip: "按住 Ctrl 选两块垂直相接的板"), Btn("合并所选", MergeSelected, G.Merge), Btn("取消分配", UnassignSelected, G.Delete))));
 
-        var tint = new ToggleSwitch { OnContent = "按零件着色", OffContent = "按颜色显示", IsOn = true };
-        tint.Toggled += (_, _) => S.Display = tint.IsOn ? DisplayMode.PartTint : DisplayMode.Color;
-        root.Children.Add(Card("预览", "红色斜纹 = 还没有分到零件的豆。", SliderRow("爆炸", 1, 3, 1, v => S.Explode = (float)v, 0.05, "0.00", "×").Row, tint));
+        _tintToggle = new ToggleSwitch { OnContent = "按零件着色", OffContent = "按颜色显示", IsOn = false };
+        _tintToggle.Toggled += (_, _) => { if (!_syncTint) S.Display = _tintToggle.IsOn ? DisplayMode.PartTint : DisplayMode.Color; };
+        root.Children.Add(Card("预览", "开启「按零件着色」时，红色斜纹 = 还没有分到零件的豆；零件很多时建议按颜色显示。",
+            SliderRow("爆炸", 1, 3, 1, v => S.Explode = (float)v, 0.05, "0.00", "×").Row, _tintToggle));
 
         View = root;
+        var footer = new StackPanel { Spacing = 2 };
+        var auto = WideBtn("智能推荐拆分", Auto, G.Magic);
+        auto.Margin = new Thickness(0);
+        footer.Children.Add(auto);
+        footer.Children.Add(NextLink("下一步：检查 →", () => _h.GoStep(4)));
+        Footer = footer;
         // 只跟「内容」变化：显示开关（亮度、描边、剖切…）不该让整份零件分析重算一遍
         S.ContentChanged += () => { if (_active) _h.View.DispatcherQueue.TryEnqueue(Refresh); };
+        S.PropertyChanged += (_, e) => { if (e.PropertyName == nameof(Session.Display)) _h.View.DispatcherQueue.TryEnqueue(SyncTint); };
     }
 
     public void OnEnter()
     {
         _active = true;
-        S.Display = DisplayMode.PartTint;
+        int parts = S.Model.PartList.Count;
+        S.Display = parts is > 0 and <= 30 ? DisplayMode.PartTint : DisplayMode.Color;
+        SyncTint();
         if (S.Action is EditAction.Attach or EditAction.Erase or EditAction.Paint) { S.Action = EditAction.PartPaint; S.Brush = BrushMode.Plane; }
         var (how, flat) = SplitTools.Recommend(S.Model);
-        _recommend.Text = $"表面平面度 {flat:P0}，推荐「{(how == "panel" ? "面板拆分（箱体 + 齿口）" : "水平分层（环片）")}」。初稿之后再用零件刷手工调整。";
+        var estimate = how == "panel" ? "预计 6~12 个板件" : $"预计 {S.Model.SY}~{S.Model.SY * 2} 个层板";
+        _recommend.Text = $"表面平面度 {flat:P0}，推荐「{(how == "panel" ? "面板拆分（箱体 + 齿口）" : "水平分层（环片）")}」，{estimate}。初稿之后再用零件刷手工调整。" +
+                          (parts > 30 ? $"\n当前 {parts} 个零件，已切回按颜色显示；零件多时建议降低豆高、合并碎件或改用面板拆分。" : "");
         Refresh();
     }
 
     public void OnLeave() => _active = false;
+
+    private void SyncTint()
+    {
+        if (_tintToggle == null) return;
+        _syncTint = true;
+        _tintToggle.IsOn = S.Display == DisplayMode.PartTint;
+        _syncTint = false;
+    }
 
     private void Brush(BrushMode b)
     {
@@ -104,10 +126,23 @@ public sealed class PartsPage : IStepPage
     private void Do(string name, Func<int> f)
     {
         if (S.Model.CountSolid() == 0) { _h.Notify("模型是空的", InfoBarSeverity.Warning); return; }
-        int r = f();
+        f();
         S.RaiseChanged();
+        int count = S.Model.PartList.Count;
+        if (count > 30)
+        {
+            S.Display = DisplayMode.Color;
+            SyncTint();
+        }
+        else if (count > 0)
+        {
+            S.Display = DisplayMode.PartTint;
+            SyncTint();
+        }
         Refresh();
-        _h.Notify($"{name}完成：当前 {S.Model.PartList.Count} 个零件", InfoBarSeverity.Success);
+        var msg = $"{name}完成：当前 {count} 个零件";
+        if (count > 30) msg += "。零件较多，建议降低豆高、合并碎件或改用面板拆分。";
+        _h.Notify(msg, count > 30 ? InfoBarSeverity.Warning : InfoBarSeverity.Success);
     }
 
     private async Task ClearAll()

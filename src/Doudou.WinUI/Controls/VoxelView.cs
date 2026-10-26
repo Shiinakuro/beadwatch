@@ -24,6 +24,9 @@ public sealed class VoxelView : Grid
     private Session? _s;
     public ToolController? Tools { get; private set; }
 
+    /// <summary>关闭后仍可旋转/缩放/平移，但左键不会修改模型（导入、检查、导出、设置页）。</summary>
+    public bool EditEnabled { get; set; } = true;
+
     private bool _meshDirty = true, _previewDirty = true, _linesDirty = true, _frameQueued;
     private bool _initFailed;
     private int _solid;
@@ -271,7 +274,7 @@ public sealed class VoxelView : Grid
         var props = pt.Properties;
         if (props.IsRightButtonPressed) { _rotating = true; return; }
         if (props.IsMiddleButtonPressed || (props.IsLeftButtonPressed && _spaceDown)) { _panning = true; return; }
-        if (!props.IsLeftButtonPressed || Tools == null || _s == null) return;
+        if (!props.IsLeftButtonPressed || !EditEnabled || Tools == null || _s == null) return;
         if (Exploded) { Message?.Invoke("爆炸预览中不能编辑，请先把爆炸系数调回 1"); return; }
         bool alt = e.KeyModifiers.HasFlag(VirtualKeyModifiers.Menu);
         bool ctrl = e.KeyModifiers.HasFlag(VirtualKeyModifiers.Control);
@@ -307,7 +310,7 @@ public sealed class VoxelView : Grid
             Invalidate();
             return;
         }
-        if (Tools == null || _s == null || Exploded) return;
+        if (!EditEnabled || Tools == null || _s == null || Exploded) return;
         var (o, d) = Ray(p);
         bool alt = e.KeyModifiers.HasFlag(VirtualKeyModifiers.Menu);
         if (pt.Properties.IsLeftButtonPressed && Tools.Drag(o, d)) _meshDirty = true;
@@ -320,7 +323,7 @@ public sealed class VoxelView : Grid
     {
         ReleasePointerCapture(e.Pointer);
         if (_rotating || _panning) { _rotating = _panning = false; return; }
-        if (Tools != null && Tools.Up()) _meshDirty = true;
+        if (Tools != null && EditEnabled && Tools.Up()) _meshDirty = true;
         _previewDirty = true;
         Invalidate();
     }

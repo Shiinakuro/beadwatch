@@ -1,4 +1,5 @@
 using System.Numerics;
+using Doudou.Core.Geometry;
 using Doudou.Core.IO;
 
 namespace Doudou.Core.Recon;
@@ -9,9 +10,22 @@ namespace Doudou.Core.Recon;
 /// </summary>
 public static class Voxelizer
 {
+    /// <summary>体素网格与原网格之间的坐标变换。体素坐标以格中心 +0.5 计。</summary>
+    public readonly record struct VoxelFrame(Vector3 MeshMin, float Scale, Int3 CropOffset)
+    {
+        public Vector3 ToVoxel(Vector3 meshPoint) =>
+            (meshPoint - MeshMin) * Scale - new Vector3(CropOffset.X, CropOffset.Y, CropOffset.Z);
+
+        public Vector3 ToMesh(Vector3 voxelPoint) =>
+            MeshMin + (voxelPoint + new Vector3(CropOffset.X, CropOffset.Y, CropOffset.Z)) / Scale;
+    }
+
     /// <param name="mesh">网格，Y 朝上</param>
     /// <param name="targetHeight">目标高度（豆数 / 层数）</param>
-    public static Occupancy Voxelize(TriMesh mesh, int targetHeight)
+    public static Occupancy Voxelize(TriMesh mesh, int targetHeight) => Voxelize(mesh, targetHeight, out _);
+
+    /// <param name="frame">网格坐标 → 体素坐标的变换，供纹理采样复用。</param>
+    public static Occupancy Voxelize(TriMesh mesh, int targetHeight, out VoxelFrame frame)
     {
         var (mn, mx) = mesh.Bounds();
         float h = mx.Y - mn.Y;
@@ -30,9 +44,13 @@ public static class Voxelizer
 
         var occ = new Occupancy(sx, sy, sz);
         for (int i = 0; i < votes.Length; i++) occ.Cells[i] = votes[i] >= 2;
-        occ.KeepLargestComponent(0.02);
+        occ.KeepLargestComponent(0.002);
         occ.FillCavities();
-        return occ.Cropped();
+        frame = new VoxelFrame(mn, s, Int3.Zero);
+        var bounds = occ.Bounds();
+        var cropped = occ.Cropped();
+        if (bounds is { } b) frame = new VoxelFrame(mn, s, b.Min);
+        return cropped;
     }
 
     private static void CastAlong(Vector3[] v, List<int> idx, int[] dims, int c, byte[] votes)

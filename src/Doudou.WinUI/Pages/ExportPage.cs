@@ -14,6 +14,7 @@ public sealed class ExportPage : IStepPage
     public string Header => "图纸导出";
     public string Description => "生成总图、零件图、装配图和材料清单";
     public UIElement View { get; }
+    public UIElement? Footer { get; }
 
     private readonly IHost _h;
     private Session S => _h.S;
@@ -49,12 +50,21 @@ public sealed class ExportPage : IStepPage
         g.Children.Add(_folder);
         Grid.SetColumn(pick, 1);
         g.Children.Add(pick);
-        root.Children.Add(Card("输出位置", null, g, WideBtn("生成图纸", async () => await Export(), G.Print), _out));
+        root.Children.Add(Card("输出位置", null, g, _out));
         View = root;
+        var run = WideBtn("生成图纸", () => _ = Export(), G.Print);
+        run.Margin = new Thickness(0);
+        Footer = run;
         S.ModelReplaced += () => h.View.DispatcherQueue.TryEnqueue(() =>
         {
             _folder.Text = "";
             _out.Children.Clear();
+        });
+        S.ContentChanged += () => h.View.DispatcherQueue.TryEnqueue(() =>
+        {
+            if (_out.Children.Count == 0) return;
+            _out.Children.Clear();
+            _out.Children.Add(Caption("模型已修改，请重新生成图纸。"));
         });
     }
 
