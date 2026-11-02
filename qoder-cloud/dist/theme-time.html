@@ -439,6 +439,50 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(233,184,92,.16);pad
 .leave{position:fixed;inset:0;z-index:400;background:radial-gradient(circle at 50% 50%,rgba(94,177,232,.3),rgba(5,8,18,.98) 48%);opacity:0;pointer-events:none;transition:opacity .3s}
 .leave.on{opacity:1}
 
+
+/* ---------- extra time interactions ---------- */
+.time-screen{transform-style:preserve-3d;transition:transform .2s ease-out;will-change:transform}
+.time-screen::after{content:"";position:absolute;inset:7px;z-index:4;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(220px circle at var(--gx,50%) var(--gy,35%),rgba(255,235,190,.2),transparent 68%);mix-blend-mode:screen}
+.hero-stage:hover .time-screen::after{opacity:.8}
+.sonic-ring{position:absolute;z-index:7;width:14px;height:14px;border:1px solid var(--gold);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%) scale(.2);opacity:.9;animation:sonic-ring .8s ease-out forwards}
+@keyframes sonic-ring{to{transform:translate(-50%,-50%) scale(15);opacity:0}}
+.warp-flash{position:absolute;inset:0;z-index:4;pointer-events:none;background:radial-gradient(circle at 50% 56%,rgba(233,184,92,.42),rgba(42,111,168,.25) 34%,transparent 70%);opacity:0}
+.warp-flash.on{animation:warp-flash 1.35s ease-out}
+@keyframes warp-flash{0%{opacity:0}18%{opacity:1}100%{opacity:0}}
+.hero.warping .vortex{filter:brightness(1.55) saturate(1.3)}
+.warp-burst{position:absolute;inset:0;z-index:8;pointer-events:none}
+.warp-spark{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--gold2);box-shadow:0 0 10px var(--gold2);animation:warp-spark 1.1s ease-out forwards}
+@keyframes warp-spark{to{transform:translate(var(--dx),var(--dy)) scale(.15);opacity:0}}
+.core-box.flash{animation:core-flash .5s ease}
+@keyframes core-flash{50%{filter:brightness(1.22);box-shadow:0 0 0 1px var(--gold2),0 0 52px rgba(233,184,92,.35)}}
+.radio.tuning .radio-dial{animation:radio-wobble .55s ease}
+@keyframes radio-wobble{20%{transform:rotate(-2deg)}45%{transform:rotate(1.5deg)}70%{transform:rotate(-.8deg)}100%{transform:rotate(0)}}
+.radio.tuning .freq{color:#fff;text-shadow:0 0 14px var(--teal)}
+.radio.tuning .radio-head b{color:#fff;text-shadow:0 0 10px var(--teal)}
+.time-rail .rail-ticks{position:absolute;left:50%;top:0;width:16px;height:180px;transform:translateX(-50%);z-index:2}
+.time-rail .rail-ticks a{position:absolute;left:50%;width:18px;height:18px;margin-left:-9px;margin-top:-9px;display:grid;place-items:center;opacity:.55;transition:opacity .25s;cursor:pointer}
+.time-rail .rail-ticks a::before{content:"";width:3px;height:3px;border-radius:50%;background:#5f7690;transition:background .25s,box-shadow .25s,transform .25s}
+.time-rail .rail-ticks a:hover,.time-rail .rail-ticks a.active{opacity:1}
+.time-rail .rail-ticks a:hover::before,.time-rail .rail-ticks a.active::before{background:var(--gold);box-shadow:0 0 8px var(--gold);transform:scale(1.5)}
+.badwolf{background:none;border:0;padding:0;font:inherit;cursor:pointer}
+.wolf-veil{position:fixed;inset:0;z-index:320;background:rgba(2,6,14,.93);display:grid;place-items:center;padding:24px;overflow:hidden}
+.wolf-veil[hidden]{display:none}
+.wolf-card{position:relative;z-index:2;width:min(680px,100%);text-align:center;padding:56px 30px 42px;border:1px solid rgba(233,184,92,.38);background:radial-gradient(circle at 50% 38%,rgba(42,111,168,.22),rgba(4,8,18,.97) 68%);box-shadow:0 30px 90px -20px #000,0 0 70px rgba(42,111,168,.18);overflow:hidden}
+.wolf-card::before{content:"";position:absolute;inset:13%;border:1px dashed rgba(233,184,92,.25);border-radius:50%;animation:spin 22s linear infinite;pointer-events:none}
+.wolf-card::after{content:"";position:absolute;inset:24%;border:1px solid rgba(100,214,207,.14);border-radius:50%;pointer-events:none}
+.wolf-kicker{font-family:var(--mono);font-size:8px;letter-spacing:.24em;color:var(--teal);margin-bottom:14px}
+.wolf-card h2{position:relative;z-index:1;font-family:var(--serif);font-size:clamp(52px,9vw,96px);line-height:1.05;letter-spacing:.1em;color:var(--gold2);text-shadow:0 0 30px rgba(233,184,92,.3),2px 0 rgba(100,214,207,.28),-2px 0 rgba(233,184,92,.2);animation:wolf-scratch 4.5s ease-in-out infinite alternate}
+@keyframes wolf-scratch{0%{transform:skewX(0)}48%{transform:skewX(0)}50%{transform:skewX(-1.2deg)}52%{transform:skewX(1deg)}54%{transform:skewX(0)}100%{transform:skewX(0)}}
+.wolf-card p{margin-top:18px;font-size:12px;line-height:1.95;color:#a99a80;position:relative;z-index:1}
+.wolf-close{margin-top:26px;border:1px solid rgba(233,184,92,.45);background:rgba(233,184,92,.1);color:var(--gold2);padding:11px 24px;border-radius:999px;font-family:var(--mono);font-size:9px;letter-spacing:.14em;cursor:pointer;position:relative;z-index:1;transition:background .25s,color .25s}
+.wolf-close:hover{background:var(--gold);color:#07101f}
+.time-cursor{position:fixed;left:0;top:0;z-index:150;width:34px;height:34px;border-radius:50%;border:1px solid rgba(233,184,92,.55);pointer-events:none;opacity:0;transition:opacity .25s, border-color .25s;will-change:transform}
+.time-cursor.on{opacity:.8}
+.time-cursor::before{content:"";position:absolute;inset:-5px;border:1px dashed rgba(100,214,207,.4);border-radius:50%;animation:spin 16s linear infinite}
+.time-cursor::after{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold)}
+.time-cursor.pulse{border-color:var(--teal)}
+@media (prefers-reduced-motion:reduce){.time-screen{transform:none!important}.sonic-ring{display:none}.warp-spark{display:none}.warp-flash{display:none}.time-cursor{display:none}.wolf-card h2{animation:none}}
+
 /* responsive */
 @media (min-width:1280px){
   .time-rail{display:flex}
@@ -595,9 +639,18 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(233,184,92,.16);pad
 <a class="skip" href="#main">跳到主要内容</a>
 <div class="progress" aria-hidden="true"><i></i></div>
 
-<div class="time-rail" aria-hidden="true">
+<nav class="time-rail" aria-label="时间线导航">
   <div class="rail-line"><i class="rail-dot" id="railDot"></i><span class="rail-label" id="railLabel">T+00</span></div>
-</div>
+  <div class="rail-ticks">
+    <a href="#timeline" style="top:0%" aria-label="时间线"></a>
+    <a href="#parallel" style="top:16.66%" aria-label="平行世界"></a>
+    <a href="#console" style="top:33.33%" aria-label="控制台"></a>
+    <a href="#engine" style="top:50%" aria-label="重建引擎"></a>
+    <a href="#signal" style="top:66.66%" aria-label="通讯器"></a>
+    <a href="#archive" style="top:83.33%" aria-label="档案"></a>
+    <a href="#launch" style="top:100%" aria-label="出发"></a>
+  </div>
+</nav>
 
 <header class="cmd" id="cmd">
   <div class="wrap cmd-in">
@@ -674,6 +727,8 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(233,184,92,.16);pad
       <div class="stage-label">BIGGER ON THE INSIDE<span>里面比外面大</span></div>
       <div class="stage-coords"><b>LOCATION</b>51.5074° N // 0.1278° W<b>TYPE 40 // 1963</b></div>
       <div class="demat-ring" id="dematRing" aria-hidden="true"></div>
+      <div class="warp-flash" id="warpFlash" aria-hidden="true"></div>
+      <div class="warp-burst" id="warpBurst" aria-hidden="true"></div>
       <button class="tardis" id="tardis" type="button" aria-label="按一下蓝色警亭的灯，有声音" title="按一下试试，有声音">
         <svg viewBox="0 0 140 210" role="img" aria-label="蓝色警亭">
           <defs>
@@ -1007,11 +1062,22 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(233,184,92,.16);pad
     <nav class="foot-nav" aria-label="页脚导航">
       <a href="#timeline">时间线</a><a href="#parallel">平行世界</a><a href="#console">控制台</a><a href="#engine">重建引擎</a><a href="#signal">通讯器</a><a href="#archive">档案</a><a href="#launch">出发</a><a href="api-guide.html">API 指南</a><a href="https://github.com/Shiinakuro/beadwatch" target="_blank" rel="noopener">GitHub</a>
     </nav>
-    <p class="foot-meta">© 2026 BEADWATCH<br>非官方《神秘博士》同人主题<br><span class="fan">与 BBC 无关</span><br><span class="type40">TYPE 40 // 1963</span><br><span class="badwolf" title="有些字会跟着你">BAD WOLF</span></p>
+    <p class="foot-meta">© 2026 BEADWATCH<br>非官方《神秘博士》同人主题<br><span class="fan">与 BBC 无关</span><br><span class="type40">TYPE 40 // 1963</span><br><button class="badwolf" id="badwolf" type="button" title="有些字会跟着你">BAD WOLF</button></p>
   </div>
 </footer>
 
+<div class="wolf-veil" id="wolfVeil" hidden role="dialog" aria-modal="true" aria-labelledby="wolfTitle">
+  <div class="wolf-card">
+    <p class="wolf-kicker">BAD WOLF // 有些字会跟着你</p>
+    <h2 id="wolfTitle">BAD WOLF</h2>
+    <p>你找到的彩蛋不会计入成就。<br>但它会一直跟着你。</p>
+    <button class="wolf-close" id="wolfClose" type="button">继续走</button>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite">别眨眼。</div>
+
+<div class="time-cursor" id="timeCursor" aria-hidden="true"><i></i><i></i></div>
 
 <script src="assets/themes/switch.js"></script>
 <script>
@@ -1019,6 +1085,7 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(233,184,92,.16);pad
   "use strict";
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
+  let warpFactor = 0;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
@@ -1101,9 +1168,16 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(233,184,92,.16);pad
         s.x += s.vx * dt * .02;
         if (s.x < -2) s.x = w + 2; if (s.x > w + 2) s.x = -2;
         const a = s.a * (0.6 + 0.4 * Math.sin(s.ph));
+        if (warpFactor > .015) {
+          const dx = s.x - w / 2, dy = s.y - h / 2;
+          ctx.strokeStyle = "rgba(233,222,198," + (.7 * warpFactor * s.a).toFixed(3) + ")";
+          ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(s.x + dx * warpFactor * .18, s.y + dy * warpFactor * .18); ctx.stroke();
+        }
         ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 6.2832);
         ctx.fillStyle = "rgba(233,222,198," + a + ")"; ctx.fill();
       }
+      warpFactor *= .965;
       nextShot -= dt;
       if (!shooting && nextShot <= 0) {
         shooting = { x: Math.random() * w * .7, y: Math.random() * h * .4, len: 70 + Math.random() * 90, life: 0 };
@@ -1152,15 +1226,117 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(233,184,92,.16);pad
     o1.start(t); o2.start(t); o1.stop(t + 1.35); o2.stop(t + 1.35);
     setTimeout(() => ctx.close().catch(() => {}), 1800);
   }
+  function stageBurst() {
+    const stage = document.querySelector(".hero-stage");
+    const burst = $("#warpBurst");
+    const flash = $("#warpFlash");
+    if (!stage || !burst || !tardis) return;
+    const sr = stage.getBoundingClientRect(), tr = tardis.getBoundingClientRect();
+    const cx = tr.left - sr.left + tr.width / 2, cy = tr.top - sr.top + tr.height / 2;
+    burst.innerHTML = "";
+    for (let i = 0; i < 26; i++) {
+      const sp = document.createElement("i");
+      sp.className = "warp-spark";
+      const a = Math.random() * Math.PI * 2, d = 40 + Math.random() * 130;
+      sp.style.left = cx + "px"; sp.style.top = cy + "px";
+      sp.style.setProperty("--dx", (Math.cos(a) * d).toFixed(1) + "px");
+      sp.style.setProperty("--dy", (Math.sin(a) * d).toFixed(1) + "px");
+      sp.style.animationDelay = (Math.random() * .15).toFixed(2) + "s";
+      burst.appendChild(sp);
+    }
+    if (flash) { flash.classList.remove("on"); void flash.offsetWidth; flash.classList.add("on"); setTimeout(() => flash.classList.remove("on"), 1400); }
+    setTimeout(() => { burst.innerHTML = ""; }, 1400);
+  }
   function dematerialise() {
     if (tardis.classList.contains("demat")) return;
     tardis.classList.add("demat");
     if (dematRing) { dematRing.classList.remove("on"); void dematRing.offsetWidth; dematRing.classList.add("on"); }
+    warpFactor = 1;
+    const hero = $(".hero");
+    if (hero) { hero.classList.add("warping"); setTimeout(() => hero.classList.remove("warping"), 1700); }
+    stageBurst();
     try { playWheeze(); } catch (_) {}
     if (toast) { toast.classList.add("on"); setTimeout(() => toast.classList.remove("on"), 1800); }
     setTimeout(() => tardis.classList.remove("demat"), 1600);
   }
   if (tardis) tardis.addEventListener("click", dematerialise);
+
+
+  /* stage tilt + sonic rings */
+  const heroStage = $(".hero-stage");
+  const timeScreen = $(".time-screen");
+  if (heroStage && timeScreen && fine && !reduce) {
+    heroStage.addEventListener("pointermove", (e) => {
+      const r = heroStage.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - .5;
+      const py = (e.clientY - r.top) / r.height - .5;
+      timeScreen.style.transform = "rotate(-1.2deg) rotateX(" + (-py * 3.2).toFixed(2) + "deg) rotateY(" + (px * 3.8).toFixed(2) + "deg) translate3d(" + (px * 4).toFixed(1) + "px," + (py * 3).toFixed(1) + "px,0)";
+      timeScreen.style.setProperty("--gx", (e.clientX - r.left).toFixed(0) + "px");
+      timeScreen.style.setProperty("--gy", (e.clientY - r.top).toFixed(0) + "px");
+    });
+    heroStage.addEventListener("pointerleave", () => { timeScreen.style.transform = ""; });
+    heroStage.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0 || e.target.closest("button,a")) return;
+      const r = heroStage.getBoundingClientRect();
+      const ring = document.createElement("span");
+      ring.className = "sonic-ring";
+      ring.style.left = (e.clientX - r.left) + "px";
+      ring.style.top = (e.clientY - r.top) + "px";
+      heroStage.appendChild(ring);
+      setTimeout(() => ring.remove(), 900);
+    }, { passive: true });
+  }
+
+  /* time rail active */
+  const railTicks = $$(".time-rail .rail-ticks a");
+  if (railTicks.length && "IntersectionObserver" in window) {
+    const railSections = railTicks.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+    const railIO = new IntersectionObserver((es) => {
+      for (const e of es) if (e.isIntersecting) railTicks.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + e.target.id));
+    }, { rootMargin: "-42% 0px -50% 0px", threshold: 0 });
+    railSections.forEach((x) => railIO.observe(x));
+  }
+
+  /* wolf overlay */
+  const wolf = $("#badwolf");
+  const wolfVeil = $("#wolfVeil");
+  const wolfClose = $("#wolfClose");
+  function openWolf() {
+    if (!wolfVeil) return;
+    wolfVeil.hidden = false;
+    document.body.style.overflow = "hidden";
+    if (wolfClose) wolfClose.focus({ preventScroll: true });
+  }
+  function closeWolf() {
+    if (!wolfVeil) return;
+    wolfVeil.hidden = true;
+    document.body.style.overflow = "";
+    if (wolf) wolf.focus({ preventScroll: true });
+  }
+  if (wolf) wolf.addEventListener("click", openWolf);
+  if (wolfClose) wolfClose.addEventListener("click", closeWolf);
+  if (wolfVeil) wolfVeil.addEventListener("click", (e) => { if (e.target === wolfVeil) closeWolf(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && wolfVeil && !wolfVeil.hidden) closeWolf(); });
+
+  /* time cursor */
+  if (fine && !reduce) {
+    const cursor = $("#timeCursor");
+    if (cursor) {
+      let cx = innerWidth / 2, cy = innerHeight / 2, tx = cx, ty = cy, shown = false;
+      addEventListener("pointermove", (e) => {
+        tx = e.clientX; ty = e.clientY;
+        if (!shown) { cx = tx; cy = ty; shown = true; cursor.classList.add("on"); }
+      }, { passive: true });
+      document.addEventListener("pointerleave", () => cursor.classList.remove("on"));
+      addEventListener("pointerdown", () => { cursor.classList.add("pulse"); setTimeout(() => cursor.classList.remove("pulse"), 500); }, { passive: true });
+      const follow = () => {
+        cx += (tx - cx) * .2; cy += (ty - cy) * .2;
+        cursor.style.transform = "translate3d(" + (cx - 17) + "px," + (cy - 17) + "px,0)";
+        requestAnimationFrame(follow);
+      };
+      requestAnimationFrame(follow);
+    }
+  }
 
   /* timeline scroll driven */
   const line = $("#timeLine");
@@ -1242,9 +1418,31 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(233,184,92,.16);pad
     engineBar.style.width = d.width;
     if (coreSign) coreSign.textContent = d.sign;
   }
+  function playClunk() {
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      const ac = new AC(), t = ac.currentTime;
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.type = "sine"; o.frequency.setValueAtTime(120, t); o.frequency.exponentialRampToValueAtTime(54, t + .18);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.07, t + .01); g.gain.exponentialRampToValueAtTime(.001, t + .22);
+      o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + .24);
+      const len = Math.floor(ac.sampleRate * .06), buf = ac.createBuffer(1, len, ac.sampleRate), data = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
+      const src = ac.createBufferSource(), ng = ac.createGain();
+      src.buffer = buf; ng.gain.value = .035; src.connect(ng); ng.connect(ac.destination); src.start(t);
+      setTimeout(() => ac.close().catch(() => {}), 500);
+    } catch (_) {}
+  }
+  const coreBox = $(".core-box");
+  function toggleEngine() {
+    setEngine(!isOnline);
+    try { playClunk(); } catch (_) {}
+    if (coreBox) { coreBox.classList.remove("flash"); void coreBox.offsetWidth; coreBox.classList.add("flash"); setTimeout(() => coreBox.classList.remove("flash"), 600); }
+  }
   setEngine(true);
-  track.addEventListener("click", () => setEngine(!isOnline));
-  track.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setEngine(!isOnline); } });
+  track.addEventListener("click", toggleEngine);
+  track.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleEngine(); } });
 
   /* radio */
   const needle = $("#radioNeedle");
@@ -1253,6 +1451,7 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(233,184,92,.16);pad
   const radioStatus = $("#radioStatus");
   const modelBtns = $$(".radio-models button");
   const angles = { "101.5": -38, "96.7": -12, "88.1": 18, "104.2": -62 };
+  const radioEl = $(".radio");
   modelBtns.forEach((b) => {
     b.addEventListener("click", () => {
       modelBtns.forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
@@ -1261,6 +1460,7 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(233,184,92,.16);pad
       freqModel.textContent = b.dataset.model;
       needle.style.transform = "rotate(" + (angles[f] || 0) + "deg)";
       radioStatus.textContent = "TUNED // " + b.dataset.model.toUpperCase();
+      if (radioEl) { radioEl.classList.remove("tuning"); void radioEl.offsetWidth; radioEl.classList.add("tuning"); setTimeout(() => radioEl.classList.remove("tuning"), 650); }
     });
   });
 

@@ -208,7 +208,7 @@ ul,ol{padding:0;list-style:none}
 
 /* ---------- pause ---------- */
 .pause{padding:118px 0 108px;position:relative}
-.pause-in{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:70px;align-items:end}
+.pause-in{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:56px;align-items:end}
 .pause blockquote{position:relative;padding-top:30px}
 .pause blockquote::before{content:"";position:absolute;left:0;top:0;width:52px;height:1px;background:var(--copper)}
 .pause blockquote p{
@@ -444,6 +444,47 @@ footer{border-top:1px solid var(--line-2);padding:48px 0 38px;background:rgba(23
 .foot-themes a:hover{border-color:var(--copper)}
 .foot-themes span{color:var(--line-2);margin:0 5px}
 
+
+/* ---------- interactive paper ---------- */
+.hero-shot{transform-style:preserve-3d;transition:transform .22s var(--ease),box-shadow .4s var(--ease);will-change:transform;cursor:zoom-in}
+.hero-shot::after{content:"";position:absolute;left:9px;right:9px;top:9px;height:calc(100% - 64px);z-index:2;pointer-events:none;opacity:0;transition:opacity .35s;background:radial-gradient(180px circle at var(--gx,50%) var(--gy,35%),rgba(255,255,255,.3),transparent 68%);mix-blend-mode:screen}
+.hero-shot:hover::after{opacity:.75}
+.shot-lens{position:absolute;z-index:5;width:132px;height:132px;border-radius:50%;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.86);transition:opacity .18s,transform .18s;background-color:var(--cream);background-image:url("assets/shots/editor.png");background-repeat:no-repeat;border:2px solid rgba(251,247,238,.92);box-shadow:0 0 0 1px var(--copper),0 18px 44px -18px rgba(0,0,0,.7);left:-200px;top:-200px}
+.hero-shot:hover .shot-lens{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.note-bell{position:absolute;top:13px;right:13px;width:27px;height:27px;border:1px solid rgba(217,139,87,.4);border-radius:50%;background:rgba(255,255,255,.035);color:var(--copper-3);display:grid;place-items:center;cursor:pointer;padding:0;transition:color .25s,border-color .25s,transform .25s}
+.note-bell:hover{color:var(--cream);border-color:var(--copper-3);transform:rotate(-8deg)}
+.note-bell svg{width:13px;height:13px}
+.hero-note.ringing{animation:note-ring .9s var(--ease)}
+@keyframes note-ring{0%,100%{transform:rotate(-1.4deg)}25%{transform:rotate(-.2deg)}50%{transform:rotate(-2.2deg)}75%{transform:rotate(-.8deg)}}
+.btn{position:relative;overflow:hidden}
+.ink-ripple{position:absolute;border-radius:50%;background:rgba(255,248,238,.3);pointer-events:none;transform:scale(0);animation:ink-ripple .65s ease-out forwards}
+@keyframes ink-ripple{60%{opacity:.55}100%{transform:scale(1);opacity:0}}
+.shot{overflow:hidden}
+.shot img{transition:transform .8s var(--ease)}
+.shot:hover img{transform:scale(1.015)}
+.mini-studio{position:relative;margin-top:22px;padding:12px;background:rgba(251,247,238,.55);border:1px solid rgba(239,230,214,.18);box-shadow:0 20px 40px -30px rgba(0,0,0,.6)}
+.mini-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:2px 2px 10px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--muted)}
+.mini-head span:last-child{color:var(--copper)}
+.mini-studio canvas{display:block;width:100%;height:auto;border:1px solid rgba(90,64,28,.28);background:#f6efe3;touch-action:pan-y;cursor:crosshair}
+.mini-tools{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px}
+.mini-palette{display:flex;align-items:center;gap:6px}
+.mini-palette button{width:19px;height:19px;border-radius:50%;border:1px solid rgba(239,230,214,.35);background:var(--c);padding:0;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.mini-palette button:hover{transform:translateY(-2px)}
+.mini-palette button.on{box-shadow:0 0 0 2px var(--cream),0 0 0 3px var(--copper);transform:translateY(-1px)}
+.mini-clear{background:none;border:0;padding:0;font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;color:var(--muted);text-decoration:underline;cursor:pointer}
+.mini-clear:hover{color:var(--copper)}
+.mini-studio .bead-caption{margin-top:9px;font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--muted)}
+.mini-studio .bead-caption::before{content:"› ";}
+.mini-studio.painting{box-shadow:0 0 0 1px rgba(217,139,87,.35),0 20px 40px -30px rgba(0,0,0,.6)}
+.paper-rail{display:none;position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:70;flex-direction:column;gap:13px;align-items:flex-end}
+.paper-rail a{display:flex;align-items:center;gap:8px;flex-direction:row-reverse;font-family:var(--mono);font-size:7.5px;letter-spacing:.12em;color:var(--muted);opacity:.55;transition:color .25s,opacity .25s}
+.paper-rail a::after{content:"";width:5px;height:5px;border-radius:50%;background:var(--line-2);transition:background .25s,transform .25s}
+.paper-rail a:hover,.paper-rail a.active{opacity:1;color:var(--copper)}
+.paper-rail a:hover::after,.paper-rail a.active::after{background:var(--copper);transform:scale(1.5)}
+@media(min-width:1360px){.paper-rail{display:flex}}
+@media(max-width:600px){.shot-lens{display:none}.mini-studio{margin-top:18px}.paper-rail{display:none}}
+@media(prefers-reduced-motion:reduce){.hero-shot{transform:none!important}.shot-lens{display:none}.hero-note.ringing{animation:none}.ink-ripple{display:none}}
+
 /* ---------- reveal ---------- */
 .reveal{opacity:0;transform:translateY(26px);filter:blur(5px);transition:opacity 1s var(--ease),transform 1.05s var(--ease),filter .9s var(--ease)}
 .reveal.in{opacity:1;transform:none;filter:blur(0)}
@@ -612,6 +653,15 @@ footer{border-top:1px solid var(--line-2);padding:48px 0 38px;background:rgba(23
   <p>拼豆先锋 · Windows 10 / 11<br>立体与平面拼豆设计。</p>
 </div>
 
+<nav class="paper-rail" aria-label="章节速览">
+  <a href="#workflow">01 做法</a>
+  <a href="#flat">02 平面</a>
+  <a href="#interface">03 界面</a>
+  <a href="#local-ai">04 重建</a>
+  <a href="#api">05 生图 API</a>
+  <a href="#log">06 更新</a>
+</nav>
+
 <main id="main">
 
 <section class="hero">
@@ -637,12 +687,14 @@ footer{border-top:1px solid var(--line-2);padding:48px 0 38px;background:rgba(23
     <div class="hero-art">
       <figure class="hero-shot">
         <img src="assets/shots/editor.png" width="1680" height="1000" alt="拼豆先锋编辑界面：中央是三维体素风铃挂件模型，左侧为动作和笔刷，右侧为颜色与剖切参数">
+        <div class="shot-lens" id="shotLens" aria-hidden="true"></div>
         <figcaption>
           <span><b>编辑 · 风铃挂件</b></span>
           <span>53 × 100 × 44 颗豆 · 17 色 · 195 个零件</span>
         </figcaption>
       </figure>
       <aside class="hero-note">
+        <button class="note-bell" id="noteBell" type="button" aria-label="摇一下风铃" title="摇一下"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 16h12l-2-3V9a4 4 0 0 0-8 0v4z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg></button>
         <span class="k">示例作品</span>
         <strong>铃铛、挂绳、流苏，分开熨。</strong>
         <small>195 个零件 · 17 色 · 最后再拼回去</small>
@@ -664,15 +716,21 @@ footer{border-top:1px solid var(--line-2);padding:48px 0 38px;background:rgba(23
     </blockquote>
     <div class="pause-side reveal">
       <p>转一转，拆开看看，数数要用多少色。等真正坐下拼的时候，它已经是你熟悉的东西了。</p>
-      <div class="beads" aria-hidden="true">
-        <i></i><i></i><i></i><i></i><i></i><i></i>
-        <i></i><i></i><i></i><i></i><i></i><i></i>
-        <i></i><i></i><i></i><i></i><i></i><i></i>
-        <i></i><i></i><i></i><i></i><i></i><i></i>
-        <i></i><i></i><i></i><i></i><i></i><i></i>
-        <i></i><i></i><i></i><i></i><i></i><i></i>
+      <div class="mini-studio" id="miniStudio">
+        <div class="mini-head"><span>试着拼一颗</span><span id="miniCount">0 颗</span></div>
+        <canvas id="miniBoard" width="480" height="300" aria-label="可涂色的拼豆练习板"></canvas>
+        <div class="mini-tools">
+          <div class="mini-palette" role="group" aria-label="选择颜色">
+            <button type="button" class="on" data-color="#b05a2b" style="--c:#b05a2b" aria-label="铜色" aria-pressed="true"></button>
+            <button type="button" data-color="#f2e7d4" style="--c:#f2e7d4" aria-label="米白" aria-pressed="false"></button>
+            <button type="button" data-color="#2c241c" style="--c:#2c241c" aria-label="深墨" aria-pressed="false"></button>
+            <button type="button" data-color="#8a9a7b" style="--c:#8a9a7b" aria-label="灰绿" aria-pressed="false"></button>
+            <button type="button" data-color="#d9a6a0" style="--c:#d9a6a0" aria-label="豆沙" aria-pressed="false"></button>
+          </div>
+          <button class="mini-clear" id="miniClear" type="button">清空</button>
+        </div>
+        <p class="bead-caption">按住拖动 · 只是练手，不会保存</p>
       </div>
-      <p class="bead-caption" aria-hidden="true">PEGBOARD · 6 × 6</p>
     </div>
   </div>
 </section>
@@ -1156,6 +1214,146 @@ footer{border-top:1px solid var(--line-2);padding:48px 0 38px;background:rgba(23
       if (!ready) { cx = tx; cy = ty; ready = true; }
       if (!raf) raf = requestAnimationFrame(loop);
     }, { passive: true });
+  }
+
+
+  /* interactive pegboard */
+  const miniBoard = $("#miniBoard");
+  if (miniBoard) {
+    const ctx = miniBoard.getContext("2d");
+    const cols = 16, rows = 10, cell = 30;
+    const palette = ["#b05a2b", "#f2e7d4", "#2c241c", "#8a9a7b", "#d9a6a0"];
+    const grid = Array.from({ length: rows }, () => Array(cols).fill(""));
+    const seed = ["  xx  xx  ", " xxxxxxxx ", " xxxxxxxx ", "  xxxxxx  ", "   xxxx   ", "    xx    "];
+    seed.forEach((row, y) => row.split("").forEach((ch, x) => { if (ch === "x") grid[y + 2][x + 3] = palette[0]; }));
+    let paint = palette[0], painting = false;
+    const countEl = $("#miniCount");
+    const studio = $("#miniStudio");
+    const drawBoard = () => {
+      ctx.clearRect(0, 0, miniBoard.width, miniBoard.height);
+      ctx.fillStyle = "#f6efe3"; ctx.fillRect(0, 0, miniBoard.width, miniBoard.height);
+      ctx.strokeStyle = "rgba(90,64,28,.18)"; ctx.lineWidth = 1; ctx.strokeRect(.5, .5, miniBoard.width - 1, miniBoard.height - 1);
+      for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+        const cx = x * cell + cell / 2, cy = y * cell + cell / 2;
+        ctx.beginPath(); ctx.arc(cx, cy, 4.2, 0, Math.PI * 2); ctx.fillStyle = "rgba(90,64,28,.10)"; ctx.fill();
+        const c = grid[y][x];
+        if (!c) continue;
+        ctx.beginPath(); ctx.arc(cx, cy + 1.4, 11.2, 0, Math.PI * 2); ctx.fillStyle = "rgba(90,64,28,.16)"; ctx.fill();
+        ctx.beginPath(); ctx.arc(cx, cy, 11, 0, Math.PI * 2); ctx.fillStyle = c; ctx.fill();
+        const g = ctx.createRadialGradient(cx - 3.5, cy - 4, 1, cx, cy, 11);
+        g.addColorStop(0, "rgba(255,255,255,.48)"); g.addColorStop(.35, "rgba(255,255,255,.08)"); g.addColorStop(1, "rgba(0,0,0,.12)");
+        ctx.beginPath(); ctx.arc(cx, cy, 11, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
+        ctx.beginPath(); ctx.arc(cx, cy, 3, 0, Math.PI * 2); ctx.fillStyle = "rgba(33,29,24,.3)"; ctx.fill();
+      }
+      if (countEl) countEl.textContent = grid.flat().filter(Boolean).length + " 颗";
+    };
+    const paintAt = (e) => {
+      const r = miniBoard.getBoundingClientRect();
+      const x = Math.floor((e.clientX - r.left) / r.width * cols);
+      const y = Math.floor((e.clientY - r.top) / r.height * rows);
+      if (x < 0 || y < 0 || x >= cols || y >= rows) return;
+      if (grid[y][x] !== paint) { grid[y][x] = paint; drawBoard(); }
+    };
+    miniBoard.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "mouse") e.preventDefault();
+      painting = true; studio?.classList.add("painting"); paintAt(e);
+      if (e.pointerType === "mouse" && miniBoard.setPointerCapture) miniBoard.setPointerCapture(e.pointerId);
+    });
+    miniBoard.addEventListener("pointermove", (e) => { if (painting && e.pointerType === "mouse") paintAt(e); });
+    ["pointerup", "pointercancel", "pointerleave"].forEach((ev) => miniBoard.addEventListener(ev, () => { painting = false; studio?.classList.remove("painting"); }));
+    miniBoard.addEventListener("contextmenu", (e) => e.preventDefault());
+    $$(".mini-palette button").forEach((b) => b.addEventListener("click", () => {
+      paint = b.dataset.color;
+      $$(".mini-palette button").forEach((x) => { const on = x === b; x.classList.toggle("on", on); x.setAttribute("aria-pressed", String(on)); });
+    }));
+    $("#miniClear")?.addEventListener("click", () => { grid.forEach((row) => row.fill("")); drawBoard(); });
+    drawBoard();
+  }
+
+  /* screenshot lens + tilt */
+  const shot = $(".hero-shot");
+  const lens = $("#shotLens");
+  if (shot && lens && fine && !reduce) {
+    const lensImg = shot.querySelector("img");
+    const size = 132, zoom = 2.35;
+    shot.addEventListener("pointermove", (e) => {
+      if (!lensImg) return;
+      const ir = lensImg.getBoundingClientRect(), fr = shot.getBoundingClientRect();
+      const x = Math.max(0, Math.min(ir.width, e.clientX - ir.left));
+      const y = Math.max(0, Math.min(ir.height, e.clientY - ir.top));
+      const nx = x / ir.width - .5, ny = y / ir.height - .5;
+      shot.style.transform = "perspective(900px) rotateX(" + (-ny * 1.7).toFixed(2) + "deg) rotateY(" + (nx * 2.3).toFixed(2) + "deg)";
+      shot.style.setProperty("--gx", (x / ir.width * 100).toFixed(1) + "%");
+      shot.style.setProperty("--gy", (y / ir.height * 100).toFixed(1) + "%");
+      lens.style.left = (ir.left - fr.left + x) + "px";
+      lens.style.top = (ir.top - fr.top + y) + "px";
+      lens.style.backgroundSize = (ir.width * zoom) + "px " + (ir.height * zoom) + "px";
+      lens.style.backgroundPosition = (-(x * zoom - size / 2)) + "px " + (-(y * zoom - size / 2)) + "px";
+    });
+    shot.addEventListener("pointerleave", () => { shot.style.transform = ""; });
+  }
+
+  /* chapter rail */
+  const railLinks = $$(".paper-rail a");
+  if (railLinks.length) {
+    const railSecs = railLinks.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+    if ("IntersectionObserver" in window) {
+      const railIO = new IntersectionObserver((es) => {
+        for (const e of es) if (e.isIntersecting) railLinks.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + e.target.id));
+      }, { rootMargin: "-42% 0px -50% 0px", threshold: 0 });
+      railSecs.forEach((x) => railIO.observe(x));
+    }
+  }
+
+  /* magnetic buttons + ink ripple */
+  if (fine && !reduce) {
+    $$(".btn, .link-arrow").forEach((el) => {
+      el.addEventListener("pointermove", (e) => {
+        const r = el.getBoundingClientRect();
+        const dx = (e.clientX - r.left - r.width / 2) / r.width;
+        const dy = (e.clientY - r.top - r.height / 2) / r.height;
+        el.style.transform = "translate(" + (dx * 4).toFixed(1) + "px," + (dy * 3).toFixed(1) + "px)";
+      });
+      el.addEventListener("pointerleave", () => { el.style.transform = ""; });
+    });
+    $$(".btn").forEach((btn) => btn.addEventListener("pointerdown", (e) => {
+      const r = btn.getBoundingClientRect();
+      const d = Math.max(r.width, r.height) * 1.7;
+      const ink = document.createElement("span");
+      ink.className = "ink-ripple";
+      ink.style.width = ink.style.height = d + "px";
+      ink.style.left = (e.clientX - r.left - d / 2) + "px";
+      ink.style.top = (e.clientY - r.top - d / 2) + "px";
+      btn.appendChild(ink);
+      ink.addEventListener("animationend", () => ink.remove(), { once: true });
+    }));
+  }
+
+  /* little bell */
+  const bell = $("#noteBell");
+  const noteCard = $(".hero-note");
+  if (bell && noteCard) {
+    const chime = () => {
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return;
+        const ac = new AC(), t = ac.currentTime;
+        [880, 1174.66, 1567.98].forEach((f, i) => {
+          const o = ac.createOscillator(), g = ac.createGain();
+          o.type = "sine"; o.frequency.value = f;
+          g.gain.setValueAtTime(0, t + i * .045);
+          g.gain.linearRampToValueAtTime(.055 / (i + 1), t + i * .045 + .015);
+          g.gain.exponentialRampToValueAtTime(.001, t + 1.15);
+          o.connect(g); g.connect(ac.destination); o.start(t + i * .045); o.stop(t + 1.2);
+        });
+        setTimeout(() => ac.close().catch(() => {}), 1500);
+      } catch (_) {}
+    };
+    bell.addEventListener("click", () => {
+      noteCard.classList.remove("ringing"); void noteCard.offsetWidth; noteCard.classList.add("ringing");
+      chime();
+      setTimeout(() => noteCard.classList.remove("ringing"), 1000);
+    });
   }
 
   // Download: manifest shards -> one file.

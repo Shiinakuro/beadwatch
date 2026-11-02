@@ -128,6 +128,39 @@ footer{border-top:1px solid var(--line2);padding:28px 0 36px}
 .foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
 .foot a:hover{color:var(--copper)}
 .foot .mono{font-family:var(--mono);font-size:8px;letter-spacing:.08em}
+
+/* ---------- guide interactions ---------- */
+.read-progress{position:fixed;left:0;right:0;top:0;height:2px;z-index:400;background:rgba(33,29,24,.08);pointer-events:none}
+.read-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--copper),var(--gold2))}
+.toc a.active{color:var(--copper);font-weight:600}
+.toc a.active::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--copper);margin-right:7px;vertical-align:1px}
+.copy-inline{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;vertical-align:middle}
+.copy-btn{background:rgba(176,90,43,.07);border:1px solid rgba(176,90,43,.3);color:var(--copper-2);font-family:var(--mono);font-size:7px;letter-spacing:.08em;padding:3px 6px;cursor:pointer;transition:background .25s,color .25s}
+.copy-btn:hover{background:var(--copper);color:var(--cream)}
+.copy-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;font-size:11px;color:var(--muted)}
+.copy-line code{font-family:var(--mono);font-size:10px;color:var(--ink-soft);background:rgba(33,29,24,.045);border:1px solid var(--line);padding:2px 5px}
+.calc{margin-top:22px;border:1px solid var(--line2);background:var(--cream);padding:24px 24px 20px;position:relative}
+.calc::before{content:"";position:absolute;left:0;top:0;width:64px;height:2px;background:var(--copper)}
+.calc-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.calc-head h3{font-family:var(--serif);font-weight:500;font-size:23px;letter-spacing:.02em}
+.calc-head span{font-family:var(--mono);font-size:8px;letter-spacing:.08em;color:var(--muted)}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;margin-top:16px}
+.calc-grid label{display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px 10px;font-size:11.5px;color:var(--ink-soft)}
+.calc-grid label>span{grid-column:1/-1;font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--muted)}
+.calc-grid input[type="range"]{width:100%;accent-color:var(--copper);height:4px;cursor:pointer}
+.calc-grid select{width:100%;background:rgba(255,255,255,.5);border:1px solid var(--line2);color:var(--ink-soft);padding:7px 8px;font:inherit;font-size:11px;cursor:pointer}
+.calc-grid output{font-family:var(--mono);font-size:10px;color:var(--copper-2);min-width:20px;text-align:right}
+.calc-result{margin-top:18px;padding-top:14px;border-top:1px solid var(--line);display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.calc-result>span{font-family:var(--mono);font-size:8px;letter-spacing:.12em;color:var(--muted)}
+.calc-result strong{font-family:var(--serif);font-weight:500;font-size:32px;line-height:1;color:var(--copper-2);letter-spacing:.01em}
+.calc-result strong.bump{animation:calc-bump .35s ease}
+.calc-result small{font-size:10.5px;color:var(--muted);line-height:1.7}
+@keyframes calc-bump{50%{transform:translateY(-2px);filter:brightness(1.15)}}
+.faq details[open] .ans{animation:faq-in .3s ease}
+@keyframes faq-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@media (max-width:600px){.calc{padding:20px 16px 16px}.calc-grid{grid-template-columns:1fr}.calc-result strong{font-size:28px}}
+@media (prefers-reduced-motion:reduce){.read-progress{display:none}.calc-result strong.bump{animation:none}.faq details[open] .ans{animation:none}}
+
 @media (max-width:900px){
   :root{--pad:24px}
   .head-title{display:none}
@@ -152,6 +185,7 @@ footer{border-top:1px solid var(--line2);padding:28px 0 36px}
 </head>
 <body id="top">
 <a class="skip" href="#main">跳到主要内容</a>
+<div class="read-progress" aria-hidden="true"><i></i></div>
 <header class="head">
   <div class="wrap head-in">
     <a class="brand" href="index.html">
@@ -241,7 +275,7 @@ footer{border-top:1px solid var(--line2);padding:28px 0 36px}
         <li><b>打开混元生3D 产品页，开通服务。</b>新用户开通后会送 <b>100 积分</b>免费体验额度。</li>
         <li><b>按需要购买积分包或开通后付费。</b>1000 积分约 ¥100；用多少扣多少，失败任务通常不扣费。</li>
         <li><b>在控制台的「API Key 管理」创建 OpenAI 兼容 Key。</b>选择 OpenAI 兼容方式，不是 SecretId/SecretKey；复制 <b>sk-</b> 开头的 Key，只显示一次。</li>
-        <li><b>回到拼豆先锋的设置，填进「混元 3D 在线 API」。</b>地址保留默认的 <span class="mono">https://api.ai3d.cloud.tencent.com</span>，然后点「测试 Key」。</li>
+        <li><b>回到拼豆先锋的设置，填进「混元 3D 在线 API」。</b>地址保留默认的 <span class="copy-inline"><span class="mono">https://api.ai3d.cloud.tencent.com</span><button class="copy-btn" type="button" data-copy="https://api.ai3d.cloud.tencent.com">复制</button></span>，然后点「测试 Key」。</li>
       </ol>
       <div class="callout warn"><b>费用参考：</b>单张图约 20 积分，八视图约 30 积分。按积分包折算，一次大约 ¥2–3。100 免费积分大约够 3–5 次单图重建。具体扣费以腾讯云账单为准。</div>
       <h3>官方入口</h3>
@@ -292,6 +326,7 @@ footer{border-top:1px solid var(--line2);padding:28px 0 36px}
       <p class="sec-kicker">// IN THE APP</p>
       <h2>在应用里填写。</h2>
       <p>安装完成后，打开「设置」，会看到两组在线服务。两处都填好后，导入照片时优先走在线重建。</p>
+      <p class="copy-line">图像接口：<code>/v1/images/edits</code><button class="copy-btn" type="button" data-copy="/v1/images/edits">复制</button></p>
       <ol class="steps">
         <li><b>混元 3D 在线 API：</b>粘贴 <span class="mono">sk-</span> Key，地址保留默认值，点「测试 Key」。</li>
         <li><b>AI 图像服务：</b>粘贴 Base URL 和 Key，点「获取模型」，选中一个图像模型。</li>
@@ -315,6 +350,16 @@ footer{border-top:1px solid var(--line2);padding:28px 0 36px}
         </table>
       </div>
       <p class="callout"><b>省钱的做法：</b>先用正面单图试效果，满意再加背面和侧面；不要一开始就提交八视图。生图前处理只在照片确实有背景、反光或角度问题时使用。具体价格以服务商账单为准；本页不构成报价。</p>
+      <div class="calc" id="costCalc">
+        <div class="calc-head"><h3>估算一下。</h3><span>拖动看看大概要准备多少</span></div>
+        <div class="calc-grid">
+          <label><span>作品数量</span><input type="range" id="calcWorks" min="1" max="20" value="3"><output id="calcWorksOut">3</output></label>
+          <label><span>混元视图</span><select id="calcViews"><option value="2">单图 · 约 ¥2</option><option value="3">八视图 · 约 ¥3</option></select></label>
+          <label><span>生图模型</span><select id="calcModel"><option value="0.1,1">gpt-image</option><option value="0.3,0.5">Nano Banana</option><option value="0.2,0.6">Seedream / Qwen</option></select></label>
+          <label><span>每件生图次数</span><input type="range" id="calcEdits" min="0" max="3" value="1"><output id="calcEditsOut">1</output></label>
+        </div>
+        <div class="calc-result"><span>预计</span><strong id="calcTotal">¥ 6.3 – 9</strong><small>按参考价估算，不含新用户免费积分；实际以服务商账单为准。</small></div>
+      </div>
     </section>
 
     <section id="faq">
@@ -327,7 +372,7 @@ footer{border-top:1px solid var(--line2);padding:28px 0 36px}
         </details>
         <details>
           <summary>能不能不配 API，只用本机？</summary>
-          <div class="ans"><b>可以，但效果会差一些。</b>本机混元 3D 需要 NVIDIA 显卡和约 10 GB 模型；没有显卡时会回退到纯 CPU 轮廓雕刻，只能做出大致外形，细节明显少。想要接近照片的形体，建议用在线混元 3D。</div>
+          <div class="ans"><b>可以，但效果会差很多。</b>本机混元 3D 需要 NVIDIA 显卡和约 10 GB 模型；没有显卡时会回退到纯 CPU 轮廓雕刻，只能做出大致外形，细节明显少。想要接近照片的形体，建议用在线混元 3D。</div>
         </details>
         <details>
           <summary>只配生图 API 行不行？</summary>
@@ -376,6 +421,74 @@ footer{border-top:1px solid var(--line2);padding:28px 0 36px}
     <span class="mono">API GUIDE // 2026-10</span>
   </div>
 </footer>
+
+
+<script>
+(() => {
+  "use strict";
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+
+  // reading progress
+  const bar = $(".read-progress i");
+  let ticking = false;
+  const onScroll = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    const p = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
+    if (bar) bar.style.width = (p * 100).toFixed(2) + "%";
+    ticking = false;
+  };
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  onScroll();
+
+  // active table of contents
+  const tocLinks = $$(".toc a[href^='#']");
+  const tocSecs = tocLinks.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+  let tocTick = false;
+  const updateToc = () => {
+    if (!tocSecs.length) return;
+    let current = tocSecs[0];
+    const limit = innerHeight * .34;
+    for (const sec of tocSecs) if (sec.getBoundingClientRect().top <= limit) current = sec;
+    tocLinks.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + current.id));
+    tocTick = false;
+  };
+  addEventListener("scroll", () => { if (!tocTick) { tocTick = true; requestAnimationFrame(updateToc); } }, { passive: true });
+  updateToc();
+
+  // copy buttons
+  $$(".copy-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const text = btn.dataset.copy || "";
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = "已复制";
+      } catch (_) { btn.textContent = "请选中复制"; }
+      setTimeout(() => { btn.textContent = "复制"; }, 1500);
+    });
+  });
+
+  // cost estimator
+  const works = $("#calcWorks"), views = $("#calcViews"), model = $("#calcModel"), edits = $("#calcEdits");
+  const worksOut = $("#calcWorksOut"), editsOut = $("#calcEditsOut"), total = $("#calcTotal");
+  const money = (n) => (n % 1 ? n.toFixed(1) : n.toFixed(0));
+  function updateCalc() {
+    if (!works || !views || !model || !edits || !total) return;
+    const w = Number(works.value), v = Number(views.value), e = Number(edits.value);
+    const range = String(model.value).split(",").map(Number);
+    const lo = Number(range[0]) || 0, hi = Number(range[1]) || lo;
+    const min = w * v + w * e * lo;
+    const max = w * v + w * e * hi;
+    if (worksOut) worksOut.textContent = w;
+    if (editsOut) editsOut.textContent = e;
+    total.textContent = "¥ " + money(min) + " – " + money(max);
+    if (!reduce) { total.classList.remove("bump"); void total.offsetWidth; total.classList.add("bump"); }
+  }
+  [works, views, model, edits].forEach((el) => { if (el) { el.addEventListener("input", updateCalc); el.addEventListener("change", updateCalc); } });
+  updateCalc();
+})();
+</script>
 
 <script src="assets/themes/switch.js"></script>
 </body>

@@ -442,6 +442,55 @@ footer{position:relative;z-index:1;background:#0d0a07;color:#d8c8a8;border-top:1
 .leave{position:fixed;inset:0;z-index:400;background:linear-gradient(155deg,#f4e8d0,#e4d0a8);pointer-events:none;clip-path:inset(100% 0 0 0);transition:clip-path .42s var(--ease)}
 .leave.on{clip-path:inset(0 0 0 0)}
 
+
+/* ---------- extra magic interactions ---------- */
+.candle{cursor:pointer}
+.candle:hover .flame,.candle.flare .flame{filter:brightness(1.35) drop-shadow(0 0 9px rgba(255,212,137,.9))}
+.candle.flare .flame{animation:flare .7s ease}
+@keyframes flare{50%{transform:scale(1.65);opacity:1}}
+.candle.flare::after{animation:candle-glow .8s ease}
+@keyframes candle-glow{50%{opacity:1;transform:scale(1.35)}}
+.gold-spark{position:fixed;z-index:310;width:4px;height:4px;border-radius:50%;pointer-events:none;background:var(--gold2);box-shadow:0 0 9px currentColor;animation:gold-spark .9s ease-out forwards}
+@keyframes gold-spark{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.15);opacity:0}}
+.bubbles{position:absolute;inset:0;overflow:hidden;border-radius:inherit;pointer-events:none;z-index:1}
+.bubbles i{position:absolute;bottom:7%;width:3px;height:3px;border-radius:50%;background:rgba(255,255,255,.28);animation:bubble 4.2s linear infinite}
+.bubbles i:nth-child(1){left:22%;animation-delay:-.4s}
+.bubbles i:nth-child(2){left:44%;width:4px;height:4px;animation-delay:-2.1s}
+.bubbles i:nth-child(3){left:66%;animation-delay:-3.2s}
+.bubbles i:nth-child(4){left:80%;width:2px;height:2px;animation-delay:-1.3s}
+@keyframes bubble{0%{transform:translateY(0) scale(.8);opacity:0}20%{opacity:.8}100%{transform:translateY(-120px) scale(1.1);opacity:0}}
+.bottle-btn[aria-pressed="true"] .bubbles i{animation-duration:2.4s;background:rgba(255,255,255,.5)}
+.download-stamp{position:absolute;right:18px;top:14px;z-index:5;width:74px;height:74px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 28%,#9d3a4b,#5a1724 72%);color:#efd39a;font-family:var(--serif);font-size:12px;letter-spacing:.08em;border:1px solid rgba(239,211,154,.45);box-shadow:0 12px 24px -12px rgba(60,10,20,.8),inset 0 2px 4px rgba(255,255,255,.18);transform:rotate(-18deg) scale(.6);opacity:0;pointer-events:none;transition:transform .35s var(--ease),opacity .25s}
+.download-stamp::before{content:"";position:absolute;inset:6px;border:1px dashed rgba(239,211,154,.4);border-radius:50%}
+.download-stamp.on{opacity:1;transform:rotate(-10deg) scale(1)}
+.page394{background:none;border:0;padding:0;font:inherit;cursor:pointer}
+.map-veil{position:fixed;inset:0;z-index:320;background:rgba(7,10,18,.82);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:grid;place-items:center;padding:24px;overflow:auto}
+.map-veil[hidden]{display:none}
+.map-sheet{position:relative;width:min(900px,100%);background:linear-gradient(160deg,#f4e8cd,#e5d1a9);color:#3a2a17;border:1px solid #8d6a30;box-shadow:0 40px 90px -30px #000;padding:32px 34px 26px;animation:map-in .6s var(--ease)}
+.map-sheet::before{content:"";position:absolute;inset:9px;border:1px solid rgba(90,64,28,.35);pointer-events:none}
+.map-close{position:absolute;right:16px;top:13px;z-index:2;background:none;border:1px solid rgba(90,64,28,.35);color:#6e2433;font-family:var(--latin);font-style:italic;font-size:10px;padding:4px 9px;cursor:pointer;transition:background .25s,color .25s}
+.map-close:hover{background:#6e2433;color:#f4e8cd}
+.map-kicker{font-family:var(--mono);font-size:8px;letter-spacing:.2em;color:#8d6a30}
+.map-sheet h2{font-family:var(--serif);font-weight:500;font-size:clamp(28px,4vw,44px);line-height:1.35;margin-top:8px;color:#3a2a17}
+.map-stage{margin-top:16px;border-top:1px solid rgba(90,64,28,.22);border-bottom:1px solid rgba(90,64,28,.22);padding:8px 0}
+.map-stage svg{display:block;width:100%}
+.map-stage .ink{fill:none;stroke:rgba(90,64,28,.4);stroke-width:1.2}
+.map-stage .footpath{fill:none;stroke:#7a2c3a;stroke-width:1;stroke-dasharray:3 5;opacity:.72}
+.map-stage .room text{font-family:var(--serif);font-size:11px;fill:#5a452a}
+.map-stage .foot{fill:#7a2c3a;opacity:.8}
+.map-stage .compass text{font-family:var(--mono);font-size:8px;fill:#7a2c3a}
+.map-note{margin-top:12px;font-family:var(--serif);font-size:12px;color:#5a452a}
+.map-secret{margin-top:6px;text-align:right;font-family:var(--script);font-size:19px;color:#6e2433}
+@keyframes map-in{from{opacity:0;transform:translateY(18px) rotateX(7deg) scale(.97)}to{opacity:1;transform:none}}
+.magic-cursor{position:fixed;left:0;top:0;z-index:150;width:22px;height:22px;pointer-events:none;opacity:0;transition:opacity .25s;will-change:transform}
+.magic-cursor.on{opacity:.9}
+.magic-cursor i{position:absolute;left:50%;top:50%;width:11px;height:11px;margin:-5.5px;background:linear-gradient(135deg,#f6e8c9,#d8b56d 55%,#9a6b2f);clip-path:polygon(50% 0,63% 36%,100% 50%,63% 64%,50% 100%,37% 64%,0 50%,37% 36%);box-shadow:0 0 12px rgba(216,181,109,.65)}
+.magic-cursor::before{content:"";position:absolute;inset:-3px;border:1px solid rgba(216,181,109,.25);border-radius:50%;animation:spin 14s linear infinite}
+.magic-cursor.flare i{animation:cursor-flare .45s ease}
+@keyframes cursor-flare{50%{transform:scale(2) rotate(45deg);filter:brightness(1.4)}}
+@media (max-width:600px){.download-stamp{width:58px;height:58px;font-size:10px;right:12px;top:10px}.map-sheet{padding:24px 18px 20px}.map-close{right:10px;top:9px}}
+@media (prefers-reduced-motion:reduce){.gold-spark{display:none}.bubbles i{animation:none}.magic-cursor{display:none}.map-sheet{animation:none}.download-stamp{transition:none}}
+
 /* responsive */
 @media (max-width:1120px){
   :root{--pad:34px}
@@ -803,11 +852,11 @@ footer{position:relative;z-index:1;background:#0d0a07;color:#d8c8a8;border-top:1
         <p class="shelf-label">POTION CABINET // 推荐在线配方</p>
         <div class="bottles">
           <button class="bottle-btn" type="button" aria-pressed="true" data-potion="online">
-            <span class="bottle"><span class="brew"></span><span class="label">ONLINE · 2 KEYS</span></span>
+            <span class="bottle"><span class="brew"></span><span class="bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="label">ONLINE · 2 KEYS</span></span>
             <span class="bottle-name">在线配方</span><span class="bottle-size">2 个 Key</span>
           </button>
           <button class="bottle-btn" type="button" aria-pressed="false" data-potion="local">
-            <span class="bottle light"><span class="brew"></span><span class="label">LOCAL · 10 GB</span></span>
+            <span class="bottle light"><span class="brew"></span><span class="bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="label">LOCAL · 10 GB</span></span>
             <span class="bottle-name">本机配方</span><span class="bottle-size">约 10 GB</span>
           </button>
         </div>
@@ -950,6 +999,7 @@ footer{position:relative;z-index:1;background:#0d0a07;color:#d8c8a8;border-top:1
         <p class="ps">P.S. 装好后在设置里填好两个 Key，就能开始。两个 Key 都需自行购买。</p>
       </div>
       <div class="launch-stub">
+        <div class="download-stamp" id="downloadStamp" aria-hidden="true"><span>已寄出</span></div>
         <div class="platform">PLATFORM<b>9¾</b></div>
         <div class="ticket-small">WINDOWS // SELF-CONTAINED // ONLINE FIRST</div>
         <div class="dl-name" id="dlName">拼豆先锋_v1.4.0_安装程序.exe</div>
@@ -978,15 +1028,53 @@ footer{position:relative;z-index:1;background:#0d0a07;color:#d8c8a8;border-top:1
     <nav class="foot-nav" aria-label="页脚导航">
       <a href="#craft">做法</a><a href="#flat">平面</a><a href="#hall">工作台</a><a href="#potions">重建配方</a><a href="#owl">猫头鹰邮局</a><a href="#archive">档案</a><a href="#launch">出发</a><a href="api-guide.html">API 指南</a><a href="https://github.com/Shiinakuro/beadwatch" target="_blank" rel="noopener">GitHub</a>
     </nav>
-    <p class="foot-meta">© 2026 BEADWATCH<br>非官方《哈利·波特》同人主题<br><span class="fan">与 Warner Bros. 无关</span><br><span class="nine">9¾</span><br><span class="page394" title="这一页没有什么，真的。">PAGE 394</span></p>
+    <p class="foot-meta">© 2026 BEADWATCH<br>非官方《哈利·波特》同人主题<br><span class="fan">与 Warner Bros. 无关</span><br><span class="nine">9¾</span><br><button class="page394" id="mapOpen" type="button" title="这一页没有什么，真的。">PAGE 394</button></p>
   </div>
 </footer>
+
+<div class="map-veil" id="mapVeil" hidden role="dialog" aria-modal="true" aria-labelledby="mapTitle">
+  <div class="map-sheet">
+    <button class="map-close" id="mapClose" type="button">合上地图</button>
+    <p class="map-kicker">THE MARAUDER'S MAP // 活点地图</p>
+    <h2 id="mapTitle">拼豆工坊，四楼。</h2>
+    <div class="map-stage">
+      <svg viewBox="0 0 720 300" role="img" aria-label="拼豆工坊活点地图">
+        <path class="ink" d="M40 250 H180 V170 H310 V90 H470 V180 H680 V260 H40 Z"/>
+        <path class="ink" d="M180 250 V170 M310 170 H470 M470 90 V180 M310 90 V170 M40 150 H130 M560 260 V200"/>
+        <path class="footpath" d="M70 230 C150 230 150 180 220 180 S300 210 330 160 S400 110 470 110 S560 140 620 120"/>
+        <path class="footpath" d="M120 260 C200 240 250 250 300 220 S400 200 430 160 S520 170 600 220"/>
+        <path class="footpath" d="M90 120 C160 120 180 90 240 100 S320 130 360 90 S440 60 500 75"/>
+        <g class="room">
+          <text x="60" y="240">照片入口</text>
+          <text x="195" y="160">修形间</text>
+          <text x="320" y="160">拆件室</text>
+          <text x="480" y="175">检查塔</text>
+          <text x="580" y="250">图纸库</text>
+          <text x="330" y="80">本机密室</text>
+        </g>
+        <g class="foot"><circle r="3"><animateMotion dur="7s" repeatCount="indefinite" path="M70 230 C150 230 150 180 220 180 S300 210 330 160 S400 110 470 110 S560 140 620 120"/></circle></g>
+        <g class="foot"><circle r="2.5"><animateMotion dur="9s" repeatCount="indefinite" path="M120 260 C200 240 250 250 300 220 S400 200 430 160 S520 170 600 220"/></circle></g>
+        <g class="foot"><circle r="2.5"><animateMotion dur="8s" repeatCount="indefinite" path="M90 120 C160 120 180 90 240 100 S320 130 360 90 S440 60 500 75"/></circle></g>
+        <g class="compass" transform="translate(650,50)">
+          <circle r="22" class="ink"/>
+          <path d="M0 -16 L5 0 L0 16 L-5 0Z" fill="#6e2433"/>
+          <text x="0" y="-28" text-anchor="middle">N</text>
+        </g>
+      </svg>
+    </div>
+    <p class="map-note">从照片进来，沿图纸走。拆件那层别停太久。</p>
+    <p class="map-secret">MISCHIEF MANAGED.</p>
+  </div>
+</div>
+
+<div class="magic-cursor" id="magicCursor" aria-hidden="true"><i></i></div>
 
 <script src="assets/themes/switch.js"></script>
 <script>
 (() => {
   "use strict";
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const fine = matchMedia("(hover: hover) and (pointer: fine)").matches;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
@@ -1028,12 +1116,33 @@ footer{position:relative;z-index:1;background:#0d0a07;color:#d8c8a8;border-top:1
   $$("a", mobileMenu).forEach((a) => a.addEventListener("click", () => setMenu(false)));
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && mobileMenu.classList.contains("on")) setMenu(false); });
 
+
+  /* gold sparks */
+  function sparkBurst(x, y, color, n) {
+    const count = n || 10;
+    for (let i = 0; i < count; i++) {
+      const sp = document.createElement("i");
+      sp.className = "gold-spark";
+      sp.style.left = x + "px"; sp.style.top = y + "px";
+      sp.style.color = color || "#d8b56d";
+      sp.style.background = color || "#d8b56d";
+      const a = Math.random() * Math.PI * 2, d = 24 + Math.random() * 54;
+      sp.style.setProperty("--dx", (Math.cos(a) * d).toFixed(1) + "px");
+      sp.style.setProperty("--dy", (Math.sin(a) * d).toFixed(1) + "px");
+      sp.style.animationDelay = (Math.random() * .08).toFixed(2) + "s";
+      document.body.appendChild(sp);
+      setTimeout(() => sp.remove(), 1100);
+    }
+  }
+
   /* snitch */
   const snitch = $("#snitch");
   const snitchNote = $("#snitchNote");
   let snitchTimer = 0;
   if (snitch) snitch.addEventListener("click", () => {
     snitch.classList.add("caught");
+    const sr = snitch.getBoundingClientRect();
+    sparkBurst(sr.left + sr.width / 2, sr.top + sr.height / 2, "#ffd489", 16);
     if (snitchNote) snitchNote.classList.add("on");
     clearTimeout(snitchTimer);
     snitchTimer = setTimeout(() => {
@@ -1048,6 +1157,8 @@ footer{position:relative;z-index:1;background:#0d0a07;color:#d8c8a8;border-top:1
   crests.forEach((c) => c.addEventListener("click", () => {
     crests.forEach((x) => x.setAttribute("aria-pressed", String(x === c)));
     if (crestReadout) crestReadout.innerHTML = "<b>" + c.dataset.crest + "：</b>" + c.dataset.note.split("：").slice(1).join("：");
+    const cr = c.getBoundingClientRect();
+    sparkBurst(cr.left + cr.width / 2, cr.top + cr.height * .35, "#e6c98e", 12);
   }));
 
   /* potion bottles */
@@ -1062,7 +1173,70 @@ footer{position:relative;z-index:1;background:#0d0a07;color:#d8c8a8;border-top:1
     potionBtns.forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
     const d = potionData[b.dataset.potion];
     if (d) { potionName.textContent = d.name; potionNote.textContent = d.note; }
+    const pr = b.getBoundingClientRect();
+    sparkBurst(pr.left + pr.width / 2, pr.top + pr.height * .3, "#d8b56d", 8);
   }));
+
+
+  /* candles */
+  $$(".candle").forEach((c) => {
+    c.setAttribute("role", "button");
+    c.setAttribute("tabindex", "0");
+    c.setAttribute("aria-label", "点亮这支蜡烛");
+    const light = () => {
+      c.classList.remove("flare"); void c.offsetWidth; c.classList.add("flare");
+      const r = c.getBoundingClientRect();
+      sparkBurst(r.left + r.width / 2, r.top - 8, "#ffd489", 7);
+      setTimeout(() => c.classList.remove("flare"), 800);
+    };
+    c.addEventListener("click", light);
+    c.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); light(); } });
+  });
+
+  /* marauder's map */
+  const mapOpen = $("#mapOpen");
+  const mapVeil = $("#mapVeil");
+  const mapClose = $("#mapClose");
+  function openMap() {
+    if (!mapVeil) return;
+    mapVeil.hidden = false;
+    document.body.style.overflow = "hidden";
+    if (mapClose) mapClose.focus({ preventScroll: true });
+  }
+  function closeMap() {
+    if (!mapVeil) return;
+    mapVeil.hidden = true;
+    document.body.style.overflow = "";
+    if (mapOpen) mapOpen.focus({ preventScroll: true });
+  }
+  if (mapOpen) mapOpen.addEventListener("click", openMap);
+  if (mapClose) mapClose.addEventListener("click", closeMap);
+  if (mapVeil) mapVeil.addEventListener("click", (e) => { if (e.target === mapVeil) closeMap(); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && mapVeil && !mapVeil.hidden) closeMap(); });
+
+  /* magic cursor */
+  if (fine && !reduce) {
+    const cursor = $("#magicCursor");
+    if (cursor) {
+      let cx = innerWidth / 2, cy = innerHeight / 2, tx = cx, ty = cy, shown = false;
+      addEventListener("pointermove", (e) => {
+        tx = e.clientX; ty = e.clientY;
+        if (!shown) { cx = tx; cy = ty; shown = true; cursor.classList.add("on"); }
+      }, { passive: true });
+      document.addEventListener("pointerleave", () => cursor.classList.remove("on"));
+      addEventListener("pointerdown", (e) => {
+        cursor.classList.remove("flare"); void cursor.offsetWidth; cursor.classList.add("flare");
+        sparkBurst(e.clientX, e.clientY, "#f0d7a0", 5);
+        setTimeout(() => cursor.classList.remove("flare"), 500);
+      }, { passive: true });
+      const follow = () => {
+        cx += (tx - cx) * .2; cy += (ty - cy) * .2;
+        cursor.style.transform = "translate3d(" + (cx - 11) + "px," + (cy - 11) + "px,0)";
+        requestAnimationFrame(follow);
+      };
+      requestAnimationFrame(follow);
+    }
+  }
 
   /* owl envelope */
   const owl = $(".owl");
@@ -1148,6 +1322,11 @@ footer{position:relative;z-index:1;background:#0d0a07;color:#d8c8a8;border-top:1
       const total = data.parts.reduce((a, p) => a + (Number(p.size) || 0), 0);
       const expected = Number(data.size) || total;
       if (!total || total !== expected) throw new Error("manifest parts invalid");
+      const stamp = $("#downloadStamp");
+      if (stamp) {
+        stamp.classList.remove("on"); void stamp.offsetWidth; stamp.classList.add("on");
+        setTimeout(() => stamp.classList.remove("on"), 3400);
+      }
       if (data.sha256 && shaText) shaText.textContent = data.sha256;
       if (data.name) { meta.name = data.name; const n = $("#dlName"); if (n) n.textContent = data.name; }
       if (handle) writable = await handle.createWritable();

@@ -469,6 +469,36 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(79,195,247,.16);pad
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .8s var(--ease),transform .9s var(--ease)}
 .reveal.in{opacity:1;transform:none}
 
+
+/* ---------- extra interactions ---------- */
+.holo{cursor:crosshair}
+.holo-frame{transform-style:preserve-3d;transition:transform .18s ease-out,box-shadow .3s;will-change:transform}
+.holo:hover .holo-frame{box-shadow:0 40px 80px -30px rgba(0,0,0,.75),0 0 0 1px rgba(79,195,247,.25) inset,0 0 40px rgba(79,195,247,.12)}
+.holo-glare{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(280px circle at var(--gx,50%) var(--gy,40%),rgba(79,195,247,.18),transparent 66%);mix-blend-mode:screen}
+.holo:hover .holo-glare{opacity:1}
+.reticle-tag{position:absolute;left:50%;top:-21px;transform:translateX(-50%);font-family:var(--mono);font-size:6.5px;letter-spacing:.18em;color:var(--cyan);opacity:0;transition:opacity .2s;white-space:nowrap}
+.reticle.lock .reticle-tag{opacity:1}
+.reticle .pulse{position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px 0 0 -5px;border:1px solid rgba(79,195,247,.9);border-radius:50%;opacity:0;pointer-events:none}
+.reticle.fire .pulse{animation:reticle-pulse .55s ease-out}
+@keyframes reticle-pulse{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(6)}}
+.map-node{cursor:pointer}
+.map-node:hover circle,.map-node:focus-visible circle{fill:rgba(79,195,247,.18);stroke:var(--cyan)}
+.map-node:hover text{fill:#f2f8fc}
+.map-node:focus{outline:none}
+.map-node.ping circle{animation:node-ping .55s ease-out}
+@keyframes node-ping{0%{stroke:var(--orange);stroke-width:1.5}100%{stroke:var(--orange);stroke-width:9;stroke-opacity:0}}
+.stage-img.glitching::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;z-index:4;background:linear-gradient(90deg,transparent,var(--cyan),var(--orange),transparent);animation:stage-scan .45s linear}
+.stage-img.glitching img{filter:contrast(1.12) saturate(1.25)}
+@keyframes stage-scan{from{top:-2%}to{top:102%}}
+.loadout{overflow:hidden}
+.loadout.scanning::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(125deg,transparent 25%,rgba(249,158,26,.18) 48%,transparent 68%);transform:translateX(-130%);animation:loadout-scan .7s var(--ease)}
+@keyframes loadout-scan{to{transform:translateX(130%)}}
+.readout.flash{animation:readout-flash .55s ease}
+@keyframes readout-flash{50%{border-color:var(--orange);background:rgba(249,158,26,.1)}}
+.copy-endpoint{margin-left:auto;flex:none;border:1px solid rgba(79,195,247,.26);background:rgba(79,195,247,.05);color:var(--cyan);font-family:var(--mono);font-size:7px;letter-spacing:.1em;padding:3px 6px;cursor:pointer;transition:color .25s,border-color .25s}
+.copy-endpoint:hover{border-color:var(--orange);color:var(--orange)}
+@media (prefers-reduced-motion:reduce){.holo-frame{transform:none!important}.reticle .pulse{display:none}.map-node.ping circle{animation:none}.stage-img.glitching::before{display:none}.loadout.scanning::before{display:none}}
+
 /* responsive */
 @media (max-width:1180px){
   :root{--pad:34px}
@@ -658,6 +688,7 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(79,195,247,.16);pad
         </div>
         <div class="holo-screen">
           <img src="assets/shots/editor.png" width="1680" height="1000" alt="拼豆先锋编辑视口：三维风铃挂件模型，左侧动作栏，右侧颜色与剖切参数">
+          <div class="holo-glare" aria-hidden="true"></div>
           <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
           <span class="holo-tag a">TARGET LOCK <b>// 195 PARTS</b></span>
           <span class="holo-tag b">COLOR SYNC <b>// 17</b></span>
@@ -694,7 +725,7 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(79,195,247,.16);pad
         <div class="map-head"><span>ROUTE // 路线</span><b id="routePct">20%</b></div>
         <div class="map-stage">
           <div class="radar"></div>
-          <svg viewBox="0 0 320 420" role="img" aria-label="五段路线：情报、修形、拆件、校验、回收">
+          <svg viewBox="0 0 320 420" role="group" aria-label="五段路线：情报、修形、拆件、校验、回收">
             <path class="map-grid" d="M0 60H320M0 120H320M0 180H320M0 240H320M0 300H320M0 360H320M80 0V420M160 0V420M240 0V420"/>
             <circle class="map-ring" cx="160" cy="210" r="150"/>
             <circle class="map-ring" cx="160" cy="210" r="104"/>
@@ -886,7 +917,7 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(79,195,247,.16);pad
         <div class="terminal">
           <div class="term-head"><span>CHANNEL // 外援频道</span><span class="sig" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
           <div class="term-body">
-            <p><b>&gt;</b> endpoint <span class="val">/v1/images/edits</span></p>
+            <p><b>&gt;</b> endpoint <span class="val">/v1/images/edits</span><button class="copy-endpoint" id="copyEndpoint" type="button">COPY</button></p>
             <p><b>&gt;</b> <span id="typed">handshake recommended</span><span class="caret"></span></p>
             <p><b>&gt;</b> purpose <span class="dim">photos only, never bead patterns</span></p>
             <p><b>&gt;</b> privacy <span class="dim">your provider, your call</span></p>
@@ -1027,7 +1058,7 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(79,195,247,.16);pad
   </div>
 </footer>
 
-<div class="reticle" id="reticle" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<div class="reticle" id="reticle" aria-hidden="true"><i></i><i></i><i></i><i></i><span class="reticle-tag">LOCK</span><span class="pulse"></span></div>
 
 <div class="potg" id="potg" role="dialog" aria-modal="true" aria-labelledby="potgTitle" hidden>
   <div class="potg-inner">
@@ -1167,6 +1198,30 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(79,195,247,.16);pad
     });
   }
 
+
+  /* holo tilt + glare */
+  const holo = $(".holo");
+  const holoFrame = $(".holo-frame");
+  const holoGlare = $(".holo-glare");
+  const holoTags = $$(".holo-tag");
+  if (holo && holoFrame && fine && !reduce) {
+    holo.addEventListener("pointermove", (e) => {
+      const r = holo.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - .5;
+      const py = (e.clientY - r.top) / r.height - .5;
+      holoFrame.style.transform = "rotateX(" + (-py * 4).toFixed(2) + "deg) rotateY(" + (px * 5).toFixed(2) + "deg)";
+      if (holoGlare) {
+        holoGlare.style.setProperty("--gx", (e.clientX - r.left).toFixed(1) + "px");
+        holoGlare.style.setProperty("--gy", (e.clientY - r.top).toFixed(1) + "px");
+      }
+      holoTags.forEach((t, i) => { t.style.transform = "translate3d(" + (px * (4 + i * 2)).toFixed(1) + "px," + (py * (3 + i * 2)).toFixed(1) + "px,0)"; });
+    });
+    holo.addEventListener("pointerleave", () => {
+      holoFrame.style.transform = "";
+      holoTags.forEach((t) => { t.style.transform = ""; });
+    });
+  }
+
   /* route map */
   const steps = $$(".route-step");
   const nodes = $$(".map-node");
@@ -1210,6 +1265,34 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(79,195,247,.16);pad
   }
   setTimeout(() => setStep(0), 400);
 
+  const nodeNames = ["情报接入", "现场修形", "分割部署", "装配校验", "图纸回收"];
+  nodes.forEach((n, i) => {
+    n.style.cursor = "pointer";
+    n.setAttribute("tabindex", "0");
+    n.setAttribute("role", "button");
+    n.setAttribute("aria-label", "跳到行动路线：" + (nodeNames[i] || ("第 " + (i + 1) + " 步")));
+    const dot = n.querySelector("circle");
+    if (dot) {
+      const hit = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      hit.setAttribute("x", String(Number(dot.getAttribute("cx")) - 28));
+      hit.setAttribute("y", String(Number(dot.getAttribute("cy")) - 28));
+      hit.setAttribute("width", "56");
+      hit.setAttribute("height", "56");
+      hit.setAttribute("fill", "transparent");
+      hit.setAttribute("pointer-events", "all");
+      n.insertBefore(hit, n.firstChild);
+    }
+    const jump = () => {
+      setStep(i);
+      steps[i]?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+      n.classList.remove("ping"); void n.getBoundingClientRect(); n.classList.add("ping");
+      setTimeout(() => n.classList.remove("ping"), 600);
+    };
+    n.addEventListener("click", jump);
+    n.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); jump(); } });
+  });
+
+
   /* tabs */
   const tabs = $$(".tab");
   const stageImg = $("#stageImg");
@@ -1223,19 +1306,33 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(79,195,247,.16);pad
     welcome: { src: "assets/shots/welcome.png", w: 1680, h: 1000, label: "03 / START", cap: "从图片开始、打开旧作品，或从空白画布搭起。", alt: "拼豆先锋开始界面" },
     guide: { src: "assets/shots/guide.png", w: 1000, h: 800, label: "04 / GUIDE", cap: "第一次打开，聚光灯会指到真实按钮上。", alt: "拼豆先锋首次引导" },
   };
-  let tabTimer = 0;
+  let tabTimer = 0, capTimer = 0, glitchTimer = 0;
+  function typeCaption(text) {
+    clearInterval(capTimer);
+    if (reduce) { stageCap.textContent = text; return; }
+    stageCap.textContent = "";
+    let i = 0;
+    capTimer = setInterval(() => {
+      stageCap.textContent = text.slice(0, ++i);
+      if (i >= text.length) clearInterval(capTimer);
+    }, 13);
+  }
   function pickTab(btn) {
     const key = btn.dataset.shot;
     const data = shots[key];
     if (!data) return;
     tabs.forEach((t) => t.setAttribute("aria-selected", String(t === btn)));
     stageImg.classList.add("switching");
+    stageImg.classList.remove("glitching");
     clearTimeout(tabTimer);
     tabTimer = setTimeout(() => {
       stageShot.src = data.src; stageShot.width = data.w; stageShot.height = data.h; stageShot.alt = data.alt;
-      stageLabel.textContent = data.label; stageCap.textContent = data.cap;
+      stageLabel.textContent = data.label; typeCaption(data.cap);
       stageIndex.textContent = "VIEW " + data.label.slice(0, 2) + " / 04";
       stageImg.classList.remove("switching");
+      stageImg.classList.add("glitching");
+      clearTimeout(glitchTimer);
+      glitchTimer = setTimeout(() => stageImg.classList.remove("glitching"), 480);
     }, 170);
   }
   tabs.forEach((btn, i) => {
@@ -1255,6 +1352,10 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(79,195,247,.16);pad
     btn.addEventListener("click", () => {
       loadouts.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
       if (readout) readout.textContent = btn.dataset.name + " · " + btn.dataset.size + " · " + btn.dataset.note;
+      btn.classList.remove("scanning"); void btn.offsetWidth; btn.classList.add("scanning");
+      setTimeout(() => btn.classList.remove("scanning"), 750);
+      const readoutBox = readout?.closest(".readout");
+      if (readoutBox) { readoutBox.classList.remove("flash"); void readoutBox.offsetWidth; readoutBox.classList.add("flash"); setTimeout(() => readoutBox.classList.remove("flash"), 600); }
     });
   });
 
@@ -1278,6 +1379,17 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(79,195,247,.16);pad
     } else start();
   }
 
+
+  /* copy support endpoint */
+  const copyEndpoint = $("#copyEndpoint");
+  if (copyEndpoint) copyEndpoint.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText("/v1/images/edits");
+      copyEndpoint.textContent = "COPIED";
+    } catch (_) { copyEndpoint.textContent = "SELECT"; }
+    setTimeout(() => (copyEndpoint.textContent = "COPY"), 1600);
+  });
+
   /* reticle */
   if (fine && !reduce) {
     const ret = $("#reticle");
@@ -1288,7 +1400,12 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(79,195,247,.16);pad
     }, { passive: true });
     document.addEventListener("pointerleave", () => ret.classList.remove("on"));
     document.addEventListener("pointerover", (e) => {
-      ret.classList.toggle("lock", !!e.target.closest("a,button,summary,.tab,.loadout"));
+      ret.classList.toggle("lock", !!e.target.closest("a,button,summary,.tab,.loadout,.map-node"));
+    }, { passive: true });
+    document.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0) return;
+      ret.classList.remove("fire"); void ret.offsetWidth; ret.classList.add("fire");
+      setTimeout(() => ret.classList.remove("fire"), 620);
     }, { passive: true });
     const loop = () => {
       rx += (px - rx) * .2; ry += (py - ry) * .2;
